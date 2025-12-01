@@ -1,0 +1,42 @@
+.min-h-screen.flex.items-center.justify-center.p-4 class="bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900"
+  .absolute.inset-0.overflow-hidden.pointer-events-none
+    .absolute.top-0.left-0.w-96.h-96.bg-emerald-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse
+    .absolute.top-1/2.right-0.w-80.h-80.bg-teal-400.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 1s"
+    .absolute.bottom-0.left-1/3.w-72.h-72.bg-cyan-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 2s"
+  
+  .relative.w-full.max-w-md
+    .text-center.mb-8
+      .inline-flex.items-center.justify-center.w-20.h-20.rounded-full.mb-4 class="bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30"
+        svg.w-10.h-10.text-white xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
+      h1.text-4xl.font-bold.text-white.tracking-tight.drop-shadow-lg = t('.shared.app_name')
+      p.text-emerald-200.mt-2.text-lg = t('.subtitle')
+
+    .backdrop-blur-xl.rounded-2xl.shadow-2xl.p-8.border class="bg-white/10 border-white/20"
+      - if flash[:alert]
+        .mb-6.p-4.rounded-lg.text-sm.flex.items-center.gap-3 class="bg-red-500/20 text-red-100 border border-red-400/30"
+          svg.w-5.h-5.flex-shrink-0 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"
+          span = flash[:alert]
+
+      = simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-1" }) do |f|
+        = f.input :email, autofocus: true, placeholder: t('.email_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "email" }, wrapper_html: { class: "mb-5" }
+        
+        .mb-5
+          .flex.items-center.justify-between.mb-2
+            = f.label :password, class: "block text-sm font-medium text-emerald-100"
+            = link_to t('.forgot_password'), new_password_path(resource_name), class: "text-sm text-amber-400 hover:text-amber-300 transition-colors"
+          = f.input_field :password, placeholder: t('.password_placeholder'), class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "current-password"
+
+        - if devise_mapping.rememberable?
+          = f.input :remember_me, as: :boolean, boolean_style: :inline, label_html: { class: "ml-3 text-sm text-emerald-200 cursor-pointer select-none" }, input_html: { class: "w-4 h-4 rounded bg-white/10 border-white/30 text-amber-500 focus:ring-amber-400 focus:ring-offset-0 cursor-pointer" }, wrapper_html: { class: "flex items-center mb-5" }
+
+        = f.button :submit, t('.submit'), class: "w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-orange-500/30"
+
+    .text-center.mt-8
+      p.text-emerald-200
+        = t('.new_user_prompt')
+        = link_to new_registration_path(resource_name), class: "ml-2 font-semibold text-amber-400 hover:text-amber-300 transition-colors" do
+          = t('.sign_up_link')
+          svg.w-4.h-4.inline.ml-1 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"

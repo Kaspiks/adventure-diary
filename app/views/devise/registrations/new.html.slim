@@ -1,0 +1,38 @@
+.min-h-screen.flex.items-center.justify-center.p-4 class="bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900"
+  .absolute.inset-0.overflow-hidden.pointer-events-none
+    .absolute.top-0.right-0.w-96.h-96.bg-amber-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse
+    .absolute.bottom-1/2.left-0.w-80.h-80.bg-teal-400.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 1s"
+    .absolute.bottom-0.right-1/3.w-72.h-72.bg-emerald-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 2s"
+  
+  .relative.w-full.max-w-md
+    .text-center.mb-8
+      .inline-flex.items-center.justify-center.w-20.h-20.rounded-full.mb-4 class="bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30"
+        svg.w-10.h-10.text-white xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
+      h1.text-4xl.font-bold.text-white.tracking-tight.drop-shadow-lg = t('.shared.app_name')
+      p.text-emerald-200.mt-2.text-lg = t('.subtitle')
+
+    .backdrop-blur-xl.rounded-2xl.shadow-2xl.p-8.border class="bg-white/10 border-white/20"
+      = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-1" }) do |f|
+        = render "devise/shared/error_messages", resource: resource
+
+        .grid.grid-cols-2.gap-4.mb-5
+          = f.input :first_name, placeholder: t('.first_name_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "given-name" }, wrapper_html: { class: "" }
+          = f.input :last_name, placeholder: t('.last_name_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "family-name" }, wrapper_html: { class: "" }
+
+        = f.input :email, autofocus: true, placeholder: t('.email_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "email" }, wrapper_html: { class: "mb-5" }
+
+        - hint = @minimum_password_length ? t('.password_hint', min_length: @minimum_password_length) : nil
+        = f.input :password, placeholder: t('.password_placeholder'), hint: hint, label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, hint_html: { class: "text-xs text-emerald-300 ml-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "new-password" }, wrapper_html: { class: "mb-5" }
+
+        = f.input :password_confirmation, placeholder: t('.password_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "new-password" }, wrapper_html: { class: "mb-5" }
+
+        = f.button :submit, t('.submit'), class: "w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-orange-500/30"
+
+    .text-center.mt-8
+      p.text-emerald-200
+        = t('.existing_user_prompt')
+        = link_to session_path(resource_name), class: "ml-2 font-semibold text-amber-400 hover:text-amber-300 transition-colors" do
+          = t('.sign_in_link')
+          svg.w-4.h-4.inline.ml-1 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"

@@ -1,0 +1,84 @@
+en:
+  presenters:
+    # Home presenter
+    home:
+      index:
+        app_name: "My Travel Diary"
+        welcome: "Welcome,"
+        sign_out: "Sign out"
+        view_all: "View all"
+        
+        stats:
+          points: "Points"
+          active_challenges: "Active"
+          completed: "Completed"
+          rewards_claimed: "Rewards"
+        
+        sections:
+          active_challenges: "Active Challenges"
+          recent_activity: "Recent Activity"
+          quick_actions: "Quick Actions"
+          leaderboard: "Top Explorers"
+        
+        actions:
+          find_challenges: "Find Challenges"
+          rewards_catalog: "Rewards Catalog"
+          my_profile: "My Profile"
+        
+        empty:
+          no_active_challenges: "No active challenges yet"
+          browse_challenges: "Browse Challenges"
+          no_activity: "Your activity will appear here"
+          no_leaderboard: "Coming soon"
+
+    # Admin presenters
+    admin:
+      dashboards:
+        index:
+          title: "Dashboard"
+          subtitle: "Overview of your application"
+          view_all: "View all"
+          
+          stats:
+            total_users: "Total Users"
+            active_users: "Active Users"
+            blocked_users: "Blocked"
+            admins: "Admins"
+          
+          recent_users:
+            title: "Recent Users"
+            name: "Name"
+            email: "Email"
+            status: "Status"
+            joined: "Joined"
+            active: "Active"
+            blocked: "Blocked"
+            admin: "Admin"
+            empty: "No users yet"
+          
+          quick_actions:
+            title: "Quick Actions"
+            manage_users: "Manage Users"
+            create_challenge: "Create Challenge"
+            add_reward: "Add Reward"
+            app_settings: "App Settings"
+
+    # Navigation presenter
+    navigation:
+      sections:
+        home:
+          title: Home
+        trips:
+          title: Trips
+        administration/users:
+          title: Users
+        configuration/settings:
+          title: Settings
+        administration:
+          title: Administration
+        configuration:
+          title: Configuration
+    
+    # Title presenter
+    title:
+      inactive: inactive

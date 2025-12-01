@@ -1,0 +1,24 @@
+.min-h-screen.flex.items-center.justify-center.p-4 class="bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900"
+  .absolute.inset-0.overflow-hidden.pointer-events-none
+    .absolute.top-0.left-1/4.w-96.h-96.bg-emerald-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse
+    .absolute.bottom-1/4.right-0.w-80.h-80.bg-amber-400.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 1s"
+  
+  .relative.w-full.max-w-md
+    .text-center.mb-8
+      .inline-flex.items-center.justify-center.w-20.h-20.rounded-full.mb-4 class="bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30"
+        svg.w-10.h-10.text-white xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+      h1.text-3xl.font-bold.text-white.tracking-tight.drop-shadow-lg = t('.title')
+      p.text-emerald-200.mt-2 = t('.subtitle')
+
+    .backdrop-blur-xl.rounded-2xl.shadow-2xl.p-8.border class="bg-white/10 border-white/20"
+      = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-1" }) do |f|
+        = render "devise/shared/error_messages", resource: resource
+        = f.hidden_field :reset_password_token
+
+        - hint = @minimum_password_length ? t('.password_hint', min_length: @minimum_password_length) : nil
+        = f.input :password, label: t('activerecord.attributes.user.new_password'), autofocus: true, placeholder: t('.password_placeholder'), hint: hint, label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, hint_html: { class: "text-xs text-emerald-300 ml-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "new-password" }, wrapper_html: { class: "mb-5" }
+
+        = f.input :password_confirmation, placeholder: t('.password_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "new-password" }, wrapper_html: { class: "mb-5" }
+
+        = f.button :submit, t('.submit'), class: "w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-orange-500/30"

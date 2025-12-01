@@ -1,0 +1,26 @@
+.min-h-screen.flex.items-center.justify-center.p-4 class="bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900"
+  .absolute.inset-0.overflow-hidden.pointer-events-none
+    .absolute.top-1/4.left-0.w-96.h-96.bg-cyan-500.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse
+    .absolute.bottom-0.right-0.w-80.h-80.bg-teal-400.rounded-full.mix-blend-multiply.filter.blur-3xl.opacity-20.animate-pulse style="animation-delay: 1s"
+  
+  .relative.w-full.max-w-md
+    .text-center.mb-8
+      .inline-flex.items-center.justify-center.w-20.h-20.rounded-full.mb-4 class="bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30"
+        svg.w-10.h-10.text-white xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
+      h1.text-3xl.font-bold.text-white.tracking-tight.drop-shadow-lg = t('.title')
+      p.text-emerald-200.mt-2 = t('.subtitle')
+
+    .backdrop-blur-xl.rounded-2xl.shadow-2xl.p-8.border class="bg-white/10 border-white/20"
+      = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-1" }) do |f|
+        = render "devise/shared/error_messages", resource: resource
+
+        = f.input :email, autofocus: true, placeholder: t('.email_placeholder'), label_html: { class: "block text-sm font-medium text-emerald-100 mb-2" }, input_html: { class: "w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-emerald-300/50 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200", autocomplete: "email" }, wrapper_html: { class: "mb-5" }
+
+        = f.button :submit, t('.submit'), class: "w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-orange-500/30"
+
+    .text-center.mt-8
+      = link_to session_path(resource_name), class: "inline-flex items-center text-emerald-200 hover:text-amber-400 transition-colors" do
+        svg.w-4.h-4.mr-2 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back_to_sign_in')

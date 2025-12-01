@@ -1,0 +1,144 @@
+en:
+  # ============================================
+  # HOME / USER DASHBOARD
+  # ============================================
+  home:
+    index:
+      app_name: "My Travel Diary"
+      welcome: "Welcome,"
+      sign_out: "Sign out"
+      view_all: "View all"
+      
+      stats:
+        points: "Points"
+        active_challenges: "Active"
+        completed: "Completed"
+        rewards_claimed: "Rewards"
+      
+      sections:
+        active_challenges: "Active Challenges"
+        recent_activity: "Recent Activity"
+        quick_actions: "Quick Actions"
+        leaderboard: "Top Explorers"
+      
+      actions:
+        find_challenges: "Find Challenges"
+        rewards_catalog: "Rewards Catalog"
+        my_profile: "My Profile"
+      
+      empty:
+        no_active_challenges: "No active challenges yet"
+        browse_challenges: "Browse Challenges"
+        no_activity: "Your activity will appear here"
+        no_leaderboard: "Coming soon"
+
+  # ============================================
+  # ADMIN
+  # ============================================
+  admin:
+    title: "Admin Panel"
+    subtitle: "Management"
+    role: "Administrator"
+    access_denied: "You don't have permission to access this area."
+    back_to_app: "Back to App"
+    
+    nav:
+      dashboard: "Dashboard"
+      users: "Users"
+      challenges: "Challenges"
+      rewards: "Rewards"
+      settings: "Settings"
+    
+    dashboard:
+      index:
+        title: "Dashboard"
+        subtitle: "Overview of your application"
+        view_all: "View all"
+        
+        stats:
+          total_users: "Total Users"
+          active_users: "Active Users"
+          blocked_users: "Blocked"
+          admins: "Admins"
+        
+        recent_users:
+          title: "Recent Users"
+          name: "Name"
+          email: "Email"
+          status: "Status"
+          joined: "Joined"
+          active: "Active"
+          blocked: "Blocked"
+          admin: "Admin"
+          empty: "No users yet"
+        
+        quick_actions:
+          title: "Quick Actions"
+          manage_users: "Manage Users"
+          create_challenge: "Create Challenge"
+          add_reward: "Add Reward"
+          app_settings: "App Settings"
+
+  # ============================================
+  # DEVISE / AUTHENTICATION
+  # ============================================
+  devise:
+    sessions:
+      new:
+        shared:
+          app_name: "My Travel Diary"
+        subtitle: "Welcome back, explorer"
+        email_placeholder: "you@example.com"
+        password_placeholder: "••••••••"
+        forgot_password: "Forgot password?"
+        submit: "Sign In"
+        new_user_prompt: "New here?"
+        sign_up_link: "Create an account"
+        
+    registrations:
+      new:
+        shared:
+          app_name: "My Travel Diary"
+        subtitle: "Start your adventure today"
+        first_name_placeholder: "John"
+        last_name_placeholder: "Doe"
+        email_placeholder: "you@example.com"
+        password_placeholder: "••••••••"
+        password_hint: "(%{min_length} characters minimum)"
+        submit: "Create Account"
+        existing_user_prompt: "Already have an account?"
+        sign_in_link: "Sign in"
+          
+      edit:
+        title: "Edit Profile"
+        subtitle: "Update your account settings"
+        leave_blank_hint: "(leave blank if you don't want to change it)"
+        current_password_hint: "(we need your current password to confirm changes)"
+        submit: "Update Profile"
+        
+    passwords:
+      new:
+        title: "Reset Password"
+        subtitle: "Enter your email and we'll send you reset instructions"
+        email_placeholder: "you@example.com"
+        submit: "Send Reset Instructions"
+        back_to_sign_in: "Back to sign in"
+        
+      edit:
+        title: "Set New Password"
+        subtitle: "Choose a strong password for your account"
+        password_placeholder: "••••••••"
+        password_hint: "(%{min_length} characters minimum)"
+        submit: "Update Password"
+
+  # ============================================
+  # SHARED
+  # ============================================
+  shared:
+    navigation:
+      home: "Home"
+      challenges: "Challenges"
+      rewards: "Rewards"
+      social: "Social"
+      profile: "Profile"
+      admin: "Admin"

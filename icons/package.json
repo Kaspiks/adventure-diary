@@ -1,0 +1,18 @@
+{
+  "name": "adventure-diary-icons",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SVG icon sprite generator",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "clean": "rm -f ../vendor/assets/images/icons.svg ../vendor/assets/images/_icons_entry.js"
+  },
+  "devDependencies": {
+    "feather-icons": "^4.29.2",
+    "svg-sprite-loader": "^6.0.11",
+    "svgo": "^3.2.0",
+    "svgo-loader": "^4.0.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

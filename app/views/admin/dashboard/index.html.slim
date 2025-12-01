@@ -1,0 +1,103 @@
+.mb-8
+  h1.text-3xl.font-bold.text-white = @presenter.title
+  p.text-slate-400.mt-1 = @presenter.subtitle
+
+.grid.grid-cols-2.lg:grid-cols-4.gap-4.mb-8
+  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between
+      div
+        p.text-sm.text-slate-400 = @presenter.stats_labels[:total_users]
+        p.text-2xl.font-bold.text-white = @presenter.stats[:total_users]
+      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-blue-500/20"
+        svg.w-6.h-6.text-blue-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z"
+
+  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between
+      div
+        p.text-sm.text-slate-400 = @presenter.stats_labels[:active_users]
+        p.text-2xl.font-bold.text-white = @presenter.stats[:active_users]
+      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
+        svg.w-6.h-6.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"
+
+  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between
+      div
+        p.text-sm.text-slate-400 = @presenter.stats_labels[:blocked_users]
+        p.text-2xl.font-bold.text-white = @presenter.stats[:blocked_users]
+      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
+        svg.w-6.h-6.text-red-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"
+
+  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between
+      div
+        p.text-sm.text-slate-400 = @presenter.stats_labels[:admins]
+        p.text-2xl.font-bold.text-white = @presenter.stats[:admins]
+      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-purple-500/20"
+        svg.w-6.h-6.text-purple-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M10 1l3 3-3 3-3-3 3-3zm0 16l-3-3 3-3 3 3-3 3zm-7-7l3-3 3 3-3 3-3-3zm14 0l-3 3-3-3 3-3 3 3z" clip-rule="evenodd"
+
+.grid.lg:grid-cols-3.gap-6
+  .lg:col-span-2.rounded-xl.border.p-6 class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between.mb-4
+      h2.text-lg.font-semibold.text-white = @presenter.recent_users_labels[:title]
+      a.text-sm.text-amber-400.hover:text-amber-300 href="#" = @presenter.view_all_text
+    
+    - if @presenter.recent_users.any?
+      .overflow-x-auto
+        table.w-full
+          thead
+            tr.text-left.text-sm.text-slate-400
+              th.pb-3.font-medium = @presenter.recent_users_labels[:name]
+              th.pb-3.font-medium = @presenter.recent_users_labels[:email]
+              th.pb-3.font-medium = @presenter.recent_users_labels[:status]
+              th.pb-3.font-medium = @presenter.recent_users_labels[:joined]
+          tbody.divide-y class="divide-slate-700"
+            - @presenter.recent_users.each do |user|
+              tr.text-sm
+                td.py-3
+                  .flex.items-center.gap-3
+                    .w-8.h-8.rounded-full.flex.items-center.justify-center.text-xs.font-medium.text-white class="bg-gradient-to-br from-slate-600 to-slate-700"
+                      = user.initials
+                    span.text-white = user.full_name
+                td.py-3.text-slate-400 = user.email
+                td.py-3
+                  - if user.blocked?
+                    span.px-2.py-1.rounded-full.text-xs.font-medium class="bg-red-500/20 text-red-400" = @presenter.recent_users_labels[:blocked]
+                  - elsif user.admin?
+                    span.px-2.py-1.rounded-full.text-xs.font-medium class="bg-purple-500/20 text-purple-400" = @presenter.recent_users_labels[:admin]
+                  - else
+                    span.px-2.py-1.rounded-full.text-xs.font-medium class="bg-emerald-500/20 text-emerald-400" = @presenter.recent_users_labels[:active]
+                td.py-3.text-slate-400 = l(user.created_at, format: :short)
+    - else
+      .text-center.py-8
+        p.text-slate-400 = @presenter.recent_users_labels[:empty]
+
+  .rounded-xl.border.p-6 class="bg-slate-800 border-slate-700"
+    h2.text-lg.font-semibold.text-white.mb-4 = @presenter.quick_actions_labels[:title]
+    .space-y-3
+      a.flex.items-center.gap-3.p-3.rounded-lg.transition-colors class="hover:bg-slate-700/50 group" href="#"
+        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-blue-500/20"
+          svg.w-5.h-5.text-blue-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path d="M10 5a3 3 0 00-3 3v1H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-2V8a3 3 0 00-3-3zm0 2a1 1 0 011 1v1H9V8a1 1 0 011-1z"
+        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:manage_users]
+      
+      a.flex.items-center.gap-3.p-3.rounded-lg.transition-colors class="hover:bg-slate-700/50 group" href="#"
+        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-emerald-500/20"
+          svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"
+        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:create_challenge]
+      
+      a.flex.items-center.gap-3.p-3.rounded-lg.transition-colors class="hover:bg-slate-700/50 group" href="#"
+        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-amber-500/20"
+          svg.w-5.h-5.text-amber-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"
+        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:add_reward]
+      
+      a.flex.items-center.gap-3.p-3.rounded-lg.transition-colors class="hover:bg-slate-700/50 group" href="#"
+        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-purple-500/20"
+          svg.w-5.h-5.text-purple-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M8.34 1.804A1 1 0 019.32 1h1.36a1 1 0 01.98.804l.295 1.473c.497.144.971.342 1.416.587l1.25-.834a1 1 0 011.262.125l.962.962a1 1 0 01.125 1.262l-.834 1.25c.245.445.443.919.587 1.416l1.473.294a1 1 0 01.804.98v1.361a1 1 0 01-.804.98l-1.473.295a6.95 6.95 0 01-.587 1.416l.834 1.25a1 1 0 01-.125 1.262l-.962.962a1 1 0 01-1.262.125l-1.25-.834a6.953 6.953 0 01-1.416.587l-.294 1.473a1 1 0 01-.98.804H9.32a1 1 0 01-.98-.804l-.295-1.473a6.957 6.957 0 01-1.416-.587l-1.25.834a1 1 0 01-1.262-.125l-.962-.962a1 1 0 01-.125-1.262l.834-1.25a6.957 6.957 0 01-.587-1.416l-1.473-.294A1 1 0 011 10.68V9.32a1 1 0 01.804-.98l1.473-.295c.144-.497.342-.971.587-1.416l-.834-1.25a1 1 0 01.125-1.262l.962-.962A1 1 0 015.38 3.03l1.25.834a6.957 6.957 0 011.416-.587l.294-1.473zM13 10a3 3 0 11-6 0 3 3 0 016 0z" clip-rule="evenodd"
+        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:app_settings]
