@@ -1,59 +1,91 @@
-- content_for(:title) { "Edit Profile | Adventure Diary" }
+- content_for :title, t('.title')
 
-.container.mx-auto.px-4.py-8.max-w-2xl
-  h1.text-2xl.font-bold.text-gray-900.mb-6 Edit Profile
+.min-h-screen class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+  nav.border-b.sticky.top-0.z-50 class="border-white/10 bg-slate-900/50 backdrop-blur-xl"
+    .max-w-2xl.mx-auto.px-4.sm:px-6.lg:px-8
+      .flex.items-center.justify-between.h-16
+        .flex.items-center.gap-3
+          = link_to profile_path, class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" do
+            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+          h1.text-xl.font-bold.text-white = t('.title')
 
-  .bg-white.rounded-lg.shadow.p-6
-    = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f|
-      = render "devise/shared/error_messages", resource: resource
+  .max-w-2xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
+    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f|
+      - if resource.errors.any?
+        .rounded-xl.border.p-4.mb-6 class="bg-red-500/10 border-red-500/30"
+          .flex.items-start.gap-3
+            svg.w-5.h-5.text-red-400.flex-shrink-0.mt-0.5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"
+            div
+              p.font-medium.text-red-300 = t('errors.messages.not_saved', count: resource.errors.count, resource: resource.class.model_name.human.downcase)
+              ul.mt-2.text-sm.text-red-300.space-y-1.list-disc.list-inside
+                - resource.errors.full_messages.each do |message|
+                  li = message
 
-      .space-y-4
-        .grid.grid-cols-2.gap-4
+      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+        h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.personal_info')
+        
+        .grid.gap-4 class="sm:grid-cols-2"
           div
-            = f.label :first_name, class: "block text-sm font-medium text-gray-700"
-            = f.text_field :first_name, autofocus: true, autocomplete: "given-name", required: true, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            = f.input :first_name,
+              label: t('.first_name'),
+              required: true,
+              autofocus: true,
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
 
           div
-            = f.label :last_name, class: "block text-sm font-medium text-gray-700"
-            = f.text_field :last_name, autocomplete: "family-name", required: true, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            = f.input :last_name,
+              label: t('.last_name'),
+              required: true,
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
 
-        div
-          = f.label :email, class: "block text-sm font-medium text-gray-700"
-          = f.email_field :email, autocomplete: "email", required: true, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        .mt-4
+          = f.input :email,
+            label: t('.email'),
+            required: true,
+            label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+            input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
 
-        hr.my-6
+      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+        h3.text-lg.font-semibold.text-white.mb-2 = t('.sections.change_password')
+        p.text-sm.text-slate-400.mb-4 = t('.leave_blank_hint')
+        
+        .grid.gap-4 class="sm:grid-cols-2"
+          div
+            = f.input :password,
+              label: t('.new_password'),
+              required: false,
+              hint: (@minimum_password_length ? t('.password_hint', min_length: @minimum_password_length) : nil),
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              hint_html: { class: "text-xs text-slate-400 mt-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", autocomplete: "new-password" }
 
-        h3.text-lg.font-medium.text-gray-900 Change Password
-        p.text-sm.text-gray-500.mb-4 Leave blank if you don't want to change it
+          div
+            = f.input :password_confirmation,
+              label: t('.password_confirmation'),
+              required: false,
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", autocomplete: "new-password" }
 
-        div
-          = f.label :password, "New password", class: "block text-sm font-medium text-gray-700"
-          - if @minimum_password_length
-            em.text-xs.text-gray-500 (#{@minimum_password_length} characters minimum)
-          = f.password_field :password, autocomplete: "new-password", class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+        h3.text-lg.font-semibold.text-white.mb-2 = t('.sections.confirm_changes')
+        p.text-sm.text-slate-400.mb-4 = t('.current_password_hint')
+        
+        = f.input :current_password,
+          label: t('.current_password'),
+          required: true,
+          label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+          input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", autocomplete: "current-password" }
 
-        div
-          = f.label :password_confirmation, "Confirm new password", class: "block text-sm font-medium text-gray-700"
-          = f.password_field :password_confirmation, autocomplete: "new-password", class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+      .flex.justify-between.items-center.pt-2
+        = f.submit t('.submit'), class: "px-6 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25"
+        = link_to t('.cancel'), profile_path, class: "px-4 py-2 rounded-lg font-medium text-slate-300 transition-colors hover:text-white hover:bg-slate-700"
 
-        hr.my-6
-
-        div
-          = f.label :current_password, class: "block text-sm font-medium text-gray-700"
-          em.text-xs.text-gray-500 (required to confirm changes)
-          = f.password_field :current_password, autocomplete: "current-password", required: true, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-
-      .flex.justify-between.items-center.pt-4
-        = f.submit "Update", class: "inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
-
-        = link_to "Back", root_path, class: "text-sm text-gray-600 hover:text-gray-900"
-
-  .mt-8.bg-red-50.rounded-lg.p-6
-    h3.text-lg.font-medium.text-red-900 Danger Zone
-    p.text-sm.text-red-600.mt-2 Once you delete your account, there is no going back.
-
-    .mt-4
-      = button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure you want to delete your account? This cannot be undone.", turbo_confirm: "Are you sure you want to delete your account? This cannot be undone." }, method: :delete, class: "inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer"
-
-
-
+      .rounded-2xl.border.p-6.mt-6 class="bg-red-500/10 border-red-500/30"
+        h3.text-lg.font-semibold.text-red-300.mb-2 = t('.danger_zone.title')
+        p.text-sm.text-red-300/70.mb-4 = t('.danger_zone.warning')
+        
+        = button_to t('.danger_zone.delete_account'), registration_path(resource_name), method: :delete, data: { turbo_confirm: t('.danger_zone.confirm') }, class: "px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-colors bg-red-600 hover:bg-red-500"

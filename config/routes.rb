@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  # Admin namespace
+  resource :profile, only: [ :show ], controller: "profiles"
+
   namespace :admin do
     root "dashboard#index"
     # Future admin resources:
-    # resources :users
+    resources :users
     # resources :challenges
     # resources :rewards
     # resources :settings, only: [:index, :update]
@@ -14,6 +15,5 @@ Rails.application.routes.draw do
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Main app root
   root "home#index"
 end

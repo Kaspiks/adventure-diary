@@ -1,0 +1,106 @@
+- content_for :title, @presenter.decorated_user.full_name
+
+.space-y-6
+  .flex.items-center.justify-between
+    .flex.items-center.gap-4
+      - if @presenter.admin_viewer?
+        = link_to admin_users_path, class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" do
+          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      - else
+        = link_to root_path, class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" do
+          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      div
+        h1.text-2xl.font-bold.text-white = @presenter.decorated_user.full_name
+        p.text-slate-400.mt-1 = @presenter.decorated_user.email
+    
+    - if @presenter.can_edit? || @presenter.can_delete?
+      .flex.items-center.gap-2
+        - if @presenter.can_edit?
+          = link_to edit_admin_user_path(@presenter.user), class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-colors bg-slate-700 hover:bg-slate-600" do
+            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+              path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
+            span = t('.edit')
+
+        - if @presenter.can_delete?
+          = link_to admin_user_path(@presenter.user), data: { turbo_method: :delete, turbo_confirm: t('.confirm_delete') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-400 transition-colors hover:bg-red-500/20" do
+            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.519.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"
+            span = t('.delete')
+
+  .grid.gap-6 class="lg:grid-cols-3"
+    .col-span-2.space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h3.text-lg.font-semibold.text-white.mb-4 = t('.title')
+        
+        dl.space-y-4
+          .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+            dt.text-slate-400 = t('.fields.name')
+            dd.font-medium.text-white = @presenter.decorated_user.full_name
+
+          .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+            dt.text-slate-400 = t('.fields.email')
+            dd.font-medium.text-white = @presenter.decorated_user.email
+
+          - if @presenter.show_admin_info?
+            .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+              dt.text-slate-400 = t('.fields.status')
+              dd
+                - if @presenter.decorated_user.blocked?
+                  span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-red-500/20 text-red-300"
+                    = t('.status.blocked')
+                - else
+                  span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-emerald-500/20 text-emerald-300"
+                    = t('.status.active')
+
+            .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+              dt.text-slate-400 = t('.fields.role')
+              dd
+                - if @presenter.decorated_user.admin?
+                  span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-amber-500/20 text-amber-300"
+                    = t('.role.admin')
+                - else
+                  span.text-slate-300 = t('.role.user')
+
+          .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+            dt.text-slate-400 = t('.fields.created_at')
+            dd.text-white = l(@presenter.decorated_user.created_at, format: :long)
+
+          - if @presenter.show_admin_info?
+            .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+              dt.text-slate-400 = t('.fields.last_sign_in')
+              dd.text-white
+                - if @presenter.decorated_user.last_sign_in_at.present?
+                  = l(@presenter.decorated_user.last_sign_in_at, format: :long)
+                - else
+                  span.text-slate-500 = t('.never')
+
+            .flex.items-center.justify-between.py-3
+              dt.text-slate-400 = t('.fields.sign_in_count')
+              dd.text-white = @presenter.decorated_user.sign_in_count
+
+    aside.space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        .flex.flex-col.items-center.text-center
+          .w-20.h-20.rounded-full.flex.items-center.justify-center.text-2xl.font-bold.text-white.mb-4 class="bg-gradient-to-br from-violet-500 to-purple-600"
+            = @presenter.decorated_user.initials
+          h4.text-lg.font-semibold.text-white = @presenter.decorated_user.full_name
+          p.text-slate-400 = @presenter.decorated_user.email
+          
+          - if @presenter.show_admin_info?
+            .flex.gap-2.mt-4
+              - if @presenter.decorated_user.admin?
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-amber-500/20 text-amber-300"
+                  = t('.role.admin')
+              - if @presenter.decorated_user.blocked?
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-red-500/20 text-red-300"
+                  = t('.status.blocked')
+              - else
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-emerald-500/20 text-emerald-300"
+                  = t('.status.active')
+
+      - if @presenter.viewing_own_profile?
+        = link_to edit_user_registration_path, class: "block w-full text-center px-4 py-2 rounded-lg font-medium text-white transition-colors bg-slate-700 hover:bg-slate-600" do
+          = t('.edit_my_profile')

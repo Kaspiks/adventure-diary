@@ -11,6 +11,10 @@ class User < ApplicationRecord
   scope :blocked, -> { where(blocked: true) }
   scope :admins, -> { where(admin: true) }
 
+  searchable_text_column :first_name
+  searchable_text_column :last_name
+  searchable_text_column :email
+
   def full_name
     "#{first_name} #{last_name}"
   end

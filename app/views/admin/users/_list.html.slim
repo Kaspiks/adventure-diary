@@ -1,0 +1,73 @@
+- if users.any?
+  .overflow-x-auto
+    table.w-full
+      thead
+        tr.border-b class="border-slate-700"
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.name')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.email')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.status')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.role')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.last_sign_in')
+          th.px-4.py-3.text-right.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.actions')
+
+      tbody.divide-y class="divide-slate-700"
+        - users.each do |user|
+          tr.transition-colors class="hover:bg-slate-700/50"
+            td.px-4.py-4
+              .flex.items-center.gap-3
+                .w-10.h-10.rounded-full.flex.items-center.justify-center.text-sm.font-medium.text-white class="bg-gradient-to-br from-violet-500 to-purple-600"
+                  = user.initials
+                div
+                  p.font-medium.text-white = user.full_name
+                  p.text-sm.text-slate-400 = t('.created_at', date: l(user.created_at, format: :short))
+
+            td.px-4.py-4
+              span.text-slate-300 = user.email
+
+            td.px-4.py-4
+              - if user.blocked?
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-red-500/20 text-red-300"
+                  = t('.status.blocked')
+              - else
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-emerald-500/20 text-emerald-300"
+                  = t('.status.active')
+
+            td.px-4.py-4
+              - if user.admin?
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-amber-500/20 text-amber-300"
+                  = t('.role.admin')
+              - else
+                span.text-slate-400 = t('.role.user')
+
+            td.px-4.py-4
+              - if user.last_sign_in_at.present?
+                span.text-slate-400 = l(user.last_sign_in_at, format: :short)
+              - else
+                span.text-slate-500 = t('.never')
+
+            td.px-4.py-4.text-right
+              .flex.items-center.justify-end.gap-2
+                = link_to admin_user_path(user), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors", title: t('.actions.view') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                    path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"
+
+                = link_to edit_admin_user_path(user), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors", title: t('.actions.edit') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+                    path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
+
+                = link_to admin_user_path(user), data: { turbo_method: :delete, turbo_confirm: t('.confirm_delete') }, class: "p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700 transition-colors", title: t('.actions.delete') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.519.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"
+
+- else
+  .p-8.text-center
+    .w-16.h-16.mx-auto.mb-4.rounded-full.flex.items-center.justify-center class="bg-slate-700"
+      svg.w-8.h-8.text-slate-500 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z"
+    p.text-slate-400 = t('.empty')
+    = link_to new_admin_user_path, class: "inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg font-medium text-emerald-400 hover:text-emerald-300 transition-colors" do
+      svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+      = t('.add_first_user')
