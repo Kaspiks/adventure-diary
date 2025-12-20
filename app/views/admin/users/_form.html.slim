@@ -63,6 +63,19 @@
 
     aside.space-y-6
       .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.role')
+        
+        div
+          = f.input :role_id,
+            as: :select,
+            collection: form.available_roles.map { |r| [r.name, r.id] },
+            include_blank: t('.no_role'),
+            label: t('.role'),
+            label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+            input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
+          p.text-xs.text-slate-400.mt-1 = t('.role_hint')
+
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
         h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.permissions')
         
         .space-y-4

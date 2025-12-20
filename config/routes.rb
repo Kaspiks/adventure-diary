@@ -5,8 +5,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboard#index"
-    # Future admin resources:
     resources :users
+    resources :roles
     # resources :challenges
     # resources :rewards
     # resources :settings, only: [:index, :update]

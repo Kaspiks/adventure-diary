@@ -1,0 +1,13 @@
+position_in_class: bottom
+position_in_factory: bottom
+position_in_fixture: bottom
+position_in_test: bottom
+position_in_routes: bottom
+position_in_serializer: bottom
+show_migration: false
+show_indexes: true
+show_foreign_keys: true
+show_complete_foreign_keys: false
+with_comment: true
+
+

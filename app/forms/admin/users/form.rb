@@ -5,13 +5,10 @@ module Admin
     class Form < ApplicationModelForm
       self.object_class_name = "User"
 
-      delegated_fields :first_name, :last_name, :email, :admin, :blocked
+      delegated_fields :first_name, :last_name, :email, :admin, :blocked, :role_id
 
       string_field :password
       string_field :password_confirmation
-
-      # validates :password, confirmation: true, length: { minimum: 6 }, if: -> { password.present? }
-      # validates :password, presence: true, if: -> { object.new_record? }
 
       def initialize(user)
         super(user)
@@ -31,6 +28,10 @@ module Admin
         save
       end
 
+      def available_roles
+        Role.ordered
+      end
+
       private
 
       def assign_attributes_from(attributes)
@@ -39,6 +40,7 @@ module Admin
         self.email = attributes[:email] if attributes.key?(:email)
         self.admin = attributes[:admin] if attributes.key?(:admin)
         self.blocked = attributes[:blocked] if attributes.key?(:blocked)
+        self.role_id = attributes[:role_id] if attributes.key?(:role_id)
 
         if attributes[:password].present?
           object.password = attributes[:password]

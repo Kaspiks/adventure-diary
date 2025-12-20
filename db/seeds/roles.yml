@@ -1,0 +1,54 @@
+# Default roles with their permissions
+
+- name: Admin
+  description: Full system access
+  permissions:
+    - users.index
+    - users.show
+    - users.create
+    - users.update
+    - users.destroy
+    - users.block
+    - roles.index
+    - roles.show
+    - roles.create
+    - roles.update
+    - roles.destroy
+    - challenges.index
+    - challenges.show
+    - challenges.create
+    - challenges.update
+    - challenges.destroy
+    - challenges.approve
+    - rewards.index
+    - rewards.show
+    - rewards.create
+    - rewards.update
+    - rewards.destroy
+    - locations.index
+    - locations.show
+    - locations.create
+    - locations.update
+    - locations.destroy
+    - dashboard.view
+    - settings.view
+    - settings.update
+- name: Moderator
+  description: Content moderation and user support
+  permissions:
+    - users.index
+    - users.show
+    - users.block
+    - challenges.index
+    - challenges.show
+    - challenges.approve
+    - rewards.index
+    - rewards.show
+    - locations.index
+    - locations.show
+    - dashboard.view
+- name: Traveler
+  description: Regular users who complete challenges
+  permissions: []
+
+

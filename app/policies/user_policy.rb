@@ -1,15 +1,37 @@
 # frozen_string_literal: true
 
 class UserPolicy < ApplicationPolicy
-  def index? = admin?
-  def show? = admin? || user == record
-  def create? = admin?
-  def update? = admin? || user == record
-  def destroy? = admin? && user != record
+  def index?
+    can?(:index)
+  end
+
+  def show?
+    can?(:show) || user == record
+  end
+
+  def create?
+    can?(:create)
+  end
+
+  def update?
+    can?(:update) || user == record
+  end
+
+  def destroy?
+    can?(:destroy) && user != record
+  end
+
+  def block?
+    can?("users.block") && user != record
+  end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      user&.admin? ? scope.all : scope.where(id: user&.id)
+      if user&.admin? || user&.has_permission?("users.index")
+        scope.all
+      else
+        scope.where(id: user&.id)
+      end
     end
   end
 end

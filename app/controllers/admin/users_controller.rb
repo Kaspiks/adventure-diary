@@ -74,7 +74,8 @@ module Admin
         :password,
         :password_confirmation,
         :admin,
-        :blocked
+        :blocked,
+        :role_id
       )
     end
 
@@ -84,7 +85,8 @@ module Admin
         :last_name,
         :email,
         :admin,
-        :blocked
+        :blocked,
+        :role_id
       )
     end
 

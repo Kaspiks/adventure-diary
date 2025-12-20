@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :trackable, :lockable, :timeoutable
 
+  belongs_to :role, optional: true
+
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
   validates :email, presence: true, uniqueness: { case_sensitive: false }
@@ -10,6 +12,7 @@ class User < ApplicationRecord
   scope :active, -> { where(blocked: false) }
   scope :blocked, -> { where(blocked: true) }
   scope :admins, -> { where(admin: true) }
+  scope :with_role, ->(role_name) { joins(:role).where(roles: { name: role_name }) }
 
   searchable_text_column :first_name
   searchable_text_column :last_name
@@ -33,6 +36,17 @@ class User < ApplicationRecord
 
   def inactive_message
     blocked? ? :blocked : super
+  end
+
+  def has_permission?(permission_code)
+    return true if admin?
+    return false unless role
+
+    role.has_permission?(permission_code)
+  end
+
+  def role_name
+    role&.name || "No Role"
   end
 end
 
@@ -61,10 +75,16 @@ end
 #  unlock_token           :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  role_id                :integer
 #
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_role_id               (role_id)
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
+#
+# Foreign Keys
+#
+#  role_id  (role_id => roles.id)
 #

@@ -1,0 +1,69 @@
+= simple_form_for form, as: :admin_roles_form, url: url, html: { class: "space-y-6", data: { controller: "permission-toggle" } } do |f|
+  - if form.errors.any?
+    .rounded-xl.border.p-4 class="bg-red-500/10 border-red-500/30"
+      .flex.items-start.gap-3
+        svg.w-5.h-5.text-red-400.flex-shrink-0.mt-0.5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"
+        div
+          p.font-medium.text-red-300 = t('errors.messages.not_saved', count: form.errors.count, resource: Role.model_name.human.downcase)
+          ul.mt-2.text-sm.text-red-300.space-y-1.list-disc.list-inside
+            - form.errors.full_messages.each do |message|
+              li = message
+
+  .grid.gap-6 class="lg:grid-cols-3"
+    .col-span-2.space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.basic_info')
+        
+        .space-y-4
+          div
+            = f.input :name,
+              label: t('.name'),
+              required: true,
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
+
+          div
+            = f.input :description,
+              as: :text,
+              label: t('.description'),
+              label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none", rows: 3 }
+
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h3.text-lg.font-semibold.text-white.mb-2 = t('.sections.permissions')
+        p.text-sm.text-slate-400.mb-6 = t('.permissions_hint')
+
+        .space-y-6
+          - form.permissions_grouped.each do |resource, permissions|
+            .border.rounded-lg.p-4 class="border-slate-600 bg-slate-700/30"
+              .flex.items-center.justify-between.mb-3
+                h4.text-sm.font-medium.text-emerald-400.uppercase.tracking-wider = resource.titleize
+                label.inline-flex.items-center.gap-2.text-xs.text-slate-400.cursor-pointer
+                  input type="checkbox" class="rounded text-emerald-500 border-slate-600 bg-slate-700 focus:ring-emerald-500 focus:ring-offset-slate-800" data-action="click->permission-toggle#toggleAll" data-resource=resource
+                  = t('.select_all')
+
+              .grid.gap-3 class="sm:grid-cols-2"
+                - permissions.each do |permission|
+                  label.flex.items-start.gap-3.cursor-pointer.p-2.rounded-lg class="hover:bg-slate-700/50 transition-colors"
+                    = check_box_tag "admin_roles_form[permission_ids][]", permission.id, form.permission_checked?(permission), class: "mt-0.5 h-4 w-4 rounded text-emerald-500 border-slate-600 bg-slate-700 focus:ring-emerald-500 focus:ring-offset-slate-800", data: { resource: resource, action: "change->permission-toggle#updateCount" }
+                    div
+                      span.text-sm.font-medium.text-slate-300 = permission.code.split(".").last.titleize
+                      - if permission.description.present?
+                        p.text-xs.text-slate-400.mt-0.5 = permission.description
+
+    aside.space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.summary')
+        
+        p.text-sm.text-slate-400.mb-4 = t('.summary_hint')
+
+        .space-y-3
+          .flex.justify-between.text-sm
+            span.text-slate-400 = t('.permissions_selected')
+            span.text-white.font-medium#permission-count = form.permission_ids.size
+
+      .flex.gap-3
+        = f.submit (form.new_role? ? t('.submit_create') : t('.submit_update')), class: "flex-1 px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25"
+        = link_to t('.cancel'), admin_roles_path, class: "px-4 py-2 rounded-lg font-medium text-slate-300 transition-colors hover:text-white hover:bg-slate-700"
+

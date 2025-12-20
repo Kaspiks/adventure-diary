@@ -1,0 +1,101 @@
+# Permission codes follow the pattern: resource.action
+# This makes it easy to group and check permissions
+
+# User management
+- code: users.index
+  description: View list of users
+
+- code: users.show
+  description: View user details
+
+- code: users.create
+  description: Create new users
+
+- code: users.update
+  description: Edit existing users
+
+- code: users.destroy
+  description: Delete users
+
+- code: users.block
+  description: Block/unblock users
+
+# Role management
+- code: roles.index
+  description: View list of roles
+
+- code: roles.show
+  description: View role details
+
+- code: roles.create
+  description: Create new roles
+
+- code: roles.update
+  description: Edit existing roles
+
+- code: roles.destroy
+  description: Delete roles
+
+# Challenge management
+- code: challenges.index
+  description: View list of challenges
+
+- code: challenges.show
+  description: View challenge details
+
+- code: challenges.create
+  description: Create new challenges
+
+- code: challenges.update
+  description: Edit existing challenges
+
+- code: challenges.destroy
+  description: Delete challenges
+
+- code: challenges.approve
+  description: Approve challenge submissions
+
+# Reward management
+- code: rewards.index
+  description: View list of rewards
+
+- code: rewards.show
+  description: View reward details
+
+- code: rewards.create
+  description: Create new rewards
+
+- code: rewards.update
+  description: Edit existing rewards
+
+- code: rewards.destroy
+  description: Delete rewards
+
+# Location management
+- code: locations.index
+  description: View list of locations
+
+- code: locations.show
+  description: View location details
+
+- code: locations.create
+  description: Create new locations
+
+- code: locations.update
+  description: Edit existing locations
+
+- code: locations.destroy
+  description: Delete locations
+
+# Dashboard access
+- code: dashboard.view
+  description: Access admin dashboard
+
+# Settings management
+- code: settings.view
+  description: View application settings
+
+- code: settings.update
+  description: Update application settings
+
+
