@@ -1,0 +1,76 @@
+- content_for(:title) { t('.title') }
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      h1.text-2xl.font-bold.text-white = t('.title')
+      p.text-slate-400.mt-1 = t('.subtitle', count: @presenter.total_count)
+
+  .flex.gap-2.border-b class="border-slate-700"
+    - @presenter.groups.each do |group|
+      = link_to admin_settings_path(group: group), class: "px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px #{@presenter.current_group == group ? 'text-white border-red-500' : 'text-slate-400 border-transparent hover:text-white hover:border-slate-500'}" do
+        span = t(".groups.#{group}")
+        span.ml-2.px-2.py-0.5.text-xs.rounded-full class="#{@presenter.current_group == group ? 'bg-red-500/20 text-red-200' : 'bg-slate-700 text-slate-400'}"
+          = @presenter.group_count(group)
+
+  .rounded-lg.border.overflow-hidden class="bg-slate-800 border-slate-700"
+    - if @presenter.current_group_settings.any?
+      .divide-y class="divide-slate-700"
+        - @presenter.current_group_settings.each do |setting|
+          - decorated = SettingDecorator.new(setting)
+          .p-4.flex.items-start.justify-between.gap-4 class="hover:bg-slate-700/30"
+            .flex-1.min-w-0
+              .flex.items-center.gap-3.mb-1
+                h3.font-medium.text-white = decorated.display_key
+                span.px-2.py-0.5.text-xs.rounded-full.border class=decorated.group_badge_class
+                  = decorated.type_label
+                - if setting.rich_text?
+                  span.px-2.py-0.5.text-xs.rounded-full.bg-pink-500/20.text-pink-200.border.border-pink-500/30
+                    | Rich Text
+              - if setting.description.present?
+                p.text-sm.text-slate-400.mb-2 = setting.description
+              .text-sm.text-slate-300
+                code.px-2.py-1.rounded.text-xs class="bg-slate-900" = setting.key
+              .mt-2.text-sm
+                - if setting.boolean?
+                  - if setting.typed_value
+                    span.inline-flex.items-center.gap-1.text-emerald-400
+                      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"
+                      | Enabled
+                  - else
+                    span.inline-flex.items-center.gap-1.text-slate-500
+                      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"
+                      | Disabled
+                - elsif setting.value.present?
+                  - if setting.rich_text?
+                    .inline-flex.items-center.gap-2 data-controller="popover"
+                      span.text-slate-300 = decorated.display_value
+                      button.inline-flex.items-center.justify-center.w-6.h-6.rounded.transition-colors.cursor-pointer type="button" data-action="click->popover#toggle" class="bg-slate-700 hover:bg-slate-600 text-slate-400 hover:text-white"
+                        svg.w-3.5.h-3.5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                          path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                          path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"
+                      .hidden.fixed.z-50.w-96.max-h-80.overflow-auto.rounded-lg.border-2.shadow-2xl data-popover-target="content" class="bg-slate-800 border-slate-500"
+                        .flex.items-center.justify-between.px-4.py-2.border-b class="bg-slate-700 border-slate-600"
+                          span.text-sm.font-medium.text-white Preview
+                          button.text-slate-400.transition-colors type="button" data-action="click->popover#close" class="hover:text-white"
+                            svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                              path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                        .p-4.prose.prose-sm.max-w-none class="prose-headings:text-white prose-p:text-slate-300 prose-strong:text-white"
+                          == setting.value
+                  - else
+                    span.text-slate-300 = decorated.display_value
+                - else
+                  span.text-slate-500.italic = t('.not_set')
+
+            .flex-shrink-0
+              = link_to edit_admin_setting_path(setting), class: "inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-700 text-white hover:bg-slate-600" do
+                svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z"
+                = t('.edit')
+    - else
+      .p-8.text-center
+        svg.w-12.h-12.mx-auto.text-slate-600.mb-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+          path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 00-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 00-1.85-1.567h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd"
+        p.text-slate-400 = t('.no_settings')

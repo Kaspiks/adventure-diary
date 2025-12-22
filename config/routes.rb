@@ -7,9 +7,13 @@ Rails.application.routes.draw do
     root "dashboard#index"
     resources :users
     resources :roles
+    resources :settings, only: [:index, :edit, :update] do
+      collection do
+        patch :bulk_update
+      end
+    end
     # resources :challenges
     # resources :rewards
-    # resources :settings, only: [:index, :update]
   end
 
   # Health check

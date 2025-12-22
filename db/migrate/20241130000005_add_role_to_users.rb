@@ -7,3 +7,7 @@ class AddRoleToUsers < ActiveRecord::Migration[8.0]
 end
 
 
+
+
+
+

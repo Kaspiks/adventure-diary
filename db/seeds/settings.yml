@@ -1,0 +1,116 @@
+# Application Settings
+# value_type: string, integer, boolean, text, rich_text
+# group: general, appearance, content, notifications
+
+# General Settings
+- key: site_name
+  value: "My Travel Diary"
+  value_type: string
+  group: general
+  description: "The name of the application displayed across the site"
+
+- key: site_description
+  value: "Discover adventures, complete challenges, and earn rewards while exploring the world."
+  value_type: text
+  group: general
+  description: "Brief description of the site for SEO and metadata"
+
+- key: admin_email
+  value: "admin@example.com"
+  value_type: string
+  group: general
+  description: "Primary admin email for notifications"
+
+- key: support_email
+  value: "support@example.com"
+  value_type: string
+  group: general
+  description: "Support email displayed to users"
+
+- key: default_locale
+  value: "en"
+  value_type: string
+  group: general
+  description: "Default language for the application"
+
+# Appearance Settings
+- key: primary_color
+  value: "#ef4444"
+  value_type: string
+  group: appearance
+  description: "Primary brand color (hex format)"
+
+- key: logo_url
+  value: ""
+  value_type: string
+  group: appearance
+  description: "URL to the site logo image"
+
+- key: favicon_url
+  value: ""
+  value_type: string
+  group: appearance
+  description: "URL to the site favicon"
+
+# Content Settings
+- key: welcome_title
+  value: "Welcome to My Travel Diary"
+  value_type: string
+  group: content
+  description: "Title displayed on the welcome screen"
+
+- key: welcome_message
+  value: "<h2>Start Your Adventure</h2><p>Explore amazing destinations, complete exciting challenges, and earn rewards for your travels!</p><ul><li>Discover new places</li><li>Complete location-based challenges</li><li>Earn points and redeem rewards</li><li>Share your journey with friends</li></ul>"
+  value_type: rich_text
+  group: content
+  description: "Welcome message shown to new users (supports HTML)"
+
+- key: terms_of_service
+  value: ""
+  value_type: rich_text
+  group: content
+  description: "Terms of Service content"
+
+- key: privacy_policy
+  value: ""
+  value_type: rich_text
+  group: content
+  description: "Privacy Policy content"
+
+- key: about_page
+  value: ""
+  value_type: rich_text
+  group: content
+  description: "About page content"
+
+# Notification Settings
+- key: email_notifications_enabled
+  value: "true"
+  value_type: boolean
+  group: notifications
+  description: "Enable or disable email notifications globally"
+
+- key: challenge_completion_notify
+  value: "true"
+  value_type: boolean
+  group: notifications
+  description: "Notify admins when challenges are completed"
+
+- key: new_user_notify
+  value: "true"
+  value_type: boolean
+  group: notifications
+  description: "Notify admins when new users register"
+
+- key: max_upload_size_mb
+  value: "10"
+  value_type: integer
+  group: general
+  description: "Maximum file upload size in megabytes"
+
+- key: points_per_challenge
+  value: "100"
+  value_type: integer
+  group: general
+  description: "Default points awarded for completing a challenge"
+

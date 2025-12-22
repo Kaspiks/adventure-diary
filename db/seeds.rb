@@ -12,6 +12,22 @@ if File.exist?(permissions_file)
   puts "  Created #{Permission.count} permissions"
 end
 
+puts "Seeding settings..."
+settings_file = Rails.root.join("db/seeds/settings.yml")
+if File.exist?(settings_file)
+  settings_data = YAML.load_file(settings_file)
+  settings_data.each do |setting_data|
+    Setting.find_or_create_by!(key: setting_data["key"]) do |s|
+      s.value = setting_data["value"]
+      s.value_type = setting_data["value_type"] || "string"
+      s.group = setting_data["group"] || "general"
+      s.description = setting_data["description"]
+      s.rich_text = setting_data["rich_text"] || false
+    end
+  end
+  puts "  Created #{Setting.count} settings"
+end
+
 puts "Seeding roles..."
 roles_file = Rails.root.join("db/seeds/roles.yml")
 if File.exist?(roles_file)

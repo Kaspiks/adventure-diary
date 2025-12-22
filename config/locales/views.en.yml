@@ -219,6 +219,32 @@ en:
         submit_create: "Create Role"
         submit_update: "Update Role"
         cancel: "Cancel"
+    settings:
+      index:
+        title: "Settings"
+        subtitle:
+          one: "%{count} setting"
+          other: "%{count} settings"
+        groups:
+          general: "General"
+          appearance: "Appearance"
+          content: "Content"
+          notifications: "Notifications"
+        edit: "Edit"
+        not_set: "(not set)"
+        no_settings: "No settings found"
+      edit:
+        title: "Edit Setting"
+        key: "Setting Key"
+        type: "Value Type"
+        value: "Value"
+        enabled: "Enabled"
+        cancel: "Cancel"
+        submit: "Save Setting"
+      update:
+        success: "Setting updated successfully."
+      bulk_update:
+        success: "Settings updated successfully."
   devise:
     sessions:
       new:
