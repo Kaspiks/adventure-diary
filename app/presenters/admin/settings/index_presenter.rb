@@ -7,7 +7,7 @@ module Admin
 
       def initialize(settings:, current_group: nil)
         @settings = settings
-        @current_group = current_group || Setting::GROUPS.first
+        @current_group = current_group || Setting.groups.keys.first
       end
 
       def grouped_settings
@@ -15,7 +15,7 @@ module Admin
       end
 
       def groups
-        Setting::GROUPS
+        Setting.groups.keys
       end
 
       def current_group_settings
@@ -32,8 +32,4 @@ module Admin
     end
   end
 end
-
-
-
-
 
