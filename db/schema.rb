@@ -10,7 +10,148 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_30_000007) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_25_182928) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "attempt_answers", force: :cascade do |t|
+    t.integer "challenge_attempt_id", null: false
+    t.string "field_id", limit: 255, null: false
+    t.text "answer_value"
+    t.json "answer_data", default: {}
+    t.boolean "is_correct"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_attempt_id", "field_id"], name: "idx_attempt_answers_unique", unique: true
+    t.index ["challenge_attempt_id"], name: "index_attempt_answers_on_challenge_attempt_id"
+  end
+
+  create_table "attempt_artifacts", force: :cascade do |t|
+    t.integer "challenge_attempt_id", null: false
+    t.string "kind", limit: 50, null: false
+    t.json "metadata", default: {}
+    t.string "field_id", limit: 255
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_attempt_id", "field_id"], name: "index_attempt_artifacts_on_challenge_attempt_id_and_field_id"
+    t.index ["challenge_attempt_id", "kind"], name: "index_attempt_artifacts_on_challenge_attempt_id_and_kind"
+    t.index ["challenge_attempt_id"], name: "index_attempt_artifacts_on_challenge_attempt_id"
+  end
+
+  create_table "attempt_statuses", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 100, null: false
+    t.boolean "is_final", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_attempt_statuses_on_code", unique: true
+  end
+
+  create_table "award_point_levels", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 100, null: false
+    t.integer "points", default: 0, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_award_point_levels_on_code", unique: true
+  end
+
+  create_table "challenge_attempts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "challenge_id", null: false
+    t.integer "attempt_status_id", null: false
+    t.integer "score_awarded"
+    t.string "evidence_url", limit: 500
+    t.datetime "started_at", null: false
+    t.datetime "submitted_at"
+    t.datetime "reviewed_at"
+    t.integer "reviewer_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attempt_status_id"], name: "index_challenge_attempts_on_attempt_status_id"
+    t.index ["challenge_id"], name: "index_challenge_attempts_on_challenge_id"
+    t.index ["reviewer_user_id"], name: "index_challenge_attempts_on_reviewer_user_id"
+    t.index ["user_id", "challenge_id"], name: "index_challenge_attempts_on_user_id_and_challenge_id"
+    t.index ["user_id"], name: "index_challenge_attempts_on_user_id"
+  end
+
+  create_table "challenge_types", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 100, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_challenge_types_on_code", unique: true
+  end
+
+  create_table "challenges", force: :cascade do |t|
+    t.integer "creator_user_id", null: false
+    t.integer "location_id"
+    t.integer "challenge_type_id", null: false
+    t.integer "difficulty_level_id", null: false
+    t.integer "award_point_level_id", null: false
+    t.string "title", limit: 255, null: false
+    t.text "description"
+    t.boolean "is_active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.json "fields_config", default: [], null: false
+    t.index ["award_point_level_id"], name: "index_challenges_on_award_point_level_id"
+    t.index ["challenge_type_id"], name: "index_challenges_on_challenge_type_id"
+    t.index ["creator_user_id"], name: "index_challenges_on_creator_user_id"
+    t.index ["difficulty_level_id"], name: "index_challenges_on_difficulty_level_id"
+    t.index ["is_active"], name: "index_challenges_on_is_active"
+    t.index ["location_id"], name: "index_challenges_on_location_id"
+    t.index ["title"], name: "index_challenges_on_title"
+  end
+
+  create_table "difficulty_levels", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 100, null: false
+    t.text "description"
+    t.integer "sort_order", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_difficulty_levels_on_code", unique: true
+    t.index ["sort_order"], name: "index_difficulty_levels_on_sort_order"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.decimal "latitude", precision: 10, scale: 7
+    t.decimal "longitude", precision: 10, scale: 7
+    t.integer "radius_meters"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_locations_on_name"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "code", limit: 100, null: false
     t.text "description"
@@ -25,6 +166,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_30_000007) do
     t.index ["permission_id", "role_id"], name: "index_permissions_roles_on_permission_id_and_role_id", unique: true
     t.index ["permission_id"], name: "index_permissions_roles_on_permission_id"
     t.index ["role_id"], name: "index_permissions_roles_on_role_id"
+  end
+
+  create_table "points_history", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "delta_points", null: false
+    t.string "reason_code", limit: 50, null: false
+    t.integer "challenge_id"
+    t.integer "order_id"
+    t.datetime "created_at", null: false
+    t.index ["challenge_id"], name: "index_points_history_on_challenge_id"
+    t.index ["created_at"], name: "index_points_history_on_created_at"
+    t.index ["reason_code"], name: "index_points_history_on_reason_code"
+    t.index ["user_id"], name: "index_points_history_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -69,13 +223,29 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_30_000007) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role_id"
+    t.integer "reward_points", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attempt_answers", "challenge_attempts"
+  add_foreign_key "attempt_artifacts", "challenge_attempts"
+  add_foreign_key "challenge_attempts", "attempt_statuses"
+  add_foreign_key "challenge_attempts", "challenges"
+  add_foreign_key "challenge_attempts", "users"
+  add_foreign_key "challenge_attempts", "users", column: "reviewer_user_id"
+  add_foreign_key "challenges", "award_point_levels"
+  add_foreign_key "challenges", "challenge_types"
+  add_foreign_key "challenges", "difficulty_levels"
+  add_foreign_key "challenges", "locations"
+  add_foreign_key "challenges", "users", column: "creator_user_id"
   add_foreign_key "permissions_roles", "permissions"
   add_foreign_key "permissions_roles", "roles"
+  add_foreign_key "points_history", "challenges"
+  add_foreign_key "points_history", "users"
   add_foreign_key "users", "roles"
 end

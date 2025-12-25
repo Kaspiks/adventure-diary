@@ -1,0 +1,19 @@
+- code: easy
+  name: Easy
+  description: Suitable for beginners
+  sort_order: 1
+
+- code: medium
+  name: Medium
+  description: Requires some experience
+  sort_order: 2
+
+- code: hard
+  name: Hard
+  description: Challenging for experienced travelers
+  sort_order: 3
+
+- code: expert
+  name: Expert
+  description: Only for the most dedicated adventurers
+  sort_order: 4

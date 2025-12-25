@@ -1,0 +1,132 @@
+- content_for :title, @presenter.decorated_challenge.title
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_challenges_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = @presenter.decorated_challenge.title
+
+    .flex.gap-2
+      = link_to attempts_admin_challenge_path(@presenter.decorated_challenge), class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-amber-600 hover:bg-amber-500" do
+        svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"
+        = t('.view_attempts')
+        - if @presenter.pending_attempts_count > 0
+          span.ml-1.px-2.py-0.5.text-xs.rounded-full.bg-amber-700 = @presenter.pending_attempts_count
+
+      = link_to edit_admin_challenge_path(@presenter.decorated_challenge), class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-slate-700 hover:bg-slate-600" do
+        svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+        = t('.edit')
+
+      = link_to admin_challenge_path(@presenter.decorated_challenge), method: :delete, data: { turbo_method: :delete, turbo_confirm: t('.confirm_delete') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-400 transition-all duration-200 bg-slate-700 hover:bg-red-600 hover:text-white" do
+        svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.519.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5z" clip-rule="evenodd"
+        = t('.delete')
+
+  .grid.grid-cols-1.lg:grid-cols-3.gap-6
+    .lg:col-span-2.space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.details')
+        .space-y-4
+          .grid.grid-cols-2.gap-4
+            div
+              .text-sm.text-slate-400 = t('.fields.type')
+              .text-white = @presenter.decorated_challenge.type_name
+            div
+              .text-sm.text-slate-400 = t('.fields.difficulty')
+              .text-white = @presenter.decorated_challenge.difficulty_name
+            div
+              .text-sm.text-slate-400 = t('.fields.points')
+              .text-white = @presenter.decorated_challenge.points_display
+            div
+              .text-sm.text-slate-400 = t('.fields.location')
+              .text-white = @presenter.decorated_challenge.location_name
+            div
+              .text-sm.text-slate-400 = t('.fields.status')
+              span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_challenge.status_color}-500/20 text-#{@presenter.decorated_challenge.status_color}-300"
+                = @presenter.decorated_challenge.status_badge
+            div
+              .text-sm.text-slate-400 = t('.fields.creator')
+              .text-white = @presenter.decorated_challenge.creator_name
+
+      - if @presenter.decorated_challenge.description.present?
+        .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+          h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.description')
+          .text-slate-300.whitespace-pre-wrap = @presenter.decorated_challenge.description
+
+      - if @presenter.decorated_challenge.object.has_fields?
+        .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+          h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.fields')
+          .space-y-4
+            - @presenter.decorated_challenge.object.fields.each_with_index do |field, index|
+              .rounded-lg.border.p-4 class="bg-slate-700/50 border-slate-600"
+                .flex.items-start.justify-between.mb-2
+                  h3.text-md.font-medium.text-white = field.label
+                  span.text-xs.text-slate-400 = "#{field.points} pts"
+                
+                - if field.instructions.present?
+                  p.text-sm.text-slate-300.mb-2 = field.instructions
+                
+                .text-xs.text-slate-400.mb-2
+                  = "Type: #{ChallengeFields.config_for(field.type.to_sym)&.dig(:name) || field.type.to_s.humanize}"
+                  - if field.required
+                    span.ml-2.text-amber-400 = "(Required)"
+                
+                - case field.type.to_s
+                - when "text_input"
+                  .text-sm.text-slate-300
+                    strong Correct Answer: 
+                    = field.correct_answer
+                
+                - when "single_choice"
+                  .text-sm.text-slate-300.mb-2
+                    strong Options: 
+                    = field.options.join(", ")
+                  .text-sm.text-slate-300
+                    strong Correct Answer: 
+                    = field.correct_answer
+                
+                - when "multiple_choice"
+                  .text-sm.text-slate-300.mb-2
+                    strong Options: 
+                    = field.options.join(", ")
+                  .text-sm.text-slate-300
+                    strong Correct Answers: 
+                    = field.correct_answers.join(", ")
+                
+                - when "hidden_letter"
+                  - if field.image_url.present?
+                    img.mb-2.rounded-lg.max-w-md src=field.image_url alt=field.display_text class="border border-slate-600"
+                  - if field.display_text.present?
+                    .text-sm.text-slate-300.mb-2 = field.display_text
+                  .text-sm.text-slate-300
+                    strong Expected Answer: 
+                    = field.correct_answer
+                    - if field.hint.present?
+                      .text-xs.text-slate-400.mt-1 = "Hint: #{field.hint}"
+                  .text-xs.text-slate-400.mt-1
+                    = "Blanks: #{field.number_of_blanks}, Case Sensitive: #{field.case_sensitive ? 'Yes' : 'No'}"
+                
+                - when "photo_upload"
+                  .text-sm.text-slate-300
+                    strong Max Photos: 
+                    = field.max_photos
+                    - if field.require_caption
+                      span.ml-2.text-amber-400 = "(Requires Caption)"
+
+    .space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.stats')
+        .space-y-4
+          .flex.justify-between
+            .text-slate-400 = t('.stats.total_attempts')
+            .text-white.font-medium = @presenter.attempts_count
+          .flex.justify-between
+            .text-slate-400 = t('.stats.pending_review')
+            .text-amber-400.font-medium = @presenter.pending_attempts_count
+
+

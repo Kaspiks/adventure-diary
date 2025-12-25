@@ -103,7 +103,7 @@
         .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
           h2.text-lg.font-semibold.text-white.mb-4 = @presenter.section_titles[:quick_actions]
           .space-y-3
-            a.flex.items-center.gap-3.p-3.rounded-xl.transition-all class="hover:bg-white/5 group" href="#"
+            = link_to challenges_path, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
               .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-emerald-500/20"
                 svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                   path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"

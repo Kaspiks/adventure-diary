@@ -44,6 +44,13 @@
             dt.text-slate-400 = t('.fields.email')
             dd.font-medium.text-white = @presenter.decorated_user.email
 
+          .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
+            dt.text-slate-400 = t('.fields.reward_points')
+            dd.font-medium.text-white
+              icon_sm('award', class: 'w-4 h-4 text-green-300')
+              span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-green-500/20 text-green-300"
+                = @presenter.decorated_user.reward_points
+
           - if @presenter.show_admin_info?
             .flex.items-center.justify-between.py-3.border-b class="border-slate-700"
               dt.text-slate-400 = t('.fields.status')

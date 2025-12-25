@@ -1,0 +1,105 @@
+- content_for :title, t('.title')
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_attempts_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = t('.title')
+
+    - unless @presenter.decorated_attempt.final?
+      .flex.gap-2
+        = link_to approve_admin_attempt_path(@presenter.decorated_attempt), method: :post, data: { turbo_method: :post, turbo_confirm: t('.confirm_approve') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-emerald-600 hover:bg-emerald-500" do
+          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+          = t('.approve')
+
+        = link_to reject_admin_attempt_path(@presenter.decorated_attempt), method: :post, data: { turbo_method: :post, turbo_confirm: t('.confirm_reject') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-red-600 hover:bg-red-500" do
+          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+          = t('.reject')
+
+  .grid.grid-cols-1.lg:grid-cols-2.gap-6
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.attempt_info')
+      .space-y-4
+        .grid.grid-cols-2.gap-4
+          div
+            .text-sm.text-slate-400 = t('.fields.user')
+            .text-white = @presenter.decorated_attempt.user_name
+          div
+            .text-sm.text-slate-400 = t('.fields.challenge')
+            = link_to @presenter.decorated_attempt.challenge_title, admin_challenge_path(@presenter.decorated_attempt.challenge), class: "text-emerald-400 hover:text-emerald-300"
+          div
+            .text-sm.text-slate-400 = t('.fields.status')
+            span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_attempt.status_color}-500/20 text-#{@presenter.decorated_attempt.status_color}-300"
+              = @presenter.decorated_attempt.status_name
+          div
+            .text-sm.text-slate-400 = t('.fields.points_awarded')
+            .text-white = @presenter.decorated_attempt.points_display
+
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.timeline')
+      .space-y-4
+        div
+          .text-sm.text-slate-400 = t('.fields.started_at')
+          .text-white = @presenter.decorated_attempt.started_at_formatted
+        div
+          .text-sm.text-slate-400 = t('.fields.submitted_at')
+          .text-white = @presenter.decorated_attempt.submitted_at_formatted || "-"
+        div
+          .text-sm.text-slate-400 = t('.fields.reviewed_at')
+          .text-white = @presenter.decorated_attempt.reviewed_at_formatted || "-"
+        - if @presenter.decorated_attempt.reviewer_user
+          div
+            .text-sm.text-slate-400 = t('.fields.reviewer')
+            .text-white = @presenter.decorated_attempt.reviewer_name
+
+  - if @presenter.decorated_attempt.evidence_url.present?
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.evidence')
+      = link_to @presenter.decorated_attempt.evidence_url, @presenter.decorated_attempt.evidence_url, target: "_blank", class: "text-emerald-400 hover:text-emerald-300 break-all"
+
+  / Display submitted answers
+  - if @presenter.decorated_attempt.object.challenge.has_fields?
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.answers')
+      .space-y-3
+        - @presenter.decorated_attempt.object.response_results.each do |result|
+          .rounded-lg.p-4 class="#{result[:is_correct] ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-slate-700/50'}"
+            .flex.items-start.justify-between
+              div
+                .text-sm.font-medium.text-slate-400 = result[:label]
+                .text-white.mt-1 = result[:response].presence || "(no answer)"
+              .text-right
+                - if result[:is_correct]
+                  span.inline-flex.items-center.gap-1.text-emerald-400.text-sm
+                    svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                      path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+                    | #{result[:points_earned]}/#{result[:max_points]} pts
+                - else
+                  span.inline-flex.items-center.gap-1.text-red-400.text-sm
+                    svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                      path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                    | 0/#{result[:max_points]} pts
+
+  / Display uploaded photos
+  - photos = @presenter.decorated_attempt.object.photos
+  - if photos.any?
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.photos')
+      .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-4
+        - photos.each do |artifact|
+          - if artifact.file.attached?
+            .rounded-lg.overflow-hidden.border.group.relative class="border-slate-600"
+              = image_tag artifact.file, class: "w-full h-40 object-cover"
+              - if artifact.field_id.present?
+                .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
+                  - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id }
+                  - if field
+                    .text-xs.text-white.truncate = field.label
+
+
+

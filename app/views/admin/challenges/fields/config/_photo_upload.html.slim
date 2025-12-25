@@ -1,0 +1,10 @@
+.grid.grid-cols-2.gap-4.mt-4
+  .space-y-2
+    = label_tag "admin_challenges_form[fields_config][#{index}][max_photos]", t('.max_photos'), class: "block text-sm font-medium text-slate-300"
+    = number_field_tag "admin_challenges_form[fields_config][#{index}][max_photos]", field.max_photos, min: 1, class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+
+  .flex.items-center.gap-4.mt-6
+    = check_box_tag "admin_challenges_form[fields_config][#{index}][require_caption]", "1", field.require_caption, class: "w-5 h-5 rounded text-emerald-500 bg-slate-700 border-slate-600"
+    = label_tag "admin_challenges_form[fields_config][#{index}][require_caption]", t('.require_caption'), class: "text-sm font-medium text-slate-300"
+
+

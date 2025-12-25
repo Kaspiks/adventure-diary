@@ -1,7 +1,5 @@
-# Default roles with their permissions
-
-- name: Admin
-  description: Full system access
+- name: administrator
+  description: Full system access - can manage all challenges and attempts
   permissions:
     - users.index
     - users.show
@@ -19,7 +17,11 @@
     - challenges.create
     - challenges.update
     - challenges.destroy
-    - challenges.approve
+    - challenges.review
+    - attempts.index
+    - attempts.show
+    - attempts.approve
+    - attempts.reject
     - rewards.index
     - rewards.show
     - rewards.create
@@ -33,26 +35,28 @@
     - dashboard.view
     - settings.view
     - settings.update
-- name: Moderator
-  description: Content moderation and user support
+
+- name: company_user
+  description: Can create challenges and review attempts for their own challenges
   permissions:
-    - users.index
-    - users.show
-    - users.block
     - challenges.index
     - challenges.show
-    - challenges.approve
-    - rewards.index
-    - rewards.show
-    - locations.index
-    - locations.show
+    - challenges.create
+    - challenges.update_own
+    - challenges.destroy_own
+    - challenges.review_own
+    - attempts.index_own
+    - attempts.show_own
+    - attempts.approve_own
+    - attempts.reject_own
     - dashboard.view
-- name: Traveler
-  description: Regular users who complete challenges
-  permissions: []
 
-
-
-
-
-
+- name: general_user
+  description: Regular users who browse and complete challenges
+  permissions:
+    - challenges.index
+    - challenges.show
+    - attempts.start
+    - attempts.submit_own
+    - attempts.index_own
+    - attempts.show_own

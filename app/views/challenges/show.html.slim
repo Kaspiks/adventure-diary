@@ -1,0 +1,58 @@
+- content_for :title, @presenter.decorated_challenge.title
+
+.min-h-screen.bg-slate-900.py-8
+  .max-w-4xl.mx-auto.px-4
+    = link_to challenges_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
+      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      = t('.back')
+
+    .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+      .p-8
+        .flex.items-start.justify-between.mb-6
+          div
+            .flex.items-center.gap-3.mb-2
+              span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-#{@presenter.decorated_challenge.status_color}-500/20 text-#{@presenter.decorated_challenge.status_color}-300"
+                = @presenter.decorated_challenge.type_name
+              span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-700 text-slate-300"
+                = @presenter.decorated_challenge.difficulty_name
+            h1.text-3xl.font-bold.text-white = @presenter.decorated_challenge.title
+          .text-right
+            .text-3xl.font-bold.text-emerald-400 = @presenter.decorated_challenge.points_display
+            .text-sm.text-slate-400 = t('.reward')
+
+        .grid.grid-cols-2.gap-4.mb-6
+          .flex.items-center.gap-2.text-slate-300
+            svg.w-5.h-5.text-slate-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+            = @presenter.decorated_challenge.location_name
+          .flex.items-center.gap-2.text-slate-300
+            svg.w-5.h-5.text-slate-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"
+            = t('.created_by', name: @presenter.decorated_challenge.creator_name)
+
+        - if @presenter.decorated_challenge.description.present?
+          .mb-8
+            h2.text-lg.font-semibold.text-white.mb-3 = t('.description')
+            .text-slate-300.whitespace-pre-wrap = @presenter.decorated_challenge.description
+
+        .border-t.pt-6 class="border-slate-700"
+          - if @presenter.can_start?
+            = link_to start_challenge_path(@presenter.decorated_challenge), method: :post, data: { turbo_method: :post }, class: "block w-full text-center px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all" do
+              = t('.start_challenge')
+          - elsif @presenter.has_active_attempt?
+            .text-center
+              .text-amber-400.mb-2 = t('.already_started')
+              = link_to t('.view_my_attempt'), my_attempts_path, class: "text-emerald-400 hover:text-emerald-300"
+          - elsif @presenter.user_attempt&.approved?
+            .text-center
+              .text-emerald-400.font-medium = t('.completed')
+              .text-sm.text-slate-400 = t('.earned_points', points: @presenter.user_attempt.score_awarded)
+          - elsif @presenter.user_attempt&.rejected?
+            .text-center
+              .text-red-400.mb-2 = t('.rejected')
+              = link_to start_challenge_path(@presenter.decorated_challenge), method: :post, data: { turbo_method: :post }, class: "inline-block px-6 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all" do
+                = t('.try_again')
+
+
+

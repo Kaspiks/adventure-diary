@@ -1,7 +1,3 @@
-# Permission codes follow the pattern: resource.action
-# This makes it easy to group and check permissions
-
-# User management
 - code: users.index
   description: View list of users
 
@@ -20,7 +16,6 @@
 - code: users.block
   description: Block/unblock users
 
-# Role management
 - code: roles.index
   description: View list of roles
 
@@ -36,7 +31,6 @@
 - code: roles.destroy
   description: Delete roles
 
-# Challenge management
 - code: challenges.index
   description: View list of challenges
 
@@ -47,15 +41,53 @@
   description: Create new challenges
 
 - code: challenges.update
-  description: Edit existing challenges
+  description: Edit any challenge (admin only)
 
 - code: challenges.destroy
-  description: Delete challenges
+  description: Delete any challenge (admin only)
 
-- code: challenges.approve
-  description: Approve challenge submissions
+- code: challenges.update_own
+  description: Edit own challenges (company_user)
 
-# Reward management
+- code: challenges.destroy_own
+  description: Delete own challenges (company_user)
+
+- code: challenges.review
+  description: Review any challenge attempts (admin only)
+
+- code: challenges.review_own
+  description: Review attempts for own challenges (company_user)
+
+- code: attempts.index
+  description: View all attempts (admin only)
+
+- code: attempts.show
+  description: View any attempt details
+
+- code: attempts.start
+  description: Start a challenge attempt
+
+- code: attempts.submit_own
+  description: Submit evidence for own attempts
+
+- code: attempts.index_own
+  description: View own attempts
+
+- code: attempts.show_own
+  description: View own attempt details
+
+- code: attempts.approve
+  description: Approve any attempt (admin only)
+
+- code: attempts.reject
+  description: Reject any attempt (admin only)
+
+- code: attempts.approve_own
+  description: Approve attempts for own challenges (company_user)
+
+- code: attempts.reject_own
+  description: Reject attempts for own challenges (company_user)
+
 - code: rewards.index
   description: View list of rewards
 
@@ -71,7 +103,6 @@
 - code: rewards.destroy
   description: Delete rewards
 
-# Location management
 - code: locations.index
   description: View list of locations
 
@@ -87,19 +118,11 @@
 - code: locations.destroy
   description: Delete locations
 
-# Dashboard access
 - code: dashboard.view
   description: Access admin dashboard
 
-# Settings management
 - code: settings.view
   description: View application settings
 
 - code: settings.update
   description: Update application settings
-
-
-
-
-
-

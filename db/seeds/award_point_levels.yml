@@ -1,0 +1,24 @@
+- code: bronze
+  name: Bronze
+  points: 10
+  description: Basic reward tier
+
+- code: silver
+  name: Silver
+  points: 25
+  description: Standard reward tier
+
+- code: gold
+  name: Gold
+  points: 50
+  description: Premium reward tier
+
+- code: platinum
+  name: Platinum
+  points: 100
+  description: Elite reward tier
+
+- code: diamond
+  name: Diamond
+  points: 250
+  description: Legendary reward tier

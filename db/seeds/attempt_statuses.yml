@@ -1,0 +1,15 @@
+- code: started
+  name: Started
+  is_final: false
+
+- code: submitted
+  name: Submitted
+  is_final: false
+
+- code: approved
+  name: Approved
+  is_final: true
+
+- code: rejected
+  name: Rejected
+  is_final: true

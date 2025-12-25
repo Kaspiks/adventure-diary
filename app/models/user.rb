@@ -5,6 +5,11 @@ class User < ApplicationRecord
 
   belongs_to :role, optional: true
 
+  has_many :created_challenges, class_name: "Challenge", foreign_key: :creator_user_id, dependent: :restrict_with_error, inverse_of: :creator_user
+  has_many :challenge_attempts, dependent: :destroy
+  has_many :reviewed_attempts, class_name: "ChallengeAttempt", foreign_key: :reviewer_user_id, dependent: :nullify, inverse_of: :reviewer_user
+  has_many :points_history, dependent: :destroy
+
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
   validates :email, presence: true, uniqueness: { case_sensitive: false }
@@ -48,6 +53,37 @@ class User < ApplicationRecord
   def role_name
     role&.name || "No Role"
   end
+
+  def administrator?
+    admin? || role&.name == "administrator"
+  end
+
+  def company_user?
+    role&.name == "company_user"
+  end
+
+  def general_user?
+    role&.name == "general_user"
+  end
+
+  def can_create_challenges?
+    administrator? || company_user?
+  end
+
+  def can_review_attempts?
+    administrator? || company_user?
+  end
+
+  def add_points!(points, reason_code:, challenge: nil)
+    transaction do
+      increment!(:reward_points, points)
+      points_history.create!(
+        delta_points: points,
+        reason_code: reason_code,
+        challenge: challenge
+      )
+    end
+  end
 end
 
 # == Schema Information
@@ -70,6 +106,7 @@ end
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  reward_points          :integer          default(0), not null
 #  session_token          :string(20)
 #  sign_in_count          :integer          default(0), not null
 #  unlock_token           :string

@@ -245,6 +245,135 @@ en:
         success: "Setting updated successfully."
       bulk_update:
         success: "Settings updated successfully."
+    challenges:
+      index:
+        title: "Challenges"
+        subtitle:
+          one: "%{count} challenge"
+          other: "%{count} challenges"
+        new_challenge: "New Challenge"
+      create:
+        success: "Challenge created successfully."
+      update:
+        success: "Challenge updated successfully."
+      destroy:
+        success: "Challenge deleted successfully."
+      search:
+        title_placeholder: "Search by title..."
+        search: "Search"
+        clear: "Clear"
+      list:
+        headers:
+          title: "Title"
+          type: "Type"
+          difficulty: "Difficulty"
+          points: "Points"
+          status: "Status"
+          attempts: "Attempts"
+          actions: "Actions"
+        no_challenges: "No challenges found"
+        add_first: "Add the first challenge"
+        confirm_delete: "Are you sure you want to delete this challenge?"
+        actions:
+          view: "View"
+          edit: "Edit"
+          delete: "Delete"
+      show:
+        back: "Back to Challenges"
+        edit: "Edit"
+        delete: "Delete"
+        view_attempts: "View Attempts"
+        confirm_delete: "Are you sure you want to delete this challenge?"
+        sections:
+          details: "Challenge Details"
+          description: "Description"
+          stats: "Statistics"
+        fields:
+          type: "Type"
+          difficulty: "Difficulty"
+          points: "Points"
+          location: "Location"
+          status: "Status"
+          creator: "Created By"
+        stats:
+          total_attempts: "Total Attempts"
+          pending_review: "Pending Review"
+      new:
+        title: "New Challenge"
+        back: "Back to Challenges"
+      edit:
+        title: "Edit Challenge"
+        back: "Back to Challenge"
+      form:
+        sections:
+          basic_info: "Basic Information"
+          settings: "Challenge Settings"
+          status: "Status"
+          fields: "Challenge Fields"
+        fields_description: "Configure the challenge fields based on the challenge type. Add questions, photo uploads, or exploration puzzles."
+        add_field: "Add Field"
+        select_field_type: "Select a field type..."
+        is_active: "Challenge is active"
+        submit_create: "Create Challenge"
+        submit_update: "Update Challenge"
+        cancel: "Cancel"
+      attempts:
+        title: "Attempts for %{challenge}"
+        subtitle:
+          one: "%{count} attempt"
+          other: "%{count} attempts"
+        back: "Back to Challenge"
+        headers:
+          user: "User"
+          status: "Status"
+          started: "Started"
+          submitted: "Submitted"
+          points: "Points"
+          actions: "Actions"
+        no_attempts: "No attempts yet"
+    attempts:
+      index:
+        back: "Back to Challenges"
+        title: "All Attempts"
+        subtitle:
+          one: "%{count} attempt"
+          other: "%{count} attempts"
+        headers:
+          user: "User"
+          challenge: "Challenge"
+          status: "Status"
+          started: "Started"
+          points: "Points"
+          actions: "Actions"
+        no_attempts: "No attempts found"
+      show:
+        title: "Attempt Details"
+        back: "Back to Attempts"
+        approve: "Approve"
+        reject: "Reject"
+        confirm_approve: "Are you sure you want to approve this attempt?"
+        confirm_reject: "Are you sure you want to reject this attempt?"
+        sections:
+          attempt_info: "Attempt Information"
+          timeline: "Timeline"
+          evidence: "Evidence"
+          answers: "Submitted Answers"
+          photos: "Uploaded Photos"
+        fields:
+          user: "User"
+          challenge: "Challenge"
+          status: "Status"
+          points_awarded: "Points Awarded"
+          started_at: "Started"
+          submitted_at: "Submitted"
+          reviewed_at: "Reviewed"
+          reviewer: "Reviewed By"
+      approve:
+        success: "Attempt approved successfully."
+        already_final: "This attempt has already been reviewed."
+      reject:
+        success: "Attempt rejected successfully."
+        already_final: "This attempt has already been reviewed."
   devise:
     sessions:
       new:
@@ -306,6 +435,73 @@ en:
         password_placeholder: "••••••••"
         password_hint: "(%{min_length} characters minimum)"
         submit: "Update Password"
+  challenges:
+    index:
+      title: "Challenges"
+      subtitle:
+        one: "%{count} challenge available"
+        other: "%{count} challenges available"
+      view_details: "View Details"
+      no_challenges: "No challenges available at the moment"
+    show:
+      back: "Back to Challenges"
+      reward: "Reward"
+      description: "Description"
+      created_by: "Created by %{name}"
+      start_challenge: "Start Challenge"
+      already_started: "You have already started this challenge"
+      view_my_attempt: "View My Attempt"
+      completed: "Challenge Completed!"
+      earned_points: "You earned %{points} points"
+      rejected: "Your previous attempt was rejected"
+      try_again: "Try Again"
+    start:
+      success: "Challenge started! Good luck!"
+      already_started: "You already have an active attempt for this challenge"
+      failure: "Could not start the challenge"
+  attempts:
+    index:
+      title: "My Attempts"
+      subtitle:
+        one: "%{count} attempt"
+        other: "%{count} attempts"
+      started: "Started %{date}"
+      view_details: "View Details"
+      no_attempts: "You haven't started any challenges yet"
+      browse_challenges: "Browse Challenges"
+    show:
+      title: "Attempt Details"
+      back: "Back to My Attempts"
+      points_earned: "points earned"
+      fields:
+        started: "Started"
+        submitted: "Submitted"
+        reviewed: "Reviewed"
+        reviewer: "Reviewed By"
+        evidence: "Evidence"
+      submit_evidence: "Submit Evidence"
+      evidence_url: "Evidence URL"
+      evidence_placeholder: "https://example.com/your-photo.jpg"
+      submit_button: "Submit for Review"
+      review_attempt: "Review This Attempt"
+      submitted_answers: "Submitted Answers"
+      uploaded_photos: "Uploaded Photos"
+      no_answer: "(no answer)"
+      approve: "Approve"
+      reject: "Reject"
+      confirm_approve: "Are you sure you want to approve this attempt?"
+      confirm_reject: "Are you sure you want to reject this attempt?"
+      hidden_letter_placeholder: "Enter %{count} letter(s)"
+      photo_caption_placeholder: "Add a caption (optional)"
+      photo_count_hint: "Minimum %{required}, maximum %{max} photos"
+    submit:
+      success: "Evidence submitted successfully!"
+    approve:
+      success: "Attempt approved successfully."
+      already_final: "This attempt has already been reviewed."
+    reject:
+      success: "Attempt rejected successfully."
+      already_final: "This attempt has already been reviewed."
   profiles:
     show:
       title: "My Profile"

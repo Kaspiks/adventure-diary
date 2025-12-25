@@ -11,13 +11,18 @@ module IconHelper
   end
 
   def icon(name, types: [], width: 24, height: 24, color: nil, **options)
-    use_tag = tag.use(nil, href: "##{name}")
+    # Feather icons use kebab-case, ensure name is properly formatted
+    icon_name = name.to_s.downcase.gsub('_', '-')
+    use_tag = tag.use(nil, href: "##{icon_name}")
     svg_classes = ["icon"] + types.map { |type| "icon--#{type}" }
     svg_classes += Array(options.delete(:class)) if options[:class]
 
+    # Feather icons always have a 24x24 viewBox regardless of display size
     tag.svg(
       use_tag,
-      viewBox: "0 0 #{width} #{height}",
+      viewBox: "0 0 24 24",
+      width: width,
+      height: height,
       class: svg_classes,
       style: color ? "color: #{color}" : nil,
       **options

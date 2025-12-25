@@ -1,0 +1,13 @@
+= simple_form_for search_form, url: admin_challenges_path, method: :get, html: { class: "flex flex-wrap gap-4" } do |f|
+  .flex-1.min-w-48
+    = f.input :title, label: false, placeholder: t('.title_placeholder'), input_html: { class: "w-full px-3 py-2 rounded-lg text-sm text-white placeholder-slate-400 bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" }
+
+  .w-40
+    = f.input :is_active, collection: [["All", ""], ["Active", "true"], ["Inactive", "false"]], label: false, include_blank: false, input_html: { class: "w-full px-3 py-2 rounded-lg text-sm text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" }
+
+  .flex.gap-2
+    = f.submit t('.search'), class: "px-4 py-2 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-colors cursor-pointer"
+    = link_to t('.clear'), admin_challenges_path, class: "px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+
+
+

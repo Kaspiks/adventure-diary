@@ -1,0 +1,47 @@
+- content_for :title, t('.title', challenge: @presenter.decorated_challenge.title)
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_challenge_path(@presenter.decorated_challenge), class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = t('.title', challenge: @presenter.decorated_challenge.title)
+      p.text-slate-400.mt-1 = t('.subtitle', count: @presenter.total_count)
+
+  .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+    - if @presenter.decorated_attempts.any?
+      .overflow-x-auto
+        table.w-full
+          thead
+            tr.text-left.text-xs.font-medium.text-slate-400.uppercase.tracking-wider
+              th.px-6.py-3 = t('.headers.user')
+              th.px-6.py-3 = t('.headers.status')
+              th.px-6.py-3 = t('.headers.started')
+              th.px-6.py-3 = t('.headers.submitted')
+              th.px-6.py-3 = t('.headers.points')
+              th.px-6.py-3.text-right = t('.headers.actions')
+          tbody.divide-y class="divide-slate-700"
+            - @presenter.decorated_attempts.each do |attempt|
+              tr.transition-colors class="hover:bg-slate-700/50"
+                td.px-6.py-4
+                  .font-medium.text-white = attempt.user_name
+                td.px-6.py-4
+                  span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{attempt.status_color}-500/20 text-#{attempt.status_color}-300"
+                    = attempt.status_name
+                td.px-6.py-4.text-sm.text-slate-300 = attempt.started_at_formatted
+                td.px-6.py-4.text-sm.text-slate-300 = attempt.submitted_at_formatted || "-"
+                td.px-6.py-4.text-sm.text-slate-300 = attempt.points_display
+                td.px-6.py-4.text-right
+                  .flex.items-center.justify-end.gap-2
+                    = link_to admin_attempt_path(attempt), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" do
+                      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                        path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"
+    - else
+      .p-12.text-center
+        .text-slate-400 = t('.no_attempts')
+
+
+
