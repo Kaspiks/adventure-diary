@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Logs
+log/*
+*.log
+
+# Temp files
+tmp/*
+!tmp/.keep
+
+# Storage (development data)
+storage/*.sqlite3
+
+# IDE / Editor
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Test artifacts
+coverage/
+spec/examples.txt
+
+# Node modules (icons folder)
+icons/node_modules
+
+# Documentation
+*.md
+!README.md
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+
