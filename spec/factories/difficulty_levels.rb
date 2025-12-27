@@ -18,12 +18,5 @@ FactoryBot.define do
       name { "Medium" }
       sort_order { 2 }
     end
-
-    trait :hard do
-      code { "hard" }
-      name { "Hard" }
-      sort_order { 3 }
-    end
   end
 end
-

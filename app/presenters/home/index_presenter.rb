@@ -10,7 +10,7 @@ module Home
     end
 
     def user_first_name
-      current_user.first_name.presence || current_user.email.split('@').first
+      current_user.first_name.presence || current_user.email.split("@").first
     end
 
     def user_initials
@@ -18,79 +18,101 @@ module Home
     end
 
     def admin?
-      current_user.admin?
+      current_user.admin? || current_user.administrator? || current_user.company_user?
     end
 
     def stats
       @stats ||= {
-        points: 0,
-        challenges_active: 0,
-        challenges_completed: 0,
+        points: current_user.reward_points,
+        challenges_active: user_active_attempts.count,
+        challenges_completed: user_completed_attempts.count,
         rewards_claimed: 0
       }
     end
 
     def active_challenges
-      []
+      @active_challenges ||= Challenge
+        .active
+        .joins(:challenge_attempts)
+        .merge(ChallengeAttempt.for_user(current_user).non_final) # non_final => attempt_statuses.is_final = false
+        .includes(:challenge_type, :difficulty_level, :award_point_level, :location)
+        .ordered
+        .distinct
+        .limit(5)
     end
 
     def recent_activity
-      []
+      @recent_activity ||= current_user.challenge_attempts
+                                        .includes(:challenge, :attempt_status)
+                                        .ordered
+                                        .limit(5)
     end
 
     def leaderboard
-      []
+      @leaderboard ||= User.where("reward_points > 0")
+                           .order(reward_points: :desc)
+                           .limit(5)
     end
 
     def app_name
-      t_context('.app_name')
+      t_context(".app_name")
     end
 
     def welcome_text
-      t_context('.welcome')
+      t_context(".welcome")
     end
 
     def sign_out_text
-      t_context('.sign_out')
+      t_context(".sign_out")
     end
 
     def view_all_text
-      t_context('.view_all')
+      t_context(".view_all")
     end
 
     def stats_labels
       {
-        points: t_context('.stats.points'),
-        active: t_context('.stats.active_challenges'),
-        completed: t_context('.stats.completed'),
-        rewards: t_context('.stats.rewards_claimed')
+        points: t_context(".stats.points"),
+        active: t_context(".stats.active_challenges"),
+        completed: t_context(".stats.completed"),
+        rewards: t_context(".stats.rewards_claimed")
       }
     end
 
     def section_titles
       {
-        active_challenges: t_context('.sections.active_challenges'),
-        recent_activity: t_context('.sections.recent_activity'),
-        quick_actions: t_context('.sections.quick_actions'),
-        leaderboard: t_context('.sections.leaderboard')
+        active_challenges: t_context(".sections.active_challenges"),
+        recent_activity: t_context(".sections.recent_activity"),
+        quick_actions: t_context(".sections.quick_actions"),
+        leaderboard: t_context(".sections.leaderboard")
       }
     end
 
     def action_labels
       {
-        find_challenges: t_context('.actions.find_challenges'),
-        rewards_catalog: t_context('.actions.rewards_catalog'),
-        my_profile: t_context('.actions.my_profile')
+        find_challenges: t_context(".actions.find_challenges"),
+        rewards_catalog: t_context(".actions.rewards_catalog"),
+        my_profile: t_context(".actions.my_profile")
       }
     end
 
     def empty_state_messages
       {
-        no_challenges: t_context('.empty.no_active_challenges'),
-        browse_challenges: t_context('.empty.browse_challenges'),
-        no_activity: t_context('.empty.no_activity'),
-        no_leaderboard: t_context('.empty.no_leaderboard')
+        no_challenges: t_context(".empty.no_active_challenges"),
+        browse_challenges: t_context(".empty.browse_challenges"),
+        no_activity: t_context(".empty.no_activity"),
+        no_leaderboard: t_context(".empty.no_leaderboard")
       }
+    end
+
+    private
+
+    def user_active_attempts
+      current_user.challenge_attempts.non_final
+    end
+
+    def user_completed_attempts
+      current_user.challenge_attempts.joins(:attempt_status).where(attempt_statuses: { code: "approved" })
     end
   end
 end

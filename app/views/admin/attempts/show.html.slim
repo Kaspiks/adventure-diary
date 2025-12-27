@@ -11,15 +11,17 @@
 
     - unless @presenter.decorated_attempt.final?
       .flex.gap-2
-        = link_to approve_admin_attempt_path(@presenter.decorated_attempt), method: :post, data: { turbo_method: :post, turbo_confirm: t('.confirm_approve') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-emerald-600 hover:bg-emerald-500" do
-          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
-          = t('.approve')
+        = form_with url: admin_attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_approve_actions_form, data: { turbo_confirm: t('.confirm_approve') } do |f|
+          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-emerald-600.cursor-pointer type="submit" class="hover:bg-emerald-500"
+            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+            = t('.approve')
 
-        = link_to reject_admin_attempt_path(@presenter.decorated_attempt), method: :post, data: { turbo_method: :post, turbo_confirm: t('.confirm_reject') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all duration-200 bg-red-600 hover:bg-red-500" do
-          svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-          = t('.reject')
+        = form_with url: admin_attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_reject_actions_form, data: { turbo_confirm: t('.confirm_reject') } do |f|
+          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-red-600.cursor-pointer type="submit" class="hover:bg-red-500"
+            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+            = t('.reject')
 
   .grid.grid-cols-1.lg:grid-cols-2.gap-6
     .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"

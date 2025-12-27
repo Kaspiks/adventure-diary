@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users
 
   resource :profile, only: [:show], controller: "profiles"
 
-  resources :challenges, only: [:index, :show] do
-    member do
-      post :start
-    end
+  namespace :challenges do
+    resources :start_actions, only: [:create]
   end
 
-  resources :attempts, only: [:show] do
-    member do
-      patch :submit
-      post :approve
-      post :reject
-    end
+  resources :challenges, only: [:index, :show]
+
+  namespace :attempts do
+    resources :submit_actions, only: [:update]
+    post "approve_actions/:id", to: "approve_actions#create", as: :approve_action
+    post "reject_actions/:id", to: "reject_actions#create", as: :reject_action
   end
+
+  resources :attempts, only: [:show]
 
   get "my/attempts", to: "attempts#index", as: :my_attempts
 
@@ -31,12 +33,14 @@ Rails.application.routes.draw do
         get :field_template
       end
     end
-    resources :attempts, only: [:index, :show] do
-      member do
-        post :approve
-        post :reject
-      end
+
+    namespace :attempts do
+      post "approve_actions/:id", to: "approve_actions#create", as: :approve_action
+      post "reject_actions/:id", to: "reject_actions#create", as: :reject_action
     end
+
+    resources :attempts, only: [:index, :show]
+
     resources :settings, only: [:index, :edit, :update] do
       collection do
         patch :bulk_update

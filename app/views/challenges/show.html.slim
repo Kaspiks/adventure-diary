@@ -38,8 +38,8 @@
 
         .border-t.pt-6 class="border-slate-700"
           - if @presenter.can_start?
-            = link_to start_challenge_path(@presenter.decorated_challenge), method: :post, data: { turbo_method: :post }, class: "block w-full text-center px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all" do
-              = t('.start_challenge')
+            = form_with url: challenges_start_actions_path(challenge_id: @presenter.decorated_challenge.id), method: :post, local: true, scope: :challenges_start_actions_form do |f|
+              = f.submit t('.start_challenge'), class: "block w-full text-center px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
           - elsif @presenter.has_active_attempt?
             .text-center
               .text-amber-400.mb-2 = t('.already_started')
@@ -51,8 +51,5 @@
           - elsif @presenter.user_attempt&.rejected?
             .text-center
               .text-red-400.mb-2 = t('.rejected')
-              = link_to start_challenge_path(@presenter.decorated_challenge), method: :post, data: { turbo_method: :post }, class: "inline-block px-6 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all" do
-                = t('.try_again')
-
-
-
+              = form_with url: challenges_start_actions_path(challenge_id: @presenter.decorated_challenge.id), method: :post, local: true, class: "inline-block", scope: :challenges_start_actions_form do |f|
+                = f.submit t('.try_again'), class: "px-6 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all cursor-pointer"

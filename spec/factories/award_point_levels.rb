@@ -18,18 +18,5 @@ FactoryBot.define do
       name { "Silver" }
       points { 25 }
     end
-
-    trait :gold do
-      code { "gold" }
-      name { "Gold" }
-      points { 50 }
-    end
-
-    trait :platinum do
-      code { "platinum" }
-      name { "Platinum" }
-      points { 100 }
-    end
   end
 end
-

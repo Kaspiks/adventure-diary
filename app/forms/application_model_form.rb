@@ -3,6 +3,7 @@
 class ApplicationModelForm < ApplicationForm
   attr_reader :object, :original_object
 
+  # Necessary for correct form_for behaviour
   delegate :id, :persisted?, to: :object
 
   class << self
@@ -72,9 +73,11 @@ class ApplicationModelForm < ApplicationForm
       case key
       when /_ids$/
         key_base = key.sub(/_ids$/, "").pluralize
+
         key_transformations[key_base] = key_base
       when /_id$/
         key_base = key.sub(/_id$/, "")
+
         key_transformations[key_base] = key_base
       else
         key_base = key

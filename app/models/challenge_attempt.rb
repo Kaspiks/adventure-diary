@@ -18,7 +18,13 @@ class ChallengeAttempt < ApplicationRecord
   end
 
   def validate_submission
-    return true if challenge.fields.empty?
+    # For challenges without fields, require at least one photo
+    if challenge.fields.empty?
+      if photos.empty?
+        errors.add(:base, "Please upload at least one photo")
+      end
+      return errors.empty?
+    end
 
     challenge.fields.each do |field|
       next unless field.required

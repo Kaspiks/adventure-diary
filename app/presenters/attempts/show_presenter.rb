@@ -17,12 +17,11 @@ module Attempts
     end
 
     def can_review?
+      return false if attempt.owned_by?(current_user)
+      return false unless attempt.can_review?
       return true if current_user.administrator?
 
-      current_user.company_user? && attempt.challenge.owned_by?(current_user) && attempt.can_review?
+      current_user.company_user? && attempt.challenge.owned_by?(current_user)
     end
   end
 end
-
-
-

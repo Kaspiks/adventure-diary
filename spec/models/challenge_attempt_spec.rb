@@ -178,3 +178,7 @@ RSpec.describe ChallengeAttempt, type: :model do
   end
 end
 
+
+
+
+

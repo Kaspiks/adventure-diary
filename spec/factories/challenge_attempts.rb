@@ -14,13 +14,11 @@ FactoryBot.define do
 
     trait :started do
       association :attempt_status, factory: [:attempt_status, :started]
-      submitted_at { nil }
     end
 
     trait :submitted do
       association :attempt_status, factory: [:attempt_status, :submitted]
       submitted_at { Time.current }
-      evidence_url { "https://example.com/evidence.jpg" }
     end
 
     trait :approved do
@@ -40,4 +38,3 @@ FactoryBot.define do
     end
   end
 end
-

@@ -11,14 +11,14 @@ class CustomFormBuilder < SimpleForm::FormBuilder
   def submit(value = nil, options = {})
     value ||= submit_default_value
     options[:class] = [
-      'w-full py-3.5 px-4 rounded-xl font-semibold text-white',
-      'transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]',
-      'cursor-pointer shadow-lg',
-      'bg-gradient-to-r from-amber-500 to-orange-500',
-      'hover:from-amber-400 hover:to-orange-400',
-      'shadow-orange-500/30',
+      "w-full py-3.5 px-4 rounded-xl font-semibold text-white",
+      "transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]",
+      "cursor-pointer shadow-lg",
+      "bg-gradient-to-r from-amber-500 to-orange-500",
+      "hover:from-amber-400 hover:to-orange-400",
+      "shadow-orange-500/30",
       options[:class]
-    ].compact.join(' ')
+    ].compact.join(" ")
 
     @template.content_tag(:div) do
       super(value, options)

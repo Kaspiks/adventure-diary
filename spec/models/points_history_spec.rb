@@ -46,3 +46,7 @@ RSpec.describe PointsHistory, type: :model do
   end
 end
 
+
+
+
+
