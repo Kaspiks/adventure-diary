@@ -6,6 +6,7 @@ FactoryBot.define do
     latitude { 40.7128 }
     longitude { -74.0060 }
     radius_meters { 100 }
+    active { true }
 
     trait :central_park do
       name { "Central Park" }

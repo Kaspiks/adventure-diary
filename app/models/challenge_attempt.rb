@@ -119,7 +119,7 @@ class ChallengeAttempt < ApplicationRecord
   def response_results
     return [] unless challenge.has_fields?
 
-    challenge.fields.map do |field|
+    challenge.fields.reject { |f| f.type == "photo_upload" }.map do |field|
       answer = answer_for_field(field.id)
       response_value = answer&.answer_value
       is_correct = answer&.is_correct || false

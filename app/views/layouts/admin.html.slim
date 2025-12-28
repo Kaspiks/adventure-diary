@@ -7,6 +7,9 @@ html
     = csp_meta_tag
     script src="https://cdn.tailwindcss.com"
     = stylesheet_link_tag "icons", "data-turbo-track": "reload"
+    link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""
+    = stylesheet_link_tag "leaflet", "data-turbo-track": "reload"
+    script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""
     = javascript_importmap_tags
 
   body.min-h-screen.bg-slate-900

@@ -459,6 +459,7 @@ en:
           basic_info: "Basic Information"
           coordinates: "Coordinates & Geofencing"
           status: "Status"
+          map: "Location Map"
         name: "Name"
         latitude: "Latitude"
         longitude: "Longitude"
@@ -470,6 +471,12 @@ en:
         submit_create: "Create Location"
         submit_update: "Update Location"
         cancel: "Cancel"
+        map_instructions:
+          title: "Map Tips"
+          geocode: "Type a location name to auto-search and place marker"
+          coordinates: "Enter coordinates manually to update the map"
+          pick_mode: "Use 'Pick on Map' to click or drag marker"
+          radius: "Set radius to visualize the geofence area"
   devise:
     sessions:
       new:
@@ -551,6 +558,8 @@ en:
       earned_points: "You earned %{points} points"
       rejected: "Your previous attempt was rejected"
       try_again: "Try Again"
+      location_required_title: "Location-Based Challenge"
+      location_required_message: "You must be within %{radius} meters of %{name} to complete this challenge. Make sure to enable location access on your device."
     start:
       success: "Challenge started! Good luck!"
       already_started: "You already have an active attempt for this challenge"
@@ -593,6 +602,15 @@ en:
       hidden_letter_placeholder: "Enter %{count} letter(s)"
       photo_caption_placeholder: "Add a caption (optional)"
       photo_count_hint: "Minimum %{required}, maximum %{max} photos"
+      location_required: "Location Verification Required"
+      location_required_hint: "You must be within %{radius}m of %{name} to submit"
+      refresh_location: "Refresh Location"
+      checking_location: "Checking your location..."
+      within_area: "You are within the location area ✓"
+      outside_area: "You must be at the location to submit"
+      location_denied: "Location permission denied. Please enable location access."
+      location_unavailable: "Location unavailable. Please try again."
+      location_timeout: "Location request timed out. Please try again."
     submit:
       success: "Evidence submitted successfully!"
     approve:

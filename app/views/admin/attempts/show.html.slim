@@ -97,11 +97,12 @@
           - if artifact.file.attached?
             .rounded-lg.overflow-hidden.border.group.relative class="border-slate-600"
               = image_tag artifact.file, class: "w-full h-40 object-cover"
-              - if artifact.field_id.present?
-                .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
-                  - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id }
-                  - if field
-                    .text-xs.text-white.truncate = field.label
+              .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
+                - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
+                - if field
+                  .text-xs.text-white.truncate = field.label
+                - if artifact.caption?
+                  .text-xs.text-slate-300.mt-1.italic = artifact.caption
 
 
 

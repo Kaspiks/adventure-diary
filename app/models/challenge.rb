@@ -92,7 +92,7 @@ class ChallengeField
   attr_accessor :id, :type, :label, :instructions, :required, :points,
                 :options, :correct_answer, :correct_answers,
                 :image_url, :display_text, :max_photos, :number_of_blanks,
-                :case_sensitive, :hint
+                :case_sensitive, :hint, :require_caption
 
   def initialize(attrs = {})
     @id = attrs[:id] || SecureRandom.uuid
@@ -110,6 +110,7 @@ class ChallengeField
     @number_of_blanks = attrs[:number_of_blanks] || 1
     @case_sensitive = attrs.fetch(:case_sensitive, false)
     @hint = attrs[:hint]
+    @require_caption = attrs.fetch(:require_caption, false)
   end
 
   def to_h
@@ -128,7 +129,8 @@ class ChallengeField
       max_photos: max_photos,
       number_of_blanks: number_of_blanks,
       case_sensitive: case_sensitive,
-      hint: hint
+      hint: hint,
+      require_caption: require_caption
     }.compact
   end
 

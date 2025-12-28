@@ -5,4 +5,3 @@ class AddActiveToLocations < ActiveRecord::Migration[8.0]
     add_column :locations, :active, :boolean, default: true, null: false
   end
 end
-

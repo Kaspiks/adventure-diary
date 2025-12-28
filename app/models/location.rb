@@ -9,6 +9,37 @@ class Location < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   searchable_text_column :name
+
+  def geofenced?
+    latitude.present? && longitude.present? && radius_meters.to_i.positive?
+  end
+
+  def distance_from(user_lat, user_lng)
+    return nil unless geofenced?
+
+    GeoDistance.haversine(user_lat.to_f, user_lng.to_f, latitude.to_f, longitude.to_f)
+  end
+
+  def within_radius?(user_lat, user_lng)
+    return true unless geofenced?
+
+    GeoDistance.within_radius?(
+      user_lat.to_f, user_lng.to_f,
+      latitude.to_f, longitude.to_f,
+      radius_meters
+    )
+  end
+
+  def to_geofence_json
+    {
+      id: id,
+      name: name,
+      latitude: latitude&.to_f,
+      longitude: longitude&.to_f,
+      radius_meters: radius_meters,
+      geofenced: geofenced?
+    }
+  end
 end
 
 # == Schema Information

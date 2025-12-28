@@ -52,13 +52,47 @@
             .grid.grid-cols-2.md:grid-cols-3.gap-3
               - photos.each do |artifact|
                 - if artifact.file.attached?
-                  .rounded-lg.overflow-hidden.border class="border-slate-600"
+                  .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
                     = image_tag artifact.file, class: "w-full h-32 object-cover"
+                    .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
+                      - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
+                      - if field
+                        .text-xs.text-white.truncate = field.label
+                      - if artifact.caption?
+                        .text-xs.text-slate-300.mt-1.italic = artifact.caption
 
         - if @presenter.can_submit?
-          .border-t.pt-6 class="border-slate-700"
+          - location = @presenter.decorated_attempt.object.challenge.location
+          - geofenced = location&.geofenced?
+          .border-t.pt-6 class="border-slate-700" data-controller=(geofenced ? "geofence" : nil) data-geofence-latitude-value=(geofenced ? location.latitude : nil) data-geofence-longitude-value=(geofenced ? location.longitude : nil) data-geofence-radius-meters-value=(geofenced ? location.radius_meters : nil) data-geofence-location-name-value=(geofenced ? location.name : nil) data-geofence-geofenced-value=(geofenced ? "true" : nil)
             h2.text-lg.font-semibold.text-white.mb-4 = t('.submit_evidence')
+            
+            / Geofence section if challenge has location
+            - if geofenced
+              .mb-6.rounded-xl.border.overflow-hidden class="bg-slate-700/50 border-slate-600"
+                .p-4.border-b class="border-slate-600"
+                  .flex.items-center.justify-between
+                    .flex.items-center.gap-3
+                      svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+                      div
+                        h3.text-sm.font-medium.text-white = t('.location_required')
+                        p.text-xs.text-slate-400 = t('.location_required_hint', name: location.name, radius: location.radius_meters)
+                    button.px-3.py-1.5.text-xs.font-medium.rounded-lg.transition-colors type="button" class="bg-slate-600 text-slate-300 hover:bg-slate-500 hover:text-white" data-geofence-target="checkButton" data-action="click->geofence#refreshLocation"
+                      = t('.refresh_location')
+                
+                / Status message
+                .px-4.py-3.text-sm.font-medium class="bg-slate-800/50" aria-live="polite"
+                  span data-geofence-target="status" class="text-amber-400"
+                    = t('.checking_location')
+                
+                / Map container
+                #geofence-map.w-full data-geofence-target="map" style="height: 280px;"
+
             = form_with url: attempts_submit_action_path(@presenter.decorated_attempt), method: :patch, local: true, multipart: true, class: "space-y-6", scope: :attempts_submit_actions_form do |f|
+              - if geofenced
+                = hidden_field_tag "attempts_submit_actions_form[user_latitude]", "", data: { geofence_target: "userLat" }
+                = hidden_field_tag "attempts_submit_actions_form[user_longitude]", "", data: { geofence_target: "userLng" }
               - challenge = @presenter.decorated_attempt.object.challenge
               - challenge.fields.each do |field|
                 .space-y-2
@@ -110,7 +144,10 @@
                     = file_field_tag "attempts_submit_actions_form[photos][evidence][]", accept: "image/*", multiple: true, required: true, class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
                     p.text-xs.text-slate-500.mt-2 = t('.upload_formats')
               
-              = f.submit t('.submit_button'), class: "w-full px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+              - if geofenced
+                = f.submit t('.submit_button'), class: "w-full px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all opacity-50 cursor-not-allowed", disabled: true, data: { geofence_target: "submitButton" }
+              - else
+                = f.submit t('.submit_button'), class: "w-full px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
 
         - if @presenter.can_review?
           .border-t.pt-6 class="border-slate-700"
@@ -141,8 +178,14 @@
                 .grid.grid-cols-2.md:grid-cols-3.gap-3
                   - photos.each do |artifact|
                     - if artifact.file.attached?
-                      .rounded-lg.overflow-hidden.border class="border-slate-600"
+                      .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
                         = image_tag artifact.file, class: "w-full h-32 object-cover"
+                        .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
+                          - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
+                          - if field
+                            .text-xs.text-white.truncate = field.label
+                          - if artifact.caption?
+                            .text-xs.text-slate-300.mt-1.italic = artifact.caption
 
             .flex.gap-4
               = form_with url: attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, class: "flex-1", scope: :attempts_approve_actions_form, data: { turbo_confirm: t('.confirm_approve') } do |f|

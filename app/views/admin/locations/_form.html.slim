@@ -1,4 +1,4 @@
-= simple_form_for form, as: :admin_locations_form, url: url, html: { class: "space-y-6" } do |f|
+= simple_form_for form, as: :admin_locations_form, url: url, html: { class: "space-y-6", data: { controller: "location-map", location_map_default_lat_value: 51.505, location_map_default_lng_value: -0.09, location_map_default_zoom_value: 2, location_map_location_zoom_value: 15 } } do |f|
   - if form.errors.any?
     .rounded-xl.border.p-4 class="bg-red-500/10 border-red-500/30"
       .flex.items-start.gap-3
@@ -21,7 +21,7 @@
               label: t('.name'),
               required: true,
               label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
-              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", data: { location_map_target: "name" } }
 
       .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
         h3.text-lg.font-semibold.text-white.mb-4 = t('.sections.coordinates')
@@ -33,22 +33,50 @@
               as: :float,
               label: t('.latitude'),
               label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
-              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", step: "0.0000001", placeholder: "e.g. 56.9496" }
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", step: "0.0000001", placeholder: "e.g. 56.9496", data: { location_map_target: "latitude" } }
 
           div
             = f.input :longitude,
               as: :float,
               label: t('.longitude'),
               label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
-              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", step: "0.0000001", placeholder: "e.g. 24.1052" }
+              input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", step: "0.0000001", placeholder: "e.g. 24.1052", data: { location_map_target: "longitude" } }
 
         .mt-4
           = f.input :radius_meters,
             as: :integer,
             label: t('.radius_meters'),
             label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
-            input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", placeholder: "e.g. 100" }
+            input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent", placeholder: "e.g. 100", data: { location_map_target: "radius" } }
           p.text-xs.text-slate-400.mt-1 = t('.radius_hint')
+
+      / Map Section
+      .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+        .p-4.border-b.flex.items-center.justify-between class="border-slate-700"
+          .flex.items-center.gap-3
+            h3.text-lg.font-semibold.text-white = t('.sections.map')
+            span.text-sm.text-slate-400.hidden data-location-map-target="status"
+          .flex.items-center.gap-2
+            button.px-3.py-1.5.text-sm.font-medium.rounded-lg.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-location-map-target="modeToggle" data-action="click->location-map#toggleMode"
+              | Pick on Map
+            button.p-1.5.rounded-lg.transition-colors.cursor-pointer type="button" class="text-slate-400 hover:text-white hover:bg-slate-700" data-action="click->location-map#centerOnMarker" title="Center on marker"
+              svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+
+        / Suggest Name Button (hidden by default)
+        .p-3.border-b.hidden class="border-slate-700 bg-slate-700/50" data-location-map-target="suggestName"
+          .flex.items-center.justify-between.gap-3
+            .flex.items-center.gap-2.min-w-0
+              svg.w-4.h-4.text-amber-400.flex-shrink-0 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"
+              span.text-sm.text-slate-300.truncate
+                | Suggested: 
+                span.font-medium.suggested-name-text
+            button.px-3.py-1.text-xs.font-medium.rounded-lg.transition-colors.cursor-pointer.flex-shrink-0 type="button" class="bg-emerald-600 text-white hover:bg-emerald-500" data-action="click->location-map#useSuggestedName"
+              | Use this name
+
+        / Map Container
+        #location-map.w-full data-location-map-target="container" style="height: 380px;"
 
     aside.space-y-6
       .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
@@ -61,7 +89,15 @@
               = f.label :active, t('.active'), class: "text-sm font-medium text-slate-300"
               p.text-xs.text-slate-400 = t('.active_hint')
 
+      / Map Instructions
+      .rounded-xl.border.p-4 class="bg-slate-800/50 border-slate-700"
+        h4.text-sm.font-medium.text-white.mb-2 = t('.map_instructions.title')
+        ul.text-xs.text-slate-400.space-y-1.list-disc.list-inside
+          li = t('.map_instructions.geocode')
+          li = t('.map_instructions.coordinates')
+          li = t('.map_instructions.pick_mode')
+          li = t('.map_instructions.radius')
+
       .flex.gap-3
         = f.submit (form.new_record? ? t('.submit_create') : t('.submit_update')), class: "flex-1 px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25"
         = link_to t('.cancel'), admin_locations_path, class: "px-4 py-2 rounded-lg font-medium text-slate-300 transition-colors hover:text-white hover:bg-slate-700"
-

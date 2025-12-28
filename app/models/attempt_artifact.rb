@@ -18,6 +18,14 @@ class AttemptArtifact < ApplicationRecord
   def video?
     kind == 'video'
   end
+
+  def caption
+    metadata&.dig('caption')
+  end
+
+  def caption?
+    caption.present?
+  end
 end
 
 # == Schema Information

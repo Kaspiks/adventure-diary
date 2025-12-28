@@ -30,8 +30,11 @@ module Attempts
     def update_params
       params.require(:attempts_submit_actions_form).permit(
         :evidence_url,
+        :user_latitude,
+        :user_longitude,
         answers: {},
-        photos: {}
+        photos: {},
+        photo_captions: {}
       )
     end
   end
