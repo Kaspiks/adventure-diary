@@ -31,14 +31,20 @@ module Home
     end
 
     def active_challenges
-      @active_challenges ||= Challenge
-        .active
-        .joins(:challenge_attempts)
-        .merge(ChallengeAttempt.for_user(current_user).non_final) # non_final => attempt_statuses.is_final = false
-        .includes(:challenge_type, :difficulty_level, :award_point_level, :location)
-        .ordered
-        .distinct
-        .limit(5)
+      @active_challenges ||= begin
+        challenge_ids = Challenge
+          .active
+          .joins(:challenge_attempts)
+          .merge(ChallengeAttempt.for_user(current_user).non_final)
+          .select("challenges.id")
+          .distinct
+          .limit(5)
+
+        Challenge
+          .where(id: challenge_ids)
+          .includes(:challenge_type, :difficulty_level, :award_point_level, :location)
+          .ordered
+      end
     end
 
     def recent_activity

@@ -374,6 +374,102 @@ en:
       reject:
         success: "Attempt rejected successfully."
         already_final: "This attempt has already been reviewed."
+    classification_items:
+      index:
+        title: "Classifications"
+        subtitle: "Manage classification values"
+      list:
+        headers:
+          name: "Name"
+          actions: "Actions"
+        no_items: "No classifications found"
+    classifications:
+      show:
+        back: "Back to Classifications"
+        new_value: "New Value"
+      list:
+        headers:
+          value: "Value"
+          status: "Status"
+          actions: "Actions"
+        no_values: "No values found"
+        status:
+          active: "Active"
+          inactive: "Inactive"
+    classification_values:
+      new:
+        title: "New Value"
+        back: "Back to Classification"
+      edit:
+        title: "Edit %{name}"
+        back: "Back to Classification"
+      create:
+        success: "Value created successfully."
+      update:
+        success: "Value updated successfully."
+      form:
+        sections:
+          basic_info: "Basic Information"
+          status: "Status"
+        value: "Value"
+        active: "Active"
+        active_hint: "Inactive values won't be available for selection"
+        submit_create: "Create Value"
+        submit_update: "Update Value"
+        cancel: "Cancel"
+    locations:
+      index:
+        title: "Locations"
+        subtitle: "Manage geographic locations for challenges"
+        new_location: "New Location"
+      create:
+        success: "Location created successfully."
+      update:
+        success: "Location updated successfully."
+      search:
+        name: "Name"
+        name_placeholder: "Search by name..."
+        search: "Search"
+        clear: "Clear"
+      list:
+        headers:
+          name: "Name"
+          coordinates: "Coordinates"
+          radius: "Radius"
+          status: "Status"
+          actions: "Actions"
+        no_coordinates: "Not set"
+        no_radius: "Not set"
+        status:
+          active: "Active"
+          inactive: "Inactive"
+        empty: "No locations found"
+        add_first_location: "Add the first location"
+        actions:
+          edit: "Edit"
+      new:
+        title: "New Location"
+        subtitle: "Create a new geographic location"
+        back: "Back to Locations"
+      edit:
+        title: "Edit Location"
+        back: "Back to Locations"
+      form:
+        sections:
+          basic_info: "Basic Information"
+          coordinates: "Coordinates & Geofencing"
+          status: "Status"
+        name: "Name"
+        latitude: "Latitude"
+        longitude: "Longitude"
+        radius_meters: "Radius (meters)"
+        coordinates_hint: "Optional. Set coordinates to enable geofencing for this location."
+        radius_hint: "The radius in meters for geofencing validation"
+        active: "Active"
+        active_hint: "Inactive locations won't be available for selection"
+        submit_create: "Create Location"
+        submit_update: "Update Location"
+        cancel: "Cancel"
   devise:
     sessions:
       new:

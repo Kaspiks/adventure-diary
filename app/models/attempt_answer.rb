@@ -14,7 +14,7 @@ end
 #
 # Table name: attempt_answers
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint           not null, primary key
 #  answer_data          :json
 #  answer_value         :text
 #  is_correct           :boolean
@@ -30,5 +30,5 @@ end
 #
 # Foreign Keys
 #
-#  challenge_attempt_id  (challenge_attempt_id => challenge_attempts.id)
+#  fk_rails_...  (challenge_attempt_id => challenge_attempts.id)
 #

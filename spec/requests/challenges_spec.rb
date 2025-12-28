@@ -26,7 +26,7 @@ RSpec.describe "Challenges", type: :request do
 
       it "shows active challenges" do
         active_challenge = create(:challenge, is_active: true, title: "Active Challenge")
-        inactive_challenge = create(:challenge, is_active: false, title: "Inactive Challenge")
+        _inactive_challenge = create(:challenge, is_active: false, title: "Inactive Challenge")
 
         get challenges_path
         
@@ -50,7 +50,7 @@ RSpec.describe "Challenges", type: :request do
     end
   end
 
-  describe "POST /challenges/:id/start" do
+  describe "POST /challenges/start_actions" do
     let(:user) { create(:user, :general_user) }
 
     before { sign_in user }
@@ -58,17 +58,17 @@ RSpec.describe "Challenges", type: :request do
     context "when challenge is active" do
       it "creates a new attempt" do
         expect {
-          post start_challenge_path(challenge)
+          post challenges_start_actions_path, params: { challenge_id: challenge.id }
         }.to change(ChallengeAttempt, :count).by(1)
       end
 
       it "redirects to my attempts" do
-        post start_challenge_path(challenge)
+        post challenges_start_actions_path, params: { challenge_id: challenge.id }
         expect(response).to redirect_to(my_attempts_path)
       end
 
       it "sets correct attempt attributes" do
-        post start_challenge_path(challenge)
+        post challenges_start_actions_path, params: { challenge_id: challenge.id }
         
         attempt = ChallengeAttempt.last
         expect(attempt.user).to eq(user)
@@ -85,12 +85,12 @@ RSpec.describe "Challenges", type: :request do
 
       it "does not create new attempt" do
         expect {
-          post start_challenge_path(challenge)
+          post challenges_start_actions_path, params: { challenge_id: challenge.id }
         }.not_to change(ChallengeAttempt, :count)
       end
 
       it "redirects with notice" do
-        post start_challenge_path(challenge)
+        post challenges_start_actions_path, params: { challenge_id: challenge.id }
         expect(response).to redirect_to(my_attempts_path)
       end
     end
@@ -99,11 +99,9 @@ RSpec.describe "Challenges", type: :request do
       let(:inactive_challenge) { create(:challenge, is_active: false) }
 
       it "denies access for general user" do
-        post start_challenge_path(inactive_challenge)
+        post challenges_start_actions_path, params: { challenge_id: inactive_challenge.id }
         expect(response).to redirect_to(root_path)
       end
     end
   end
 end
-
-

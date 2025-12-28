@@ -52,6 +52,21 @@ en:
             create_challenge: "Create Challenge"
             add_reward: "Add Reward"
             app_settings: "App Settings"
+      navigation:
+        sections:
+          configuration:
+            title: Configuration
+        items:
+          dashboard: Dashboard
+          users: Users
+          roles: Roles
+          challenges: Challenges
+          rewards: Rewards
+          settings: Settings
+          classification_items: Classification Items
+      classification_items:
+        index:
+          locations: Locations
     navigation:
       sections:
         home:

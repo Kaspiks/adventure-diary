@@ -8,6 +8,10 @@ class ApplicationPresenter
 
   private
 
+  def url_helpers
+    Rails.application.routes.url_helpers
+  end
+
   def t_context(key, **)
     raise "translation key must be relative\nDid you mean?  .#{key}" unless key.to_s[0] == "."
 

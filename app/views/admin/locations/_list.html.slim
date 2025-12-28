@@ -1,0 +1,60 @@
+- if locations.any?
+  .overflow-x-auto
+    table.w-full
+      thead
+        tr.border-b class="border-slate-700"
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.name')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.coordinates')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.radius')
+          th.px-4.py-3.text-left.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.status')
+          th.px-4.py-3.text-right.text-xs.font-medium.uppercase.tracking-wider.text-slate-400 = t('.headers.actions')
+
+      tbody.divide-y class="divide-slate-700"
+        - locations.each do |location|
+          tr.transition-colors class="hover:bg-slate-700/50"
+            td.px-4.py-4
+              .flex.items-center.gap-3
+                .w-10.h-10.rounded-full.flex.items-center.justify-center.text-sm.font-medium.text-white class="bg-gradient-to-br from-blue-500 to-cyan-600"
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+                div
+                  p.font-medium.text-white = location.name
+
+            td.px-4.py-4
+              - if location.latitude.present? && location.longitude.present?
+                span.text-slate-300 = "#{location.latitude}, #{location.longitude}"
+              - else
+                span.text-slate-500.italic = t('.no_coordinates')
+
+            td.px-4.py-4
+              - if location.radius_meters.present?
+                span.text-slate-300 = "#{location.radius_meters}m"
+              - else
+                span.text-slate-500.italic = t('.no_radius')
+
+            td.px-4.py-4
+              - if location.active?
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-emerald-500/20 text-emerald-300"
+                  = t('.status.active')
+              - else
+                span.inline-flex.items-center.px-2.py-1.rounded-full.text-xs.font-medium class="bg-slate-500/20 text-slate-400"
+                  = t('.status.inactive')
+
+            td.px-4.py-4.text-right
+              .flex.items-center.justify-end.gap-2
+                = link_to edit_admin_location_path(location), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors", title: t('.actions.edit') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+                    path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
+
+- else
+  .p-8.text-center
+    .w-16.h-16.mx-auto.mb-4.rounded-full.flex.items-center.justify-center class="bg-slate-700"
+      svg.w-8.h-8.text-slate-500 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+    p.text-slate-400 = t('.empty')
+    = link_to new_admin_location_path, class: "inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg font-medium text-emerald-400 hover:text-emerald-300 transition-colors" do
+      svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+      = t('.add_first_location')
+

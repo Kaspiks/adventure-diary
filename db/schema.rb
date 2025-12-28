@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_25_182928) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_28_150000) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -131,6 +134,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_182928) do
     t.index ["title"], name: "index_challenges_on_title"
   end
 
+  create_table "classification_values", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "classifications", comment: "Classifications", force: :cascade do |t|
+    t.string "code", limit: 255, null: false, comment: "Classification code"
+    t.boolean "system", default: false, comment: "Check whether the classification is a system classification"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_classifications_on_code", unique: true
+  end
+
   create_table "difficulty_levels", force: :cascade do |t|
     t.string "code", limit: 50, null: false
     t.string "name", limit: 100, null: false
@@ -149,6 +165,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_182928) do
     t.integer "radius_meters"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
     t.index ["name"], name: "index_locations_on_name"
   end
 

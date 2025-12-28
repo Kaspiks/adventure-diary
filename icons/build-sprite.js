@@ -1,60 +1,120 @@
 const fs = require('fs');
 const path = require('path');
 
-// List of Feather icons to include in the sprite
 const includedIcons = [
-  "activity", "alert-circle", "alert-octagon", "alert-triangle", "archive",
-  "arrow-down", "arrow-left", "arrow-right", "arrow-up",
-  "bar-chart-2", "book", "book-open", "calendar", "camera",
-  "check", "check-circle", "chevron-down", "chevron-left", "chevron-right", "chevron-up",
-  "chevrons-left", "chevrons-right", "clipboard", "clock", "columns", "copy",
-  "corner-right-down", "corner-up-right", "download",
-  "edit", "edit-2", "edit-3", "external-link", "eye", "eye-off",
-  "file", "file-text", "filter", "folder", "git-pull-request", "globe", "grid", "hash",
-  "heart", "help-circle", "home", "image", "info", "layers", "link", "list", "loader",
-  "lock", "log-in", "log-out", "mail", "map", "map-pin", "maximize", "menu",
-  "message-circle", "minimize", "minus", "more-horizontal", "more-vertical",
-  "navigation", "pen-tool", "pie-chart", "play", "plus", "plus-circle",
-  "refresh-cw", "save", "search", "settings", "share", "share-2", "sliders",
-  "star", "sun", "moon", "tag", "tool", "trash", "trash-2", "trending-up",
-  "unlock", "upload", "user", "user-check", "user-plus", "users",
-  "x", "x-circle", "x-octagon", "zap"
+  "activity",
+  "alert-circle",
+  "alert-triangle",
+  "archive",
+  "arrow-left",
+  "arrow-right",
+  "arrow-up",
+  "arrow-down",
+  "award",
+  "bell",
+  "bookmark",
+  "calendar",
+  "camera",
+  "check",
+  "chevron-down",
+  "chevron-left",
+  "chevron-right",
+  "chevron-up",
+  "circle-plus",
+  "clock",
+  "copy",
+  "edit",
+  "external-link",
+  "eye",
+  "eye-off",
+  "file",
+  "folder",
+  "heart",
+  "home",
+  "info-circle",
+  "lock",
+  "login",
+  "logout",
+  "map",
+  "map-pin",
+  "menu-2",
+  "message",
+  "minus",
+  "plus",
+  "search",
+  "settings",
+  "share",
+  "star",
+  "target",
+  "trash",
+  "trophy",
+  "user",
+  "users",
+  "x",
+  "category",
+  "category-2",
+  "list-details",
+  "tag",
 ];
 
-const featherIconsPath = path.join(__dirname, 'node_modules', 'feather-icons', 'dist', 'icons');
-const outputPath = path.join(__dirname, '..', 'vendor', 'assets', 'images', 'icons.svg');
+// Path to Tabler SVGs (outline style)
+const tablerIconsPath = path.join(
+  __dirname,
+  'node_modules',
+  '@tabler',
+  'icons',
+  'icons',
+  'outline'
+);
+
+const outputPath = path.join(
+  __dirname,
+  '..',
+  'vendor',
+  'assets',
+  'images',
+  'icons.svg'
+);
 
 const outputDir = path.dirname(outputPath);
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-let spriteContent = '<svg xmlns="http://www.w3.org/2000/svg" style="display: none;" class="iconset">\n';
+let spriteContent =
+  '<svg xmlns="http://www.w3.org/2000/svg" style="display:none" class="iconset">\n';
 
 let iconsAdded = 0;
 
 includedIcons.forEach(iconName => {
-  const iconPath = path.join(featherIconsPath, `${iconName}.svg`);
-  
-  if (fs.existsSync(iconPath)) {
-    let iconContent = fs.readFileSync(iconPath, 'utf8');
-    
-    iconContent = iconContent.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '');
-    
-    iconContent = iconContent.replace(/\s+fill="[^"]*"/g, '');
-    iconContent = iconContent.replace(/\s+stroke="[^"]*"/g, '');
-    iconContent = iconContent.replace(/\s+stroke-width="[^"]*"/g, '');
-    iconContent = iconContent.replace(/\s+stroke-linecap="[^"]*"/g, '');
-    iconContent = iconContent.replace(/\s+stroke-linejoin="[^"]*"/g, '');
-    
-    spriteContent += `  <symbol id="${iconName}" viewBox="0 0 24 24">${iconContent}</symbol>\n`;
-    iconsAdded++;
-  } else {
-    console.warn(`Warning: Icon ${iconName}.svg not found`);
+  const iconPath = path.join(tablerIconsPath, `${iconName}.svg`);
+
+  if (!fs.existsSync(iconPath)) {
+    console.warn(`⚠ Icon not found: ${iconName}.svg`);
+    return;
   }
+
+  let iconContent = fs.readFileSync(iconPath, 'utf8');
+
+  iconContent = iconContent
+    .replace(/<svg[^>]*>/, '')
+    .replace(/<\/svg>/, '');
+
+  iconContent = iconContent
+    .replace(/<path[^>]*d="M0 0h24v24H0z"[^>]*\/>/g, '');
+
+  iconContent = iconContent
+    .replace(/\s(fill|stroke)="[^"]*"/g, '')
+    .replace(/\s(stroke-width)="[^"]*"/g, '')
+    .replace(/\s(stroke-linecap)="[^"]*"/g, '')
+    .replace(/\s(stroke-linejoin)="[^"]*"/g, '');
+
+  spriteContent += `  <symbol id="${iconName}" viewBox="0 0 24 24">${iconContent}</symbol>\n`;
+  iconsAdded++;
 });
 
-spriteContent += '</svg>';
+spriteContent += '</svg>\n';
 
 fs.writeFileSync(outputPath, spriteContent, 'utf8');
-console.log(`✓ Built icon sprite with ${iconsAdded} icons at ${outputPath}`);
+
+console.log(`✓ Built Tabler icon sprite with ${iconsAdded} icons at ${outputPath}`);

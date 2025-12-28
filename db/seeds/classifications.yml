@@ -1,0 +1,14 @@
+root:
+  - code: drugs_quality_compliances
+    system: true
+  - code: incoming_kinds
+  - code: asmf_parts
+    system: true
+  - code: drug_types
+    system: true
+  - code: drug_decision_types
+    system: true
+  - code: meeting_kinds
+  - code: expertise_statuses
+    system: true
+  - code: expertise_completion_resolutions

@@ -18,6 +18,19 @@ html
     script src="https://cdn.tailwindcss.com"
     = javascript_importmap_tags
 
-  body
+  body.min-h-screen class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     = render_svg_icons
+    
+    - if user_signed_in?
+      = render 'shared/navbar'
+    
+    - if flash[:notice]
+      .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pt-4
+        .p-4.rounded-lg.text-sm class="bg-emerald-500/20 text-emerald-200 border border-emerald-500/30"
+          = flash[:notice]
+    - if flash[:alert]
+      .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.pt-4
+        .p-4.rounded-lg.text-sm class="bg-red-500/20 text-red-200 border border-red-500/30"
+          = flash[:alert]
+    
     = yield

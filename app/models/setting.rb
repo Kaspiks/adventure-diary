@@ -60,7 +60,7 @@ end
 #
 # Table name: settings
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  description :string(500)
 #  group       :string(50)       default("general"), not null
 #  key         :string(100)      not null

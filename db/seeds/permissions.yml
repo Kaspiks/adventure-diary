@@ -126,3 +126,6 @@
 
 - code: settings.update
   description: Update application settings
+
+- code: classifications.manage
+  description: Manage classifications

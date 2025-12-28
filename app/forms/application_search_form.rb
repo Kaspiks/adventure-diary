@@ -14,4 +14,8 @@ class ApplicationSearchForm
       hash[attr] = value if value.present?
     end
   end
+
+  def search_performed?
+    any_filters?
+  end
 end

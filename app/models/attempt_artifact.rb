@@ -24,7 +24,7 @@ end
 #
 # Table name: attempt_artifacts
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint           not null, primary key
 #  kind                 :string(50)       not null
 #  metadata             :json
 #  created_at           :datetime         not null
@@ -40,5 +40,5 @@ end
 #
 # Foreign Keys
 #
-#  challenge_attempt_id  (challenge_attempt_id => challenge_attempts.id)
+#  fk_rails_...  (challenge_attempt_id => challenge_attempts.id)
 #

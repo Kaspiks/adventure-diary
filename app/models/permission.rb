@@ -16,7 +16,7 @@ end
 #
 # Table name: permissions
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  code        :string(100)      not null
 #  description :text
 #  created_at  :datetime         not null

@@ -145,7 +145,7 @@ end
 #
 # Table name: challenge_attempts
 #
-#  id                :integer          not null, primary key
+#  id                :bigint           not null, primary key
 #  evidence_url      :string(500)
 #  reviewed_at       :datetime
 #  score_awarded     :integer
@@ -168,8 +168,8 @@ end
 #
 # Foreign Keys
 #
-#  attempt_status_id  (attempt_status_id => attempt_statuses.id)
-#  challenge_id       (challenge_id => challenges.id)
-#  reviewer_user_id   (reviewer_user_id => users.id)
-#  user_id            (user_id => users.id)
+#  fk_rails_...  (attempt_status_id => attempt_statuses.id)
+#  fk_rails_...  (challenge_id => challenges.id)
+#  fk_rails_...  (reviewer_user_id => users.id)
+#  fk_rails_...  (user_id => users.id)
 #

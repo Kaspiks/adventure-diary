@@ -6,12 +6,18 @@ module Admin
 
     layout "admin"
 
+    helper_method :admin_navigation_presenter
+
     private
 
-    # Allow access for:
-    # - Users with admin flag (full admin)
-    # - Users with administrator role
-    # - Users with company_user role (can manage their own challenges)
+    def admin_navigation_presenter
+      @admin_navigation_presenter ||= Admin::NavigationPresenter.new(
+        view_context: view_context,
+        controller_name: controller_name,
+        user: current_user
+      )
+    end
+
     def require_admin_access!
       return if current_user&.admin?
       return if current_user&.administrator?

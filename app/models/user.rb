@@ -90,7 +90,7 @@ end
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
+#  id                     :bigint           not null, primary key
 #  admin                  :boolean          default(FALSE), not null
 #  blocked                :boolean          default(FALSE), not null
 #  current_sign_in_at     :datetime
@@ -123,5 +123,5 @@ end
 #
 # Foreign Keys
 #
-#  role_id  (role_id => roles.id)
+#  fk_rails_...  (role_id => roles.id)
 #

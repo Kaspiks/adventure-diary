@@ -14,7 +14,7 @@ end
 #
 # Table name: award_point_levels
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  code        :string(50)       not null
 #  description :text
 #  name        :string(100)      not null

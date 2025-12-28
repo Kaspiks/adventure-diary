@@ -23,6 +23,24 @@ FactoryBot.define do
   end
 end
 
+# == Schema Information
+#
+# Table name: locations
+#
+#  id            :bigint           not null, primary key
+#  active        :boolean          default(TRUE), not null
+#  latitude      :decimal(10, 7)
+#  longitude     :decimal(10, 7)
+#  name          :string(255)      not null
+#  radius_meters :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_locations_on_name  (name)
+#
+
 
 
 

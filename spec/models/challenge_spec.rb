@@ -115,4 +115,40 @@ RSpec.describe Challenge, type: :model do
   end
 end
 
+# == Schema Information
+#
+# Table name: challenges
+#
+#  id                   :bigint           not null, primary key
+#  description          :text
+#  fields_config        :json             not null
+#  is_active            :boolean          default(TRUE), not null
+#  title                :string(255)      not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  award_point_level_id :integer          not null
+#  challenge_type_id    :integer          not null
+#  creator_user_id      :integer          not null
+#  difficulty_level_id  :integer          not null
+#  location_id          :integer
+#
+# Indexes
+#
+#  index_challenges_on_award_point_level_id  (award_point_level_id)
+#  index_challenges_on_challenge_type_id     (challenge_type_id)
+#  index_challenges_on_creator_user_id       (creator_user_id)
+#  index_challenges_on_difficulty_level_id   (difficulty_level_id)
+#  index_challenges_on_is_active             (is_active)
+#  index_challenges_on_location_id           (location_id)
+#  index_challenges_on_title                 (title)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (award_point_level_id => award_point_levels.id)
+#  fk_rails_...  (challenge_type_id => challenge_types.id)
+#  fk_rails_...  (creator_user_id => users.id)
+#  fk_rails_...  (difficulty_level_id => difficulty_levels.id)
+#  fk_rails_...  (location_id => locations.id)
+#
+
 

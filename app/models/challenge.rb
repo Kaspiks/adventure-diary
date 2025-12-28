@@ -186,7 +186,7 @@ end
 #
 # Table name: challenges
 #
-#  id                   :integer          not null, primary key
+#  id                   :bigint           not null, primary key
 #  description          :text
 #  fields_config        :json             not null
 #  is_active            :boolean          default(TRUE), not null
@@ -211,9 +211,9 @@ end
 #
 # Foreign Keys
 #
-#  award_point_level_id  (award_point_level_id => award_point_levels.id)
-#  challenge_type_id     (challenge_type_id => challenge_types.id)
-#  creator_user_id       (creator_user_id => users.id)
-#  difficulty_level_id   (difficulty_level_id => difficulty_levels.id)
-#  location_id           (location_id => locations.id)
+#  fk_rails_...  (award_point_level_id => award_point_levels.id)
+#  fk_rails_...  (challenge_type_id => challenge_types.id)
+#  fk_rails_...  (creator_user_id => users.id)
+#  fk_rails_...  (difficulty_level_id => difficulty_levels.id)
+#  fk_rails_...  (location_id => locations.id)
 #

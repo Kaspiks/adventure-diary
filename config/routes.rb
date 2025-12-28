@@ -46,6 +46,11 @@ Rails.application.routes.draw do
         patch :bulk_update
       end
     end
+
+    resources :locations, only: [:index, :new, :create, :edit, :update]
+    resources :classification_items, only: [:index]
+    resources :classifications, only: [:show]
+    resources :classification_values, only: [:new, :create, :edit, :update]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

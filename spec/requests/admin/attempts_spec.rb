@@ -12,7 +12,7 @@ RSpec.describe "Admin::Attempts", type: :request do
   let(:challenge) { create(:challenge, creator_user: company_user) }
   let(:general_user) { create(:user, :general_user, reward_points: 0) }
 
-  describe "POST /admin/attempts/:id/approve" do
+  describe "POST /admin/attempts/approve_actions/:id" do
     let(:attempt) do
       create(:challenge_attempt,
         user: general_user,
@@ -28,14 +28,14 @@ RSpec.describe "Admin::Attempts", type: :request do
       before { sign_in admin }
 
       it "approves attempt" do
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         
         attempt.reload
         expect(attempt.approved?).to be true
       end
 
       it "awards points" do
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         
         general_user.reload
         expect(general_user.reward_points).to eq(challenge.award_points)
@@ -43,12 +43,12 @@ RSpec.describe "Admin::Attempts", type: :request do
 
       it "creates points_history" do
         expect {
-          post approve_admin_attempt_path(attempt)
+          post admin_attempts_approve_action_path(attempt)
         }.to change(PointsHistory, :count).by(1)
       end
 
       it "sets reviewer" do
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         
         attempt.reload
         expect(attempt.reviewer_user).to eq(admin)
@@ -59,7 +59,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       before { sign_in company_user }
 
       it "can approve" do
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         
         attempt.reload
         expect(attempt.approved?).to be true
@@ -72,7 +72,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       before { sign_in other_company }
 
       it "denies access" do
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         expect(response).to redirect_to(root_path)
       end
     end
@@ -80,10 +80,9 @@ RSpec.describe "Admin::Attempts", type: :request do
     context "with quiz challenge and field scoring" do
       let(:quiz_type) { create(:challenge_type, :quiz) }
       let(:quiz_challenge) do
-        create(:challenge,
+        create(:challenge, :with_mixed_fields,
           creator_user: company_user,
-          challenge_type: quiz_type,
-          :with_mixed_fields
+          challenge_type: quiz_type
         )
       end
       let(:quiz_attempt) do
@@ -108,7 +107,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       end
 
       it "uses field-based scoring for quiz" do
-        post approve_admin_attempt_path(quiz_attempt)
+        post admin_attempts_approve_action_path(quiz_attempt)
         
         quiz_attempt.reload
         # Mixed fields have 10 + 10 = 20 points total
@@ -116,7 +115,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       end
 
       it "awards field-based points to user" do
-        post approve_admin_attempt_path(quiz_attempt)
+        post admin_attempts_approve_action_path(quiz_attempt)
         
         general_user.reload
         expect(general_user.reward_points).to eq(20)
@@ -128,12 +127,12 @@ RSpec.describe "Admin::Attempts", type: :request do
 
       it "does not double award points" do
         # First approval
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
         initial_points = general_user.reload.reward_points
         initial_history_count = PointsHistory.count
 
         # Simulate trying to approve again (would be blocked by final check)
-        post approve_admin_attempt_path(attempt)
+        post admin_attempts_approve_action_path(attempt)
 
         expect(general_user.reload.reward_points).to eq(initial_points)
         expect(PointsHistory.count).to eq(initial_history_count)
@@ -141,7 +140,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     end
   end
 
-  describe "POST /admin/attempts/:id/reject" do
+  describe "POST /admin/attempts/reject_actions/:id" do
     let(:attempt) do
       create(:challenge_attempt,
         user: general_user,
@@ -157,7 +156,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       before { sign_in admin }
 
       it "rejects attempt" do
-        post reject_admin_attempt_path(attempt)
+        post admin_attempts_reject_action_path(attempt)
         
         attempt.reload
         expect(attempt.rejected?).to be true
@@ -167,7 +166,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       it "does not award points" do
         initial_points = general_user.reward_points
         
-        post reject_admin_attempt_path(attempt)
+        post admin_attempts_reject_action_path(attempt)
         
         expect(general_user.reload.reward_points).to eq(initial_points)
       end
@@ -201,8 +200,3 @@ RSpec.describe "Admin::Attempts", type: :request do
     end
   end
 end
-
-
-
-
-

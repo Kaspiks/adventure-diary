@@ -37,7 +37,7 @@ end
 #
 # Table name: attempt_statuses
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  code       :string(50)       not null
 #  is_final   :boolean          default(FALSE), not null
 #  name       :string(100)      not null

@@ -6,6 +6,7 @@ class Location < ApplicationRecord
   validates :name, presence: true, length: { maximum: 255 }
 
   scope :ordered, -> { order(:name) }
+  scope :active, -> { where(active: true) }
 
   searchable_text_column :name
 end
@@ -14,7 +15,8 @@ end
 #
 # Table name: locations
 #
-#  id            :integer          not null, primary key
+#  id            :bigint           not null, primary key
+#  active        :boolean          default(TRUE), not null
 #  latitude      :decimal(10, 7)
 #  longitude     :decimal(10, 7)
 #  name          :string(255)      not null

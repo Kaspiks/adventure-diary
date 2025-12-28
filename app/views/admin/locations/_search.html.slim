@@ -1,0 +1,12 @@
+= simple_form_for search_form, as: :admin_locations_search_form, url: admin_locations_path, method: :get, html: { class: "flex flex-wrap gap-4 items-end" } do |f|
+  .flex-1.min-w-48
+    = f.input :name,
+      label: t('.name'),
+      placeholder: t('.name_placeholder'),
+      label_html: { class: "block text-sm font-medium text-slate-300 mb-1" },
+      input_html: { class: "w-full px-3 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" }
+
+  .flex.gap-2.items-center.pt-5
+    = f.submit t('.search'), class: "px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-colors bg-emerald-600 hover:bg-emerald-500"
+    = link_to t('.clear'), admin_locations_path, class: "px-4 py-2 rounded-lg font-medium text-slate-300 transition-colors hover:text-white hover:bg-slate-700"
+

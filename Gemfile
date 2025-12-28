@@ -18,6 +18,9 @@ gem "devise"
 
 gem "pundit"
 
+gem "redis", "~> 5.0"
+gem "redis-actionpack", "~> 5.4"
+
 gem "simple_form"
 
 # gem "bcrypt", "~> 3.1.7"
@@ -46,6 +49,8 @@ group :development, :test do
   gem "pry"
   gem "pry-byebug"
 end
+
+gem "validates_lengths_from_database", "~> 0.8.0"
 
 group :development do
   gem "web-console"

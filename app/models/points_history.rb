@@ -21,7 +21,7 @@ end
 #
 # Table name: points_history
 #
-#  id           :integer          not null, primary key
+#  id           :bigint           not null, primary key
 #  delta_points :integer          not null
 #  reason_code  :string(50)       not null
 #  created_at   :datetime         not null
@@ -38,6 +38,6 @@ end
 #
 # Foreign Keys
 #
-#  challenge_id  (challenge_id => challenges.id)
-#  user_id       (user_id => users.id)
+#  fk_rails_...  (challenge_id => challenges.id)
+#  fk_rails_...  (user_id => users.id)
 #

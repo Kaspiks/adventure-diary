@@ -178,6 +178,39 @@ RSpec.describe ChallengeAttempt, type: :model do
   end
 end
 
+# == Schema Information
+#
+# Table name: challenge_attempts
+#
+#  id                :bigint           not null, primary key
+#  evidence_url      :string(500)
+#  reviewed_at       :datetime
+#  score_awarded     :integer
+#  started_at        :datetime         not null
+#  submitted_at      :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  attempt_status_id :integer          not null
+#  challenge_id      :integer          not null
+#  reviewer_user_id  :integer
+#  user_id           :integer          not null
+#
+# Indexes
+#
+#  index_challenge_attempts_on_attempt_status_id         (attempt_status_id)
+#  index_challenge_attempts_on_challenge_id              (challenge_id)
+#  index_challenge_attempts_on_reviewer_user_id          (reviewer_user_id)
+#  index_challenge_attempts_on_user_id                   (user_id)
+#  index_challenge_attempts_on_user_id_and_challenge_id  (user_id,challenge_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (attempt_status_id => attempt_statuses.id)
+#  fk_rails_...  (challenge_id => challenges.id)
+#  fk_rails_...  (reviewer_user_id => users.id)
+#  fk_rails_...  (user_id => users.id)
+#
+
 
 
 

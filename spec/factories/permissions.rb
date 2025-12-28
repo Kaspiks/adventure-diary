@@ -22,6 +22,21 @@ FactoryBot.define do
   end
 end
 
+# == Schema Information
+#
+# Table name: permissions
+#
+#  id          :bigint           not null, primary key
+#  code        :string(100)      not null
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  index_permissions_on_code  (code) UNIQUE
+#
+
 
 
 

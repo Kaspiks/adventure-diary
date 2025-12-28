@@ -17,7 +17,7 @@ end
 #
 # Table name: roles
 #
-#  id          :integer          not null, primary key
+#  id          :bigint           not null, primary key
 #  description :text
 #  name        :string(100)      not null
 #  created_at  :datetime         not null
