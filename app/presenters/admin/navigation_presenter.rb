@@ -41,7 +41,8 @@ module Admin
         users_nav_item,
         roles_nav_item,
         challenges_nav_item,
-        rewards_nav_item
+        rewards_nav_item,
+        orders_nav_item
       ]
     end
 
@@ -91,9 +92,18 @@ module Admin
     def rewards_nav_item
       NavigationItem.new(
         t_context(".items.rewards"),
-        "trophy",
-        "#",
-        false
+        "gift",
+        @view_context.admin_rewards_path,
+        @controller_name == "rewards"
+      )
+    end
+
+    def orders_nav_item
+      NavigationItem.new(
+        t_context(".items.orders"),
+        "shopping-cart",
+        @view_context.admin_orders_path,
+        @controller_name == "orders"
       )
     end
 

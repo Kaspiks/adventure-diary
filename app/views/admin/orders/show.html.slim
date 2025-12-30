@@ -1,0 +1,52 @@
+- content_for :title, t('.title')
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_orders_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = t('.title')
+
+    .flex.items-center.gap-2
+      - if @presenter.decorated_order.can_approve?
+        = button_to admin_orders_status_action_approve_path(@presenter.order.id), method: :post, class: "px-4 py-2 rounded-lg font-medium text-blue-300 bg-blue-500/20 hover:bg-blue-500/30 transition-all cursor-pointer" do
+          = t('.approve')
+      - if @presenter.decorated_order.can_deliver?
+        = button_to admin_orders_status_action_deliver_path(@presenter.order.id), method: :post, class: "px-4 py-2 rounded-lg font-medium text-emerald-300 bg-emerald-500/20 hover:bg-emerald-500/30 transition-all cursor-pointer" do
+          = t('.deliver')
+      - if @presenter.decorated_order.can_cancel?
+        = button_to admin_orders_status_action_cancel_path(@presenter.order.id), method: :post, data: { turbo_confirm: t('.confirm_cancel') }, class: "px-4 py-2 rounded-lg font-medium text-red-300 bg-red-500/20 hover:bg-red-500/30 transition-all cursor-pointer" do
+          = t('.cancel')
+
+  .grid.grid-cols-1.lg:grid-cols-2.gap-6
+    / Order Details
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.order_details')
+      .space-y-4
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.reward')
+          .text-lg.font-medium.text-white = @presenter.decorated_order.reward_title
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.points')
+          .text-lg.font-medium.text-emerald-400 = @presenter.decorated_order.points_display
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.status')
+          span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_order.status_color}-500/20 text-#{@presenter.decorated_order.status_color}-300"
+            = @presenter.decorated_order.status_name
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.ordered_at')
+          .text-white = @presenter.decorated_order.ordered_at
+
+    / Buyer Details
+    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.buyer_details')
+      .space-y-4
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.name')
+          .text-lg.font-medium.text-white = @presenter.decorated_order.buyer_name
+        div
+          .text-sm.text-slate-400.mb-1 = t('.fields.email')
+          .text-white = @presenter.decorated_order.buyer_email
+

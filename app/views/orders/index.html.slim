@@ -1,0 +1,38 @@
+- content_for :title, t('.title')
+
+.min-h-screen.bg-slate-900.py-8
+  .max-w-6xl.mx-auto.px-4
+    = link_to root_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
+      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      = t('.back')
+
+    .mb-8
+      h1.text-3xl.font-bold.text-white = t('.title')
+      p.text-slate-400.mt-2 = t('.subtitle', count: @presenter.total_count)
+
+    - if @presenter.decorated_orders.any?
+      .space-y-4
+        - @presenter.decorated_orders.each do |order|
+          .rounded-xl.border.overflow-hidden.transition-all.duration-200 class="bg-slate-800/50 border-slate-700 hover:border-slate-600"
+            .p-6
+              .flex.items-center.justify-between
+                .flex.items-center.gap-4
+                  .w-12.h-12.rounded-lg.flex.items-center.justify-center class="bg-#{order.status_color}-500/20"
+                    svg class="w-6 h-6 text-#{order.status_color}-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                      path fill-rule="evenodd" d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0zm4-2.5A2.5 2.5 0 007.5 5v1h5V5A2.5 2.5 0 0010 2.5zM7.5 10a2.5 2.5 0 005 0V8.75a.75.75 0 011.5 0V10a4 4 0 01-8 0V8.75a.75.75 0 011.5 0V10z" clip-rule="evenodd"
+                  div
+                    h3.text-lg.font-semibold.text-white = order.reward_title
+                    .flex.items-center.gap-2.text-sm.text-slate-400
+                      span = order.ordered_at
+                      span.text-slate-600 •
+                      span class="text-#{order.status_color}-400" = order.status_name
+                .text-right
+                  .text-lg.font-bold.text-emerald-400 = order.points_display
+                  = link_to t('.view_details'), order_path(order), class: "text-sm text-slate-400 hover:text-white"
+
+    - else
+      .text-center.py-12
+        .text-slate-400.mb-4 = t('.no_orders')
+        = link_to t('.browse_rewards'), rewards_path, class: "text-emerald-400 hover:text-emerald-300"
+

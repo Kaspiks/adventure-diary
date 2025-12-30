@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
     render action
   end
 
+  def sortable_params
+    params.permit(:sort, :direction)
+  end
+
   private
 
   def flash_errors_for(object)

@@ -1,0 +1,14 @@
+- content_for :title, t('.title')
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_order_statuses_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = t('.title')
+
+  = render 'form', form: @presenter.form, url: admin_order_status_path(@presenter.form.object)
+
+

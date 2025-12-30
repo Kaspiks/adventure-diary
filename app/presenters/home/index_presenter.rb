@@ -26,7 +26,7 @@ module Home
         points: current_user.reward_points,
         challenges_active: user_active_attempts.count,
         challenges_completed: user_completed_attempts.count,
-        rewards_claimed: 0
+        rewards_claimed: rewards_claimed
       }
     end
 
@@ -119,6 +119,10 @@ module Home
 
     def user_completed_attempts
       current_user.challenge_attempts.joins(:attempt_status).where(attempt_statuses: { code: "approved" })
+    end
+
+    def rewards_claimed
+      current_user.orders.joins(:order_status).where(order_status: { code: "delivered" }).count
     end
   end
 end

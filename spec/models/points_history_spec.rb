@@ -62,12 +62,14 @@ end
 #
 #  index_points_history_on_challenge_id  (challenge_id)
 #  index_points_history_on_created_at    (created_at)
+#  index_points_history_on_order_id      (order_id)
 #  index_points_history_on_reason_code   (reason_code)
 #  index_points_history_on_user_id       (user_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (challenge_id => challenges.id)
+#  fk_rails_...  (order_id => orders.id)
 #  fk_rails_...  (user_id => users.id)
 #
 

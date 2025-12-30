@@ -62,11 +62,15 @@ en:
           roles: Roles
           challenges: Challenges
           rewards: Rewards
+          orders: Orders
           settings: Settings
           classification_items: Classification Items
       classification_items:
         index:
           locations: Locations
+          order_statuses: Order Statuses
+          attempt_statuses: Attempt Statuses
+          reward_statuses: Reward Statuses
     navigation:
       sections:
         home:

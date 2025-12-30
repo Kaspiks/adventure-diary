@@ -1,0 +1,64 @@
+- content_for :title, @presenter.decorated_reward.title
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_rewards_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = @presenter.decorated_reward.title
+    .flex.items-center.gap-2
+      = link_to orders_admin_reward_path(@presenter.reward), class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 transition-all" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0z" clip-rule="evenodd"
+        = t('.view_orders')
+      = link_to edit_admin_reward_path(@presenter.reward), class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all" do
+        = t('.edit')
+      = link_to admin_reward_path(@presenter.reward), data: { turbo_method: :delete, turbo_confirm: t('.confirm_delete') }, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-red-400 bg-red-500/20 hover:bg-red-500/30 transition-all" do
+        = t('.delete')
+
+  .grid.grid-cols-1.lg:grid-cols-3.gap-6
+    .lg:col-span-2.space-y-6
+      / Image
+      - if @presenter.decorated_reward.has_image?
+        .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+          = image_tag @presenter.decorated_reward.image, class: "w-full h-64 object-cover"
+
+      / Details
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.details')
+        .grid.grid-cols-2.gap-4
+          div
+            .text-sm.text-slate-400.mb-1 = t('.fields.cost')
+            .text-lg.font-medium.text-emerald-400 = @presenter.decorated_reward.cost_display
+          div
+            .text-sm.text-slate-400.mb-1 = t('.fields.stock')
+            .text-lg.font-medium class="text-#{@presenter.decorated_reward.stock_color}-400" = @presenter.decorated_reward.stock_display
+          div
+            .text-sm.text-slate-400.mb-1 = t('.fields.status')
+            span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_reward.status_color}-500/20 text-#{@presenter.decorated_reward.status_color}-300"
+              = @presenter.decorated_reward.status_badge
+          div
+            .text-sm.text-slate-400.mb-1 = t('.fields.owner')
+            .text-white = @presenter.decorated_reward.owner_name
+
+      / Description
+      - if @presenter.decorated_reward.description.present?
+        .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+          h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.description')
+          .prose.prose-invert.prose-slate.max-w-none.text-slate-300
+            == @presenter.decorated_reward.description_html
+
+    / Stats
+    .space-y-6
+      .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
+        h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.stats')
+        .space-y-4
+          div
+            .text-sm.text-slate-400 = t('.stats.total_orders')
+            .text-2xl.font-bold.text-white = @presenter.decorated_reward.orders_count
+          div
+            .text-sm.text-slate-400 = t('.stats.pending_orders')
+            .text-2xl.font-bold.text-amber-400 = @presenter.decorated_reward.pending_orders_count
+

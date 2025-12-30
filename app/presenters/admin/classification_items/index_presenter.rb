@@ -42,6 +42,14 @@ module Admin
           ClassificationItem.new(
             t_context('.locations'),
             url_helpers.admin_locations_path
+          ),
+          ClassificationItem.new(
+            t_context('.order_statuses'),
+            url_helpers.admin_order_statuses_path
+          ),
+          ClassificationItem.new(
+            t_context('.attempt_statuses'),
+            url_helpers.admin_attempt_statuses_path
           )
         ]
       end

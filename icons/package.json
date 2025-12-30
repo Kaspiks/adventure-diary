@@ -8,6 +8,7 @@
     "clean": "node -e \"const fs=require('fs');const p=require('path');const d=p.join(__dirname,'..','vendor','assets','images');['icons.svg','_icons_entry.js'].forEach(f=>{const fpath=p.join(d,f);if(fs.existsSync(fpath))fs.unlinkSync(fpath);});\""
   },
   "devDependencies": {
-    "@tabler/icons": "^3.0.0"
+    "@tabler/icons": "^3.0.0",
+    "sortablejs": "^1.15.6"
   }
 }

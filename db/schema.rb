@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_28_150000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_29_000004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -169,6 +169,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_150000) do
     t.index ["name"], name: "index_locations_on_name"
   end
 
+  create_table "order_statuses", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 100, null: false
+    t.boolean "is_final", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_order_statuses_on_code", unique: true
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "reward_id", null: false
+    t.bigint "order_status_id", null: false
+    t.integer "total_points", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_status_id"], name: "index_orders_on_order_status_id"
+    t.index ["reward_id", "order_status_id"], name: "index_orders_on_reward_id_and_order_status_id"
+    t.index ["reward_id"], name: "index_orders_on_reward_id"
+    t.index ["user_id", "created_at"], name: "index_orders_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "code", limit: 100, null: false
     t.text "description"
@@ -194,8 +217,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_150000) do
     t.datetime "created_at", null: false
     t.index ["challenge_id"], name: "index_points_history_on_challenge_id"
     t.index ["created_at"], name: "index_points_history_on_created_at"
+    t.index ["order_id"], name: "index_points_history_on_order_id"
     t.index ["reason_code"], name: "index_points_history_on_reason_code"
     t.index ["user_id"], name: "index_points_history_on_user_id"
+  end
+
+  create_table "rewards", force: :cascade do |t|
+    t.bigint "owner_user_id", null: false
+    t.string "title", limit: 255, null: false
+    t.text "description"
+    t.integer "cost_points", null: false
+    t.boolean "is_active", default: true, null: false
+    t.integer "stock_quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cost_points"], name: "index_rewards_on_cost_points"
+    t.index ["is_active"], name: "index_rewards_on_is_active"
+    t.index ["owner_user_id"], name: "index_rewards_on_owner_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -260,9 +298,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_150000) do
   add_foreign_key "challenges", "difficulty_levels"
   add_foreign_key "challenges", "locations"
   add_foreign_key "challenges", "users", column: "creator_user_id"
+  add_foreign_key "orders", "order_statuses"
+  add_foreign_key "orders", "rewards"
+  add_foreign_key "orders", "users"
   add_foreign_key "permissions_roles", "permissions"
   add_foreign_key "permissions_roles", "roles"
   add_foreign_key "points_history", "challenges"
+  add_foreign_key "points_history", "orders"
   add_foreign_key "points_history", "users"
+  add_foreign_key "rewards", "users", column: "owner_user_id"
   add_foreign_key "users", "roles"
 end

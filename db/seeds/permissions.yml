@@ -129,3 +129,21 @@
 
 - code: classifications.manage
   description: Manage classifications
+
+- code: order_statuses.index
+  description: View list of order statuses
+
+- code: order_statuses.create
+  description: Create new order statuses
+
+- code: order_statuses.update
+  description: Edit existing order statuses
+
+- code: attempt_statuses.index
+  description: View list of attempt statuses
+
+- code: attempt_statuses.create
+  description: Create new attempt statuses
+
+- code: attempt_statuses.update
+  description: Edit existing attempt statuses

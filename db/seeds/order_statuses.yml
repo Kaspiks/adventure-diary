@@ -1,0 +1,16 @@
+- code: pending
+  name: Pending
+  is_final: false
+
+- code: approved
+  name: Approved
+  is_final: false
+
+- code: delivered
+  name: Delivered
+  is_final: true
+
+- code: cancelled
+  name: Cancelled
+  is_final: true
+

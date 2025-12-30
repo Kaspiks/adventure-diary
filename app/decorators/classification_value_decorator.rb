@@ -28,3 +28,4 @@ class ClassificationValueDecorator < ApplicationDecorator
   end
 end
 
+

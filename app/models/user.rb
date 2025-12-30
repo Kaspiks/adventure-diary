@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :challenge_attempts, dependent: :destroy
   has_many :reviewed_attempts, class_name: "ChallengeAttempt", foreign_key: :reviewer_user_id, dependent: :nullify, inverse_of: :reviewer_user
   has_many :points_history, dependent: :destroy
+  has_many :owned_rewards, class_name: "Reward", foreign_key: :owner_user_id, dependent: :restrict_with_error, inverse_of: :owner_user
+  has_many :orders, dependent: :restrict_with_error
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
@@ -74,15 +76,38 @@ class User < ApplicationRecord
     administrator? || company_user?
   end
 
-  def add_points!(points, reason_code:, challenge: nil)
+  def add_points!(points, reason_code:, challenge: nil, order: nil)
     transaction do
       increment!(:reward_points, points)
       points_history.create!(
         delta_points: points,
         reason_code: reason_code,
-        challenge: challenge
+        challenge: challenge,
+        order: order
       )
     end
+  end
+
+  def deduct_points!(points, reason_code:, order: nil)
+    transaction do
+      lock!
+      raise "Insufficient points" if reward_points < points
+
+      decrement!(:reward_points, points)
+      points_history.create!(
+        delta_points: -points,
+        reason_code: reason_code,
+        order: order
+      )
+    end
+  end
+
+  def can_afford?(cost)
+    reward_points >= cost
+  end
+
+  def can_create_rewards?
+    administrator? || company_user?
   end
 end
 

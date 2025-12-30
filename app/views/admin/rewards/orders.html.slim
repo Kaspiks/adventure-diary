@@ -1,0 +1,50 @@
+- content_for :title, t('.title', reward: @presenter.decorated_reward.title)
+
+.space-y-6
+  .flex.items-center.justify-between
+    div
+      = link_to admin_reward_path(@presenter.reward), class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = t('.back')
+      h1.text-2xl.font-bold.text-white = t('.title', reward: @presenter.decorated_reward.title)
+      p.text-slate-400 = t('.subtitle', count: @presenter.total_count)
+
+  / Orders List
+  .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+    table.w-full
+      thead
+        tr.border-b class="border-slate-700"
+          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.headers.user')
+          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.headers.points')
+          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.headers.status')
+          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.headers.ordered')
+          th.px-6.py-4.text-right.text-sm.font-medium.text-slate-400 = t('.headers.actions')
+      tbody.divide-y class="divide-slate-700"
+        - if @presenter.decorated_orders.any?
+          - @presenter.decorated_orders.each do |order|
+            tr.transition-colors class="hover:bg-slate-700/50"
+              td.px-6.py-4
+                .font-medium.text-white = order.buyer_name
+                .text-sm.text-slate-400 = order.buyer_email
+              td.px-6.py-4.text-emerald-400.font-medium = order.points_display
+              td.px-6.py-4
+                span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{order.status_color}-500/20 text-#{order.status_color}-300"
+                  = order.status_name
+              td.px-6.py-4.text-slate-300 = order.ordered_at
+              td.px-6.py-4.text-right
+                .flex.items-center.justify-end.gap-2
+                  - if order.can_approve?
+                    = button_to admin_orders_status_action_approve_path(order.id), method: :post, class: "px-3 py-1 rounded-lg text-xs font-medium text-blue-300 bg-blue-500/20 hover:bg-blue-500/30 transition-all cursor-pointer" do
+                      = t('.actions.approve')
+                  - if order.can_deliver?
+                    = button_to admin_orders_status_action_deliver_path(order.id), method: :post, class: "px-3 py-1 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-500/20 hover:bg-emerald-500/30 transition-all cursor-pointer" do
+                      = t('.actions.deliver')
+                  - if order.can_cancel?
+                    = button_to admin_orders_status_action_cancel_path(order.id), method: :post, data: { turbo_confirm: t('.confirm_cancel') }, class: "px-3 py-1 rounded-lg text-xs font-medium text-red-300 bg-red-500/20 hover:bg-red-500/30 transition-all cursor-pointer" do
+                      = t('.actions.cancel')
+        - else
+          tr
+            td.px-6.py-12.text-center.text-slate-400 colspan="5"
+              = t('.no_orders')
+

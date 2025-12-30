@@ -1,0 +1,59 @@
+- content_for :title, t('.title')
+
+.min-h-screen.bg-slate-900.py-8
+  .max-w-6xl.mx-auto.px-4
+    = link_to root_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
+      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      = t('.back')
+
+    .mb-8
+      .flex.items-center.justify-between
+        div
+          h1.text-3xl.font-bold.text-white = t('.title')
+          p.text-slate-400.mt-2 = t('.subtitle', count: @presenter.total_count)
+        .text-right
+          .text-sm.text-slate-400 = t('.your_points')
+          .text-2xl.font-bold.text-emerald-400 = "#{@presenter.user_points} pts"
+
+    .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-6
+      - @presenter.decorated_rewards.each do |reward|
+        .rounded-xl.border.overflow-hidden.transition-all.duration-200 class="bg-slate-800/50 border-slate-700 hover:border-slate-600 hover:shadow-lg"
+          - if reward.has_image?
+            .h-40.overflow-hidden
+              = image_tag reward.image, class: "w-full h-full object-cover"
+          - else
+            .h-40.flex.items-center.justify-center class="bg-slate-700/50"
+              = icon("gift", width: 48, height: 48, class: "text-slate-500")
+          .p-6
+            .flex.items-start.justify-between.mb-4
+              span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{reward.status_color}-500/20 text-#{reward.status_color}-300"
+                = reward.status_badge
+              .text-emerald-400.font-bold = reward.cost_display
+
+            h3.text-lg.font-semibold.text-white.mb-2 = reward.title
+
+            - if reward.description.present?
+              p.text-slate-400.text-sm.mb-4.line-clamp-2 = reward.truncated_description
+
+            .flex.items-center.gap-4.text-sm.text-slate-400.mb-4
+              .flex.items-center.gap-1
+                svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z"
+                = reward.owner_name
+              .flex.items-center.gap-1 class="text-#{reward.stock_color}-400"
+                svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  path d="M5.127 3.502L5.25 3.5h9.5c.041 0 .082 0 .123.002A2.251 2.251 0 0012.75 2h-5.5a2.25 2.25 0 00-2.123 1.502zM1 10.25A2.25 2.25 0 013.25 8h13.5A2.25 2.25 0 0119 10.25v5.5A2.25 2.25 0 0116.75 18H3.25A2.25 2.25 0 011 15.75v-5.5zm3.5 0a.75.75 0 000 1.5h11a.75.75 0 000-1.5h-11z"
+                = reward.stock_display
+
+            - if @presenter.can_afford?(reward.object)
+              = link_to reward_path(reward), class: "block w-full text-center px-4 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all" do
+                = t('.view_details')
+            - else
+              = link_to reward_path(reward), class: "block w-full text-center px-4 py-2 rounded-lg font-medium text-slate-400 bg-slate-700 hover:bg-slate-600 transition-all" do
+                = t('.view_details')
+
+    - if @presenter.decorated_rewards.empty?
+      .text-center.py-12
+        .text-slate-400 = t('.no_rewards')
+

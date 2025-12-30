@@ -81,6 +81,19 @@ if File.exist?(attempt_statuses_file)
   puts "  Created #{AttemptStatus.count} attempt statuses"
 end
 
+puts "Seeding order statuses..."
+order_statuses_file = Rails.root.join("db/seeds/order_statuses.yml")
+if File.exist?(order_statuses_file)
+  order_statuses_data = YAML.load_file(order_statuses_file)
+  order_statuses_data.each do |os|
+    OrderStatus.find_or_create_by!(code: os["code"]) do |o|
+      o.name = os["name"]
+      o.is_final = os["is_final"]
+    end
+  end
+  puts "  Created #{OrderStatus.count} order statuses"
+end
+
 puts "Seeding locations..."
 locations_file = Rails.root.join("db/seeds/locations.yml")
 if File.exist?(locations_file)
@@ -209,6 +222,49 @@ if Rails.env.development?
     )
 
     puts "  Created #{Challenge.count} sample challenges"
+  end
+
+  # Seed sample rewards
+  if company_user && Reward.count == 0
+    puts "Seeding sample rewards..."
+
+    Reward.create!(
+      owner_user: company_user,
+      title: "Coffee Voucher",
+      description: "Enjoy a free coffee at any participating location. Valid for any size drink.",
+      cost_points: 50,
+      is_active: true,
+      stock_quantity: 100
+    )
+
+    Reward.create!(
+      owner_user: company_user,
+      title: "Movie Ticket",
+      description: "One free movie ticket valid at any cinema. Excludes 3D and IMAX screenings.",
+      cost_points: 200,
+      is_active: true,
+      stock_quantity: 50
+    )
+
+    Reward.create!(
+      owner_user: company_user,
+      title: "Adventure T-Shirt",
+      description: "Exclusive Adventure Diary branded t-shirt. Available in various sizes.",
+      cost_points: 500,
+      is_active: true,
+      stock_quantity: 20
+    )
+
+    Reward.create!(
+      owner_user: company_user,
+      title: "Premium Membership",
+      description: "One month of premium membership with exclusive challenges and double points.",
+      cost_points: 1000,
+      is_active: true,
+      stock_quantity: nil
+    )
+
+    puts "  Created #{Reward.count} sample rewards"
   end
 end
 

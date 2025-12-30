@@ -24,3 +24,4 @@ class ClassificationDecorator < ApplicationDecorator
   end
 end
 
+
