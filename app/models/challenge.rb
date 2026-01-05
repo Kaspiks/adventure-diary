@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class Challenge < ApplicationRecord
+  include DynamicFields::Concerns::HasDynamicFields
+
+  dynamic_fields_config(
+    column: :fields_config,
+    template_field_class: "ChallengeFields::TemplateField"
+  )
+
   belongs_to :creator_user, class_name: "User"
   belongs_to :location, optional: true
   belongs_to :challenge_type
@@ -11,7 +18,7 @@ class Challenge < ApplicationRecord
   has_many :points_history, dependent: :nullify
 
   validates :title, presence: true, length: { maximum: 255 }
-  validate :validate_fields_config
+  validate :validate_template_fields
 
   scope :active, -> { where(is_active: true) }
   scope :inactive, -> { where(is_active: false) }
@@ -29,28 +36,36 @@ class Challenge < ApplicationRecord
   end
 
   def fields
-    (fields_config || []).map { |f| ChallengeField.new(f.symbolize_keys) }
+    template_fields
   end
 
   def fields=(value)
-    self.fields_config = value.is_a?(Array) ? value : []
+    self.template_fields = value
   end
 
   def has_fields?
-    fields_config.present? && fields_config.any?
+    has_template_fields?
   end
 
   def field_count
-    fields_config&.size || 0
+    template_field_count
   end
 
   def total_field_points
-    fields.sum(&:points)
+    template_fields.sum(&:points)
   end
 
   def available_field_types
     type_code = challenge_type&.code
     ChallengeFields.for_challenge_type(type_code)
+  end
+
+  def field_type_options
+    ChallengeFields.options_for_select(challenge_type&.code)
+  end
+
+  def field_type_defaults(field_type)
+    ChallengeFields.defaults_for(challenge_type&.code, field_type)
   end
 
   def quiz_challenge?
@@ -68,118 +83,28 @@ class Challenge < ApplicationRecord
   def required_photo_count
     return 1 unless photo_challenge?
 
-    photo_field = fields.find { |f| f.photo_upload? }
-    photo_field&.max_photos || 1
+    photo_field = template_fields.find { |f| f.type == :photo_upload }
+    photo_field&.config&.dig(:max_photos) || 1
+  end
+
+  def build_model_field(template_field, storage_data: {})
+    template_field.build_model_field(object: self, storage_data: storage_data)
+  end
+
+  def build_blank_model_fields
+    template_fields.map { |tf| tf.build_blank_model_field(object: self) }
   end
 
   private
 
-  def validate_fields_config
-    return if fields_config.blank?
-
-    fields_config.each_with_index do |field, index|
-      unless field["type"].present? && ChallengeFields.valid_type?(field["type"])
-        errors.add(:fields_config, "field #{index + 1} has invalid type")
+  def validate_template_fields
+    template_fields.each_with_index do |field, index|
+      unless field.valid_type?
+        errors.add(:fields_config, "field #{index + 1} has invalid type: #{field.type}")
       end
-      unless field["label"].present?
+      if field.label.blank?
         errors.add(:fields_config, "field #{index + 1} must have a label")
       end
-    end
-  end
-end
-
-class ChallengeField
-  attr_accessor :id, :type, :label, :instructions, :required, :points,
-                :options, :correct_answer, :correct_answers,
-                :image_url, :display_text, :max_photos, :number_of_blanks,
-                :case_sensitive, :hint, :require_caption
-
-  def initialize(attrs = {})
-    @id = attrs[:id] || SecureRandom.uuid
-    @type = attrs[:type]&.to_s
-    @label = attrs[:label]
-    @instructions = attrs[:instructions]
-    @required = attrs.fetch(:required, true)
-    @points = attrs[:points].to_i
-    @options = attrs[:options] || []
-    @correct_answer = attrs[:correct_answer]
-    @correct_answers = attrs[:correct_answers] || []
-    @image_url = attrs[:image_url]
-    @display_text = attrs[:display_text]
-    @max_photos = attrs[:max_photos] || 1
-    @number_of_blanks = attrs[:number_of_blanks] || 1
-    @case_sensitive = attrs.fetch(:case_sensitive, false)
-    @hint = attrs[:hint]
-    @require_caption = attrs.fetch(:require_caption, false)
-  end
-
-  def to_h
-    {
-      id: id,
-      type: type,
-      label: label,
-      instructions: instructions,
-      required: required,
-      points: points,
-      options: options,
-      correct_answer: correct_answer,
-      correct_answers: correct_answers,
-      image_url: image_url,
-      display_text: display_text,
-      max_photos: max_photos,
-      number_of_blanks: number_of_blanks,
-      case_sensitive: case_sensitive,
-      hint: hint,
-      require_caption: require_caption
-    }.compact
-  end
-
-  def text_input?
-    type == "text_input"
-  end
-
-  def single_choice?
-    type == "single_choice"
-  end
-
-  def multiple_choice?
-    type == "multiple_choice"
-  end
-
-  def photo_upload?
-    type == "photo_upload"
-  end
-
-  def hidden_letter?
-    type == "hidden_letter"
-  end
-
-  def check_answer(response)
-    return true if !required && response.blank?
-
-    case type
-    when "text_input"
-      return false unless correct_answer.present?
-      response.to_s.strip.downcase == correct_answer.strip.downcase
-    when "hidden_letter"
-      return false unless correct_answer.present?
-      if case_sensitive
-        response.to_s.strip == correct_answer.strip
-      else
-        response.to_s.strip.downcase == correct_answer.strip.downcase
-      end
-    when "single_choice"
-      correct_answer.present? && response.to_s == correct_answer
-    when "multiple_choice"
-      return false if response.blank?
-
-      given = Array(response).map(&:to_s).sort
-      expected = correct_answers.map(&:to_s).sort
-      given == expected
-    when "photo_upload"
-      response.present?
-    else
-      true
     end
   end
 end

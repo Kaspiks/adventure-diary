@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     post "reject_actions/:id", to: "reject_actions#create", as: :reject_action
   end
 
-  resources :attempts, only: [:show]
+  resources :attempts, only: [:show, :edit, :update]
 
   get "my/attempts", to: "attempts#index", as: :my_attempts
 

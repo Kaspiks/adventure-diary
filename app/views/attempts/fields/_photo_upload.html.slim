@@ -1,0 +1,43 @@
+/ Photo Upload field for attempt submission
+/
+/ Local variables:
+/   field   - The template field object
+/   attempt - The challenge attempt object
+
+- max_photos = field.config[:max_photos] || 1
+- require_caption = field.config[:require_caption] || false
+- existing_photos = attempt.photos_for_field(field.id)
+
+/ Show existing photos if any
+- if existing_photos.any?
+  .mb-4
+    p.text-sm.text-slate-400.mb-2
+      = t('attempts.fields.photo_upload.already_uploaded', count: existing_photos.count, default: "#{existing_photos.count} photo(s) already uploaded")
+    .grid.grid-cols-3.gap-2
+      - existing_photos.each do |photo|
+        - if photo.file.attached?
+          .rounded-lg.overflow-hidden.border class="border-slate-600"
+            = image_tag photo.file, class: "w-full h-20 object-cover"
+
+/ Upload new photos
+.space-y-3
+  - (1..max_photos).each do |i|
+    .border.rounded-lg.p-3.transition-colors class="border-slate-600 hover:border-slate-500 bg-slate-700/30"
+      .flex.items-center.gap-2.mb-2
+        svg.w-5.h-5.text-slate-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path fill-rule="evenodd" d="M1 5.25A2.25 2.25 0 013.25 3h13.5A2.25 2.25 0 0119 5.25v9.5A2.25 2.25 0 0116.75 17H3.25A2.25 2.25 0 011 14.75v-9.5zm1.5 5.81v3.69c0 .414.336.75.75.75h13.5a.75.75 0 00.75-.75v-2.69l-2.22-2.219a.75.75 0 00-1.06 0l-1.91 1.909.47.47a.75.75 0 11-1.06 1.06L6.53 8.091a.75.75 0 00-1.06 0l-2.97 2.97zM12 7a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"
+        span.text-sm.text-slate-300 = t('attempts.fields.photo_upload.photo_number', number: i, default: "Photo #{i}")
+        - if i == 1 && field.required?
+          span.text-xs.text-red-400 *
+
+      = file_field_tag "attempts_submit_actions_form[photos][#{field.id}][]", accept: "image/*", required: (field.required? && i == 1 && existing_photos.empty?), class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
+
+      - if require_caption
+        = text_field_tag "attempts_submit_actions_form[photo_captions][#{field.id}][#{i}]", nil, placeholder: t('attempts.fields.photo_upload.caption_placeholder', default: 'Add a caption for this photo'), class: "mt-2 w-full px-3 py-2 rounded-lg text-sm text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+
+- if max_photos > 1
+  p.text-xs.text-slate-400.mt-2
+    - if field.required?
+      = t('attempts.fields.photo_upload.hint_required', max: max_photos, default: "Upload at least 1 photo (max #{max_photos})")
+    - else
+      = t('attempts.fields.photo_upload.hint_optional', max: max_photos, default: "Upload up to #{max_photos} photos (optional)")

@@ -1,0 +1,107 @@
+---
+# Quiz challenges - focused on knowledge testing
+quiz:
+  - type: text_input
+    defaults:
+      points: 10
+      required: true
+  - type: single_choice
+    defaults:
+      points: 10
+      required: true
+      options: []
+  - type: multiple_choice
+    defaults:
+      points: 15
+      required: true
+      options: []
+  - type: hidden_letter
+    defaults:
+      points: 20
+      required: true
+      number_of_blanks: 1
+      case_sensitive: false
+
+# Exploration challenges - discovery and adventure
+exploration:
+  - type: text_input
+    defaults:
+      points: 10
+      required: true
+  - type: single_choice
+    defaults:
+      points: 10
+      required: true
+      options: []
+  - type: multiple_choice
+    defaults:
+      points: 15
+      required: true
+      options: []
+  - type: hidden_letter
+    defaults:
+      points: 20
+      required: true
+      number_of_blanks: 1
+      case_sensitive: false
+  - type: photo_upload
+    defaults:
+      required: true
+      max_photos: 3
+      require_caption: false
+
+# Photo challenges - visual evidence based
+photo:
+  - type: photo_upload
+    defaults:
+      required: true
+      max_photos: 5
+      require_caption: true
+
+# Check-in challenges - location-based
+checkin:
+  - type: photo_upload
+    defaults:
+      required: true
+      max_photos: 1
+      require_caption: false
+
+# Social challenges - community engagement
+social:
+  - type: photo_upload
+    defaults:
+      required: true
+      max_photos: 3
+      require_caption: true
+  - type: text_input
+    defaults:
+      points: 0
+      required: false
+
+# Default field types (fallback when challenge type not specified)
+_default:
+  - type: text_input
+    defaults:
+      points: 10
+      required: true
+  - type: single_choice
+    defaults:
+      points: 10
+      required: true
+      options: []
+  - type: multiple_choice
+    defaults:
+      points: 15
+      required: true
+      options: []
+  - type: photo_upload
+    defaults:
+      required: true
+      max_photos: 3
+      require_caption: false
+  - type: hidden_letter
+    defaults:
+      points: 20
+      required: true
+      number_of_blanks: 1
+      case_sensitive: false

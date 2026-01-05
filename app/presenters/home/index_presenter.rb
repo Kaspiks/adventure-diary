@@ -2,11 +2,27 @@
 
 module Home
   class IndexPresenter < ApplicationPresenter
-    attr_reader :current_user
+    attr_reader :current_user, :view_context
 
-    def initialize(current_user:)
+    def initialize(current_user:, view_context:)
       super()
       @current_user = current_user
+      @view_context = view_context
+    end
+
+    def quick_actions
+      navigation_presenter.quick_actions
+    end
+
+    def admin_quick_actions
+      navigation_presenter.admin_quick_actions
+    end
+
+    private def navigation_presenter
+      @navigation_presenter ||= NavigationPresenter.new(
+        view_context: view_context,
+        current_user: current_user
+      )
     end
 
     def user_first_name
@@ -91,14 +107,6 @@ module Home
         recent_activity: t_context(".sections.recent_activity"),
         quick_actions: t_context(".sections.quick_actions"),
         leaderboard: t_context(".sections.leaderboard")
-      }
-    end
-
-    def action_labels
-      {
-        find_challenges: t_context(".actions.find_challenges"),
-        rewards_catalog: t_context(".actions.rewards_catalog"),
-        my_profile: t_context(".actions.my_profile")
       }
     end
 

@@ -1,73 +1,73 @@
 # frozen_string_literal: true
 
-# Centralized definition of all challenge field types
-class ChallengeFields
-  FIELD_TYPES = {
-    text_input: {
-      name: "Text Input",
-      icon: "text",
-      challenge_types: %w[quiz exploration],
-      config_fields: %i[label instructions required points correct_answer],
-      form_fields: %i[text_input],
-      show_fields: %i[label instructions text_value]
-    },
-    single_choice: {
-      name: "Single Choice",
-      icon: "radio",
-      challenge_types: %w[quiz],
-      config_fields: %i[label instructions required points options correct_answer],
-      form_fields: %i[radio_buttons],
-      show_fields: %i[label instructions selected_option]
-    },
-    multiple_choice: {
-      name: "Multiple Choice",
-      icon: "checkbox",
-      challenge_types: %w[quiz],
-      config_fields: %i[label instructions required points options correct_answers],
-      form_fields: %i[checkboxes],
-      show_fields: %i[label instructions selected_options]
-    },
-    photo_upload: {
-      name: "Photo Upload",
-      icon: "camera",
-      challenge_types: %w[photo checkin exploration social],
-      config_fields: %i[label instructions required max_photos require_caption],
-      form_fields: %i[file_upload],
-      show_fields: %i[label instructions photos]
-    },
-    hidden_letter: {
-      name: "Hidden Letter",
-      icon: "eye",
-      challenge_types: %w[exploration],
-      config_fields: %i[label instructions required points image_url display_text number_of_blanks case_sensitive correct_answer hint],
-      form_fields: %i[hidden_letter_puzzle],
-      show_fields: %i[label instructions image display_text user_answer]
-    }
-  }.freeze
+require_relative "dynamic_fields"
+module ChallengeFields
+  class << self
 
-  def self.types
-    FIELD_TYPES
-  end
-
-  def self.for_challenge_type(challenge_type_code)
-    return FIELD_TYPES if challenge_type_code.blank?
-
-    FIELD_TYPES.select do |_key, config|
-      config[:challenge_types].include?(challenge_type_code.to_s)
+    def config
+      ConfigLoader.default
     end
-  end
 
-  def self.valid_type?(type)
-    FIELD_TYPES.key?(type.to_sym)
-  end
+    def types
+      Registry::FIELD_TYPES
+    end
 
-  def self.config_for(type)
-    FIELD_TYPES[type.to_sym]
+    def for_challenge_type(challenge_type_code)
+      available_configs = config.field_types_for(challenge_type_code)
+      available_type_symbols = available_configs.map(&:type)
+
+      Registry::FIELD_TYPES.select { |type, _| available_type_symbols.include?(type) }
+    end
+
+    def valid_type?(type)
+      Registry.valid_type?(type)
+    end
+
+    def field_type_available?(challenge_type_code, field_type)
+      config.field_type_available?(challenge_type_code, field_type)
+    end
+
+    def config_for(type)
+      Registry.definition_for(type)
+    end
+
+    def field_class_for(type)
+      Registry.field_class_for(type)
+    end
+
+    def form_field_class_for(type)
+      Registry.form_field_class_for(type)
+    end
+
+    def options_for_select(challenge_type_code = nil)
+      config.options_for_select(challenge_type_code)
+    end
+
+
+    def defaults_for(challenge_type_code, field_type)
+      config.defaults_for(challenge_type_code, field_type)
+    end
+
+    def reload_config!
+      ConfigLoader.reset!
+      config.reload!
+    end
   end
 end
 
-
-
-
-
-
+# Load ChallengeFields submodules
+require_relative "challenge_fields/config_loader"
+require_relative "challenge_fields/template_field"
+require_relative "challenge_fields/base_field"
+require_relative "challenge_fields/text_input_field"
+require_relative "challenge_fields/single_choice_field"
+require_relative "challenge_fields/multiple_choice_field"
+require_relative "challenge_fields/photo_upload_field"
+require_relative "challenge_fields/hidden_letter_field"
+require_relative "challenge_fields/form_fields/base_form_field"
+require_relative "challenge_fields/form_fields/text_input_form_field"
+require_relative "challenge_fields/form_fields/single_choice_form_field"
+require_relative "challenge_fields/form_fields/multiple_choice_form_field"
+require_relative "challenge_fields/form_fields/photo_upload_form_field"
+require_relative "challenge_fields/form_fields/hidden_letter_form_field"
+require_relative "challenge_fields/registry"

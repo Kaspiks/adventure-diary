@@ -23,5 +23,3 @@ class ClassificationDecorator < ApplicationDecorator
     system
   end
 end
-
-

@@ -1,0 +1,35 @@
+/ Hidden Letter puzzle field configuration
+/
+/ Local variables:
+/   field - The template field object
+/   index - The field index
+
+/ Puzzle image
+.space-y-2.mt-4
+  = label_tag "admin_challenges_form[fields_config][#{index}][image_url]", t('admin.challenges.field_form.puzzle_image_url'), class: "block text-sm font-medium text-slate-300"
+  = url_field_tag "admin_challenges_form[fields_config][#{index}][image_url]", field.config[:image_url], class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500", placeholder: "https://example.com/puzzle-image.jpg"
+
+/ Display text with blanks
+.space-y-2.mt-4
+  = label_tag "admin_challenges_form[fields_config][#{index}][display_text]", t('admin.challenges.field_form.display_text'), class: "block text-sm font-medium text-slate-300"
+  = text_field_tag "admin_challenges_form[fields_config][#{index}][display_text]", field.config[:display_text], class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500", placeholder: t('admin.challenges.field_form.display_text_placeholder', default: 'e.g., "The ___ is blue"')
+
+/ Number of blanks and expected answer
+.grid.grid-cols-2.gap-4.mt-4
+  .space-y-2
+    = label_tag "admin_challenges_form[fields_config][#{index}][number_of_blanks]", t('admin.challenges.field_form.number_of_blanks'), class: "block text-sm font-medium text-slate-300"
+    = number_field_tag "admin_challenges_form[fields_config][#{index}][number_of_blanks]", (field.config[:number_of_blanks] || 1), min: 1, max: 10, class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+
+  .space-y-2
+    = label_tag "admin_challenges_form[fields_config][#{index}][correct_answer]", t('admin.challenges.field_form.expected_answer'), class: "block text-sm font-medium text-slate-300"
+    = text_field_tag "admin_challenges_form[fields_config][#{index}][correct_answer]", field.config[:correct_answer], class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+
+/ Hint
+.space-y-2.mt-4
+  = label_tag "admin_challenges_form[fields_config][#{index}][hint]", t('admin.challenges.field_form.hint'), class: "block text-sm font-medium text-slate-300"
+  = text_field_tag "admin_challenges_form[fields_config][#{index}][hint]", field.config[:hint], class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500", placeholder: t('admin.challenges.field_form.hint_placeholder', default: 'Optional hint for users')
+
+/ Case sensitive toggle
+.flex.items-center.gap-4.mt-4
+  = check_box_tag "admin_challenges_form[fields_config][#{index}][case_sensitive]", "1", field.config[:case_sensitive], class: "w-5 h-5 rounded text-emerald-500 bg-slate-700 border-slate-600"
+  = label_tag "admin_challenges_form[fields_config][#{index}][case_sensitive]", t('admin.challenges.field_form.case_sensitive'), class: "text-sm font-medium text-slate-300"

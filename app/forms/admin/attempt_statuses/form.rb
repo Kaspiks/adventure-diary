@@ -14,4 +14,3 @@ module Admin
   end
 end
 
-

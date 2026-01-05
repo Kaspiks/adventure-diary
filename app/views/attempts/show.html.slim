@@ -55,11 +55,36 @@
                   .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
                     = image_tag artifact.file, class: "w-full h-32 object-cover"
                     .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
-                      - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
+                      - field = @presenter.decorated_attempt.object.challenge.template_fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
                       - if field
                         .text-xs.text-white.truncate = field.label
                       - if artifact.caption?
                         .text-xs.text-slate-300.mt-1.italic = artifact.caption
+
+        / Show user's own submitted answers
+        - if @presenter.can_view_own_answers?
+          - if @presenter.decorated_attempt.object.challenge.has_fields? && @presenter.decorated_attempt.object.response_results.any?
+            .border-t.pt-6.mb-6 class="border-slate-700"
+              .flex.items-center.justify-between.mb-4
+                h2.text-lg.font-semibold.text-white = t('.your_answers', default: 'Your Answers')
+                - if @presenter.can_edit_submission?
+                  = link_to t('.edit_answers', default: 'Edit Answers'), edit_attempt_path(@presenter.decorated_attempt), class: "inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors"
+              
+              .space-y-3
+                - @presenter.decorated_attempt.object.response_results.each do |result|
+                  .rounded-lg.p-3 class="bg-slate-700/50"
+                    .flex.items-start.justify-between
+                      div
+                        .text-sm.font-medium.text-slate-300 = result[:label]
+                        .text-white.mt-1 = result[:response].presence || t('.no_answer', default: 'No answer provided')
+                      - if @presenter.decorated_attempt.approved? || @presenter.decorated_attempt.rejected?
+                        .text-right
+                          - if result[:is_correct]
+                            span.text-emerald-400.text-sm = "✓ #{result[:points_earned]}/#{result[:max_points]} pts"
+                          - else
+                            span.text-red-400.text-sm = "✗ 0/#{result[:max_points]} pts"
+                      - elsif @presenter.decorated_attempt.submitted?
+                        .text-xs.text-amber-400 = t('.pending_review', default: 'Pending review')
 
         - if @presenter.can_submit?
           - location = @presenter.decorated_attempt.object.challenge.location
@@ -93,46 +118,11 @@
               - if geofenced
                 = hidden_field_tag "attempts_submit_actions_form[user_latitude]", "", data: { geofence_target: "userLat" }
                 = hidden_field_tag "attempts_submit_actions_form[user_longitude]", "", data: { geofence_target: "userLng" }
+              / Render challenge fields using partials
               - challenge = @presenter.decorated_attempt.object.challenge
-              - challenge.fields.each do |field|
-                .space-y-2
-                  = f.label "answers[#{field.id}]", field.label, class: "block text-sm font-medium text-slate-300"
-                  - if field.instructions.present?
-                    p.text-xs.text-slate-400.mb-2 = field.instructions
-                  
-                  - case field.type
-                  - when "text_input"
-                    = text_field_tag "attempts_submit_actions_form[answers][#{field.id}]", @presenter.decorated_attempt.object.answer_for_field(field.id)&.answer_value, required: field.required, class: "w-full px-4 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
-                  
-                  - when "single_choice"
-                    - field.options.each do |option|
-                      .flex.items-center.gap-2.mb-2
-                        = radio_button_tag "attempts_submit_actions_form[answers][#{field.id}]", option, @presenter.decorated_attempt.object.answer_for_field(field.id)&.answer_value == option, required: field.required, class: "w-4 h-4 text-emerald-500 bg-slate-700 border-slate-600 focus:ring-emerald-500"
-                        = label_tag "attempts_submit_actions_form_answers_#{field.id}_#{option.parameterize}", option, class: "text-sm text-slate-300"
-                  
-                  - when "multiple_choice"
-                    - field.options.each do |option|
-                      .flex.items-center.gap-2.mb-2
-                        = check_box_tag "attempts_submit_actions_form[answers][#{field.id}][]", option, (@presenter.decorated_attempt.object.answer_for_field(field.id)&.answer_value_array || []).include?(option), class: "w-4 h-4 rounded text-emerald-500 bg-slate-700 border-slate-600 focus:ring-emerald-500"
-                        = label_tag "attempts_submit_actions_form_answers_#{field.id}_#{option.parameterize}", option, class: "text-sm text-slate-300"
-                  
-                  - when "hidden_letter"
-                    - if field.image_url.present?
-                      img.mb-3.rounded-lg.max-w-md src=field.image_url alt=field.display_text class="border border-slate-600"
-                    - if field.display_text.present?
-                      p.text-sm.text-slate-300.mb-2 = field.display_text
-                    - if field.hint.present?
-                      p.text-xs.text-slate-400.italic.mb-2 = "Hint: #{field.hint}"
-                    = text_field_tag "attempts_submit_actions_form[answers][#{field.id}]", @presenter.decorated_attempt.object.answer_for_field(field.id)&.answer_value, required: field.required, maxlength: field.number_of_blanks, class: "w-full px-4 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors", placeholder: t('.hidden_letter_placeholder', count: field.number_of_blanks)
-                  
-                  - when "photo_upload"
-                    - (1..field.max_photos).each do |i|
-                      .mb-3
-                        = file_field_tag "attempts_submit_actions_form[photos][#{field.id}][]", accept: "image/*", required: (field.required && i == 1), class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400"
-                        - if field.require_caption
-                          = text_field_tag "attempts_submit_actions_form[photo_captions][#{field.id}][#{i}]", nil, placeholder: t('.photo_caption_placeholder'), class: "mt-2 w-full px-4 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
-                      - if field.max_photos > 1
-                        p.text-xs.text-slate-400.mt-1 = t('.photo_count_hint', required: field.required ? 1 : 0, max: field.max_photos)
+              - attempt = @presenter.decorated_attempt.object
+              - challenge.template_fields.each do |field|
+                = render "attempts/fields/field_wrapper", field: field, attempt: attempt
               
               - if challenge.fields.empty?
                 div
@@ -181,7 +171,7 @@
                       .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
                         = image_tag artifact.file, class: "w-full h-32 object-cover"
                         .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
-                          - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
+                          - field = @presenter.decorated_attempt.object.challenge.template_fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
                           - if field
                             .text-xs.text-white.truncate = field.label
                           - if artifact.caption?

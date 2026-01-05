@@ -111,7 +111,12 @@ class ApplicationModelForm < ApplicationForm
 
   def save(raise_error: false)
     if form_and_object_valid?
-      raise_error ? object.save! : object.save
+      result = raise_error ? object.save! : object.save
+      # If save failed, capture the object's errors
+      unless result
+        errors.merge!(object.errors)
+      end
+      result
     else
       raise ActiveRecord::RecordInvalid, object if raise_error
 

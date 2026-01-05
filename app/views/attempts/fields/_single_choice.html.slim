@@ -1,0 +1,15 @@
+/ Single Choice field for attempt submission
+/
+/ Local variables:
+/   field   - The template field object
+/   attempt - The challenge attempt object
+
+- answer = attempt.answer_for_field(field.id)
+- current_value = answer&.answer_value
+- options = field.config[:options] || []
+
+.space-y-2
+  - options.each do |option|
+    .flex.items-center.gap-3.p-2.rounded-lg.transition-colors class="hover:bg-slate-700/50"
+      = radio_button_tag "attempts_submit_actions_form[answers][#{field.id}]", option, current_value == option, required: field.required?, class: "w-4 h-4 text-emerald-500 bg-slate-700 border-slate-600 focus:ring-emerald-500 focus:ring-offset-slate-800"
+      = label_tag "attempts_submit_actions_form_answers_#{field.id}_#{option.parameterize}", option, class: "text-sm text-slate-300 cursor-pointer flex-1"

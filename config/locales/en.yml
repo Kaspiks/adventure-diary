@@ -29,3 +29,6 @@
 
 en:
   hello: "Hello world"
+  attempts:
+    update:
+      success: "Your answers have been updated successfully."

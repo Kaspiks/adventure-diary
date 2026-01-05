@@ -1,0 +1,76 @@
+- content_for :title, t('.title', default: 'Edit Your Answers')
+
+.min-h-screen.bg-slate-900.py-8
+  .max-w-4xl.mx-auto.px-4
+    = link_to attempt_path(@presenter.attempt), class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
+      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+        path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      = t('.back', default: 'Back to Attempt')
+
+    .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
+      .p-8
+        .mb-6
+          h1.text-2xl.font-bold.text-white.mb-2 = t('.title', default: 'Edit Your Answers')
+          p.text-slate-400 = t('.description', default: 'Update your answers before the attempt is reviewed.')
+
+        - if @presenter.decorated_attempt.object.errors.any?
+          .rounded-xl.border.p-4.mb-6 class="bg-red-900/30 border-red-500/50"
+            h3.text-sm.font-semibold.text-red-400.mb-2 = t('errors.template.header', count: @presenter.decorated_attempt.object.errors.count, model: 'Attempt')
+            ul.list-disc.list-inside.text-sm.text-red-300
+              - @presenter.decorated_attempt.object.errors.full_messages.each do |message|
+                li = message
+
+        = form_with url: attempt_path(@presenter.attempt), method: :patch, local: true, multipart: true, class: "space-y-6", scope: :attempts_edit_form do |f|
+          - @presenter.template_fields.each do |field|
+            - answer = @presenter.answer_for_field(field.id)
+            - current_value = answer&.answer_value
+            
+            .rounded-lg.p-4 class="bg-slate-700/50"
+              .flex.items-start.justify-between.mb-2
+                div
+                  .text-sm.font-medium.text-white
+                    = field.label
+                    - if field.required?
+                      span.text-red-400.ml-1 *
+                  - if field.instructions.present?
+                    .text-xs.text-slate-400.mt-1 = field.instructions
+              
+              - case field.type
+              - when :text_input, :hidden_letter
+                = text_field_tag "attempts_edit_form[answers][#{field.id}]", current_value, class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500", placeholder: t('.enter_answer', default: 'Enter your answer...')
+              
+              - when :single_choice
+                - options = field.config[:options] || []
+                .space-y-2.mt-2
+                  - options.each do |option|
+                    label.flex.items-center.gap-2.cursor-pointer.text-slate-300.hover:text-white
+                      = radio_button_tag "attempts_edit_form[answers][#{field.id}]", option, current_value == option, class: "w-4 h-4 text-emerald-500 bg-slate-700 border-slate-600 focus:ring-emerald-500"
+                      = option
+              
+              - when :multiple_choice
+                - options = field.config[:options] || []
+                - selected_values = answer&.answer_value_array || []
+                .space-y-2.mt-2
+                  - options.each do |option|
+                    label.flex.items-center.gap-2.cursor-pointer.text-slate-300.hover:text-white
+                      = check_box_tag "attempts_edit_form[answers][#{field.id}][]", option, selected_values.include?(option), class: "w-4 h-4 rounded text-emerald-500 bg-slate-700 border-slate-600 focus:ring-emerald-500"
+                      = option
+              
+              - when :photo_upload
+                - existing_photos = @presenter.photos_for_field(field.id)
+                - if existing_photos.any?
+                  .mb-3
+                    .text-xs.text-slate-400.mb-2 = t('.current_photos', default: 'Current photos:')
+                    .grid.grid-cols-3.gap-2
+                      - existing_photos.each do |photo|
+                        - if photo.file.attached?
+                          .rounded-lg.overflow-hidden.border class="border-slate-600"
+                            = image_tag photo.file, class: "w-full h-20 object-cover"
+                
+                .border-2.border-dashed.rounded-xl.p-4.text-center.transition-colors class="border-slate-600 hover:border-emerald-500/50 bg-slate-700/30"
+                  = file_field_tag "attempts_edit_form[photos][#{field.id}][]", accept: "image/*", multiple: true, class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
+                  .text-xs.text-slate-500.mt-2 = t('.add_more_photos', default: 'Add more photos (optional)')
+
+          .flex.gap-4.pt-4
+            = link_to t('.cancel', default: 'Cancel'), attempt_path(@presenter.attempt), class: "flex-1 text-center px-6 py-3 rounded-lg font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+            = f.submit t('.save_changes', default: 'Save Changes'), class: "flex-1 px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"

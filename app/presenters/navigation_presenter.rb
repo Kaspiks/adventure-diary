@@ -1,103 +1,148 @@
 # frozen_string_literal: true
 
 class NavigationPresenter < ApplicationPresenter
-  NavigationSection = Struct.new(:title, :items)
-  NavigationItem = Struct.new(:title, :icon, :url, :active?)
+  QuickAction = Struct.new(:title, :icon, :url, :color, :description, keyword_init: true) do
+    def icon_color_class
+      case color
+      when "emerald" then "text-emerald-400"
+      when "blue" then "text-blue-400"
+      when "amber" then "text-amber-400"
+      when "cyan" then "text-cyan-400"
+      when "purple" then "text-purple-400"
+      when "rose" then "text-rose-400"
+      when "orange" then "text-orange-400"
+      when "yellow" then "text-yellow-400"
+      else "text-slate-400"
+      end
+    end
 
-  def initialize(view_context:, controller_path:, user:)
-    super()
-    @view_context = view_context
-    @controller_path = controller_path
-    @user = user
+    def bg_color_class
+      case color
+      when "emerald" then "bg-emerald-500/20"
+      when "blue" then "bg-blue-500/20"
+      when "amber" then "bg-amber-500/20"
+      when "cyan" then "bg-cyan-500/20"
+      when "purple" then "bg-purple-500/20"
+      when "rose" then "bg-rose-500/20"
+      when "orange" then "bg-orange-500/20"
+      when "yellow" then "bg-yellow-500/20"
+      else "bg-slate-500/20"
+      end
+    end
   end
 
-  def navigation_sections
-    sections.map do |section, section_items|
-      section_name = section ? t_context(".sections.#{section}.title") : nil
-      NavigationSection.new(section_name, section_items)
-    end
+  def initialize(view_context:, current_user:)
+    super()
+    @view_context = view_context
+    @current_user = current_user
+  end
+
+  def quick_actions
+    actions = []
+    actions << find_challenges_action
+    actions << my_attempts_action if @current_user.challenge_attempts.any?
+    actions << rewards_catalog_action
+    actions << my_profile_action
+    actions << my_orders_action if @current_user.orders.any?
+    actions.compact
+  end
+
+  def admin_quick_actions
+    return [] unless admin_user?
+
+    [
+      admin_dashboard_action,
+      manage_challenges_action,
+      review_attempts_action
+    ].compact
   end
 
   private
 
-  def sections
-    data_for_sections.reduce({}) do |result, (section, items)|
-      visible_items = items.compact
-      visible_items.present? ? result.merge(section => visible_items) : result
-    end
+  def admin_user?
+    @current_user.admin? || @current_user.administrator? || @current_user.company_user?
   end
 
-  def data_for_sections
-    {
-      nil => general_nav_items,
-      :administration => administration_nav_items,
-      :configuration => configuration_nav_items
-    }
-  end
-
-  def general_nav_items
-    [
-      home_nav_item,
-      trips_nav_item
-    ]
-  end
-
-  def administration_nav_items
-    [
-      users_nav_item
-    ]
-  end
-
-  def configuration_nav_items
-    [
-      settings_nav_item
-    ]
-  end
-
-  def home_nav_item
-    build_nav_item(
-      icon: "home",
-      path: @view_context.root_path,
-      section: "home",
-      matcher: /\Ahome/
+  def find_challenges_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.find_challenges", default: "Find Challenges"),
+      icon: "map-pin",
+      url: @view_context.challenges_path,
+      color: "emerald",
+      description: I18n.t("navigation.quick_actions.find_challenges_desc", default: "Discover new adventures")
     )
   end
 
-  def trips_nav_item
-    return unless @view_context.respond_to?(:trips_path)
-
-    build_nav_item(
-      icon: "map",
-      path: @view_context.trips_path,
-      section: "trips",
-      matcher: /\Atrips/
+  def my_attempts_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.my_attempts", default: "My Attempts"),
+      icon: "activity",
+      url: @view_context.my_attempts_path,
+      color: "blue",
+      description: I18n.t("navigation.quick_actions.my_attempts_desc", default: "View your progress")
     )
   end
 
-  def users_nav_item
-    return unless @view_context.respond_to?(:administration_users_path)
-
-    build_nav_item(
-      icon: "users",
-      path: @view_context.administration_users_path,
-      section: "administration/users",
-      matcher: %r{\Aadministration/users}
+  def rewards_catalog_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.rewards_catalog", default: "Rewards Catalog"),
+      icon: "gift",
+      url: @view_context.rewards_path,
+      color: "amber",
+      description: I18n.t("navigation.quick_actions.rewards_catalog_desc", default: "Spend your points")
     )
   end
 
-  def settings_nav_item
-    return unless @view_context.respond_to?(:configuration_settings_path)
+  def my_profile_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.my_profile", default: "My Profile"),
+      icon: "user",
+      url: @view_context.profile_path,
+      color: "cyan",
+      description: I18n.t("navigation.quick_actions.my_profile_desc", default: "View your stats")
+    )
+  end
 
-    build_nav_item(
+  def my_orders_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.my_orders", default: "My Orders"),
+      icon: "package",
+      url: @view_context.orders_path,
+      color: "purple",
+      description: I18n.t("navigation.quick_actions.my_orders_desc", default: "Track your rewards")
+    )
+  end
+
+  def admin_dashboard_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.admin_dashboard", default: "Admin Dashboard"),
+      icon: "category",
+      url: @view_context.admin_root_path,
+      color: "rose",
+      description: I18n.t("navigation.quick_actions.admin_dashboard_desc", default: "Manage the app")
+    )
+  end
+
+  def manage_challenges_action
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.manage_challenges", default: "Manage Challenges"),
       icon: "settings",
-      path: @view_context.configuration_settings_path,
-      section: "configuration/settings",
-      matcher: %r{\Aconfigurations/settings}
+      url: @view_context.admin_challenges_path,
+      color: "orange",
+      description: I18n.t("navigation.quick_actions.manage_challenges_desc", default: "Create and edit challenges")
     )
   end
 
-  def build_nav_item(icon:, path:, section:, matcher:)
-    title = t_context(".sections.#{section}.title")
-    NavigationItem.new(title, icon, path, @controller_path.match?(matcher))
+  def review_attempts_action
+    pending_count = ChallengeAttempt.pending_review.count
+    return nil if pending_count.zero?
+
+    QuickAction.new(
+      title: I18n.t("navigation.quick_actions.review_attempts", default: "Review Attempts"),
+      icon: "check",
+      url: @view_context.admin_attempts_path,
+      color: "yellow",
+      description: I18n.t("navigation.quick_actions.review_attempts_desc", count: pending_count, default: "%{count} pending review")
+    )
   end
 end

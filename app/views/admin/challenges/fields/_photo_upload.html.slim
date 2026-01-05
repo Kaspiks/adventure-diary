@@ -1,0 +1,17 @@
+/ Photo Upload field configuration
+/
+/ Local variables:
+/   field - The template field object
+/   index - The field index
+
+.grid.grid-cols-2.gap-4.mt-4
+  .space-y-2
+    = label_tag "admin_challenges_form[fields_config][#{index}][max_photos]", t('admin.challenges.field_form.max_photos'), class: "block text-sm font-medium text-slate-300"
+    = number_field_tag "admin_challenges_form[fields_config][#{index}][max_photos]", (field.config[:max_photos] || 1), min: 1, max: 10, class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+
+  .flex.items-center.gap-4.mt-6
+    = check_box_tag "admin_challenges_form[fields_config][#{index}][require_caption]", "1", field.config[:require_caption], class: "w-5 h-5 rounded text-emerald-500 bg-slate-700 border-slate-600"
+    = label_tag "admin_challenges_form[fields_config][#{index}][require_caption]", t('admin.challenges.field_form.require_caption'), class: "text-sm font-medium text-slate-300"
+
+p.text-xs.text-slate-400.mt-2
+  = t('admin.challenges.field_form.photo_upload_hint', default: 'Users will upload photos as evidence for this field')

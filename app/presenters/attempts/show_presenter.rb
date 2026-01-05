@@ -16,6 +16,14 @@ module Attempts
       attempt.owned_by?(current_user) && attempt.can_submit?
     end
 
+    def can_view_own_answers?
+      attempt.owned_by?(current_user) && !attempt.started?
+    end
+
+    def can_edit_submission?
+      attempt.owned_by?(current_user) && attempt.submitted? && !attempt.final?
+    end
+
     def can_review?
       return false if attempt.owned_by?(current_user)
       return false unless attempt.can_review?

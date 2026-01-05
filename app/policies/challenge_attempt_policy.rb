@@ -21,6 +21,18 @@ class ChallengeAttemptPolicy < ApplicationPolicy
     record.can_submit?
   end
 
+  def edit?
+    return false unless user
+    return false unless record.owned_by?(user)
+    return false if record.final?
+
+    record.submitted?
+  end
+
+  def update?
+    edit?
+  end
+
   def approve?
     return false unless user
     return false unless record.can_review?

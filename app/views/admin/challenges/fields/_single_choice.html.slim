@@ -1,0 +1,27 @@
+/ Single Choice field configuration (radio buttons)
+/
+/ Local variables:
+/   field - The template field object
+/   index - The field index
+
+.space-y-2.mt-4
+  = label_tag "admin_challenges_form[fields_config][#{index}][options]", t('admin.challenges.field_form.options'), class: "block text-sm font-medium text-slate-300"
+  
+  .space-y-2 data-controller="dynamic-options" data-dynamic-options-index-value=index data-dynamic-options-type-value="single"
+    - options = Array(field.config[:options]).presence || [""]
+    - options.each_with_index do |option, opt_idx|
+      .flex.gap-2.mb-2 data-dynamic-options-target="row"
+        = text_field_tag "admin_challenges_form[fields_config][#{index}][options][]", option, placeholder: t('admin.challenges.field_form.option_placeholder'), class: "flex-1 px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600", data: { action: "input->dynamic-options#updateRadioValue", "dynamic-options-target" => "optionInput" }
+        
+        = radio_button_tag "admin_challenges_form[fields_config][#{index}][correct_answer]", option, field.config[:correct_answer] == option, class: "mt-2", data: { "dynamic-options-target" => "correctRadio" }
+        
+        = button_tag type: "button", class: "text-red-400 hover:text-red-300 #{'hidden' if options.size <= 1}", data: { action: "click->dynamic-options#removeOption", "dynamic-options-target" => "removeBtn" } do
+          svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+
+    = button_tag type: "button", class: "text-sm text-emerald-400 hover:text-emerald-300 mt-2", data: { action: "click->dynamic-options#addOption" } do
+      .flex.items-center.gap-1
+        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+        = t('admin.challenges.field_form.add_option')
+

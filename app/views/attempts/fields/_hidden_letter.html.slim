@@ -1,0 +1,38 @@
+/ Hidden Letter puzzle field for attempt submission
+/
+/ Local variables:
+/   field   - The template field object
+/   attempt - The challenge attempt object
+
+- answer = attempt.answer_for_field(field.id)
+- current_value = answer&.answer_value
+- image_url = field.config[:image_url]
+- display_text = field.config[:display_text]
+- hint = field.config[:hint]
+- number_of_blanks = field.config[:number_of_blanks] || 1
+
+/ Puzzle image
+- if image_url.present?
+  .mb-4.rounded-lg.overflow-hidden.border class="border-slate-600"
+    img.w-full.max-w-md src=image_url alt=display_text
+
+/ Display text with blanks
+- if display_text.present?
+  .text-lg.text-slate-200.mb-3.font-medium
+    = display_text
+
+/ Hint
+- if hint.present?
+  .flex.items-start.gap-2.mb-3.p-3.rounded-lg class="bg-amber-500/10 border border-amber-500/30"
+    svg.w-4.h-4.text-amber-400.mt-0.5.flex-shrink-0 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+      path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"
+    p.text-sm.text-amber-300
+      span.font-medium = t('attempts.fields.hidden_letter.hint_label', default: 'Hint:')
+      |  
+      = hint
+
+/ Answer input
+= text_field_tag "attempts_submit_actions_form[answers][#{field.id}]", current_value, required: field.required?, maxlength: number_of_blanks * 10, class: "w-full px-4 py-3 rounded-lg text-white text-lg tracking-widest bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors", placeholder: t('attempts.fields.hidden_letter.placeholder', count: number_of_blanks, default: "Enter #{number_of_blanks} character(s)")
+
+p.text-xs.text-slate-400.mt-2
+  = t('attempts.fields.hidden_letter.instruction', count: number_of_blanks, default: "Fill in the #{number_of_blanks} missing character(s)")

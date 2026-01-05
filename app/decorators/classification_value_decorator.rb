@@ -27,5 +27,3 @@ class ClassificationValueDecorator < ApplicationDecorator
     active? ? "emerald" : "slate"
   end
 end
-
-

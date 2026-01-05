@@ -17,33 +17,56 @@ class ChallengeAttempt < ApplicationRecord
     attempt_artifacts.photos.for_field(field_id.to_s)
   end
 
+  def template_fields
+    challenge.template_fields
+  end
+
+  def find_template_field(field_id)
+    template_fields.find { |f| f.id == field_id.to_s }
+  end
+
+  def build_model_field_with_answer(template_field)
+    answer = answer_for_field(template_field.id)
+    model_field = template_field.build_blank_model_field(object: challenge)
+
+    if answer.present?
+      case template_field.type
+      when :multiple_choice
+        model_field.selected_answers = answer.answer_value_array
+      else
+        model_field.answer = answer.answer_value
+      end
+    end
+
+    model_field
+  end
+
   def validate_submission
-    # For challenges without fields, require at least one photo
-    if challenge.fields.empty?
+    if template_fields.empty?
       if photos.empty?
         errors.add(:base, "Please upload at least one photo")
       end
       return errors.empty?
     end
 
-    challenge.fields.each do |field|
-      next unless field.required
+    template_fields.each do |template_field|
+      next unless template_field.required?
 
-      case field.type
-      when "photo_upload"
-        photos_count = photos_for_field(field.id).count
+      case template_field.type
+      when :photo_upload
+        photos_count = photos_for_field(template_field.id).count
         if photos_count < 1
-          errors.add(:base, "#{field.label} requires at least 1 photo")
+          errors.add(:base, "#{template_field.label} requires at least 1 photo")
         end
-      when "text_input", "single_choice", "hidden_letter"
-        answer = answer_for_field(field.id)
+      when :text_input, :single_choice, :hidden_letter
+        answer = answer_for_field(template_field.id)
         if answer.blank? || answer.answer_value.blank?
-          errors.add(:base, "#{field.label} is required")
+          errors.add(:base, "#{template_field.label} is required")
         end
-      when "multiple_choice"
-        answer = answer_for_field(field.id)
+      when :multiple_choice
+        answer = answer_for_field(template_field.id)
         if answer.blank? || answer.answer_value_array.empty?
-          errors.add(:base, "#{field.label} is required")
+          errors.add(:base, "#{template_field.label} is required")
         end
       end
     end
@@ -95,10 +118,10 @@ class ChallengeAttempt < ApplicationRecord
   def calculate_score
     return 0 unless challenge.has_fields?
 
-    challenge.fields.sum do |field|
-      answer = answer_for_field(field.id)
-      if answer
-        answer.is_correct ? field.points : 0
+    template_fields.sum do |template_field|
+      answer = answer_for_field(template_field.id)
+      if answer&.is_correct
+        template_field.points
       else
         0
       end
@@ -108,10 +131,10 @@ class ChallengeAttempt < ApplicationRecord
   def all_responses_correct?
     return true unless challenge.has_fields?
 
-    challenge.fields.all? do |field|
-      next true unless field.required
+    template_fields.all? do |template_field|
+      next true unless template_field.required?
 
-      answer = answer_for_field(field.id)
+      answer = answer_for_field(template_field.id)
       answer&.is_correct || false
     end
   end
@@ -119,19 +142,19 @@ class ChallengeAttempt < ApplicationRecord
   def response_results
     return [] unless challenge.has_fields?
 
-    challenge.fields.reject { |f| f.type == "photo_upload" }.map do |field|
-      answer = answer_for_field(field.id)
+    template_fields.reject { |f| f.type == :photo_upload }.map do |template_field|
+      answer = answer_for_field(template_field.id)
       response_value = answer&.answer_value
       is_correct = answer&.is_correct || false
-      
+
       {
-        field_id: field.id,
-        label: field.label,
-        type: field.type,
+        field_id: template_field.id,
+        label: template_field.label,
+        type: template_field.type,
         response: response_value,
         is_correct: is_correct,
-        points_earned: is_correct ? field.points : 0,
-        max_points: field.points
+        points_earned: is_correct ? template_field.points : 0,
+        max_points: template_field.points
       }
     end
   end

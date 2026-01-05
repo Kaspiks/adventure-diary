@@ -34,6 +34,16 @@ module Attempts
         end
       end
 
+      def template_fields
+        object.challenge.template_fields
+      end
+
+      def model_fields
+        @model_fields ||= template_fields.map do |template_field|
+          template_field.build_blank_model_field(object: object.challenge)
+        end
+      end
+
       private
 
       def assign_form_attributes(attributes)
@@ -90,11 +100,31 @@ module Attempts
             answer.answer_data = {}
           end
 
-          field = object.challenge.fields.find { |f| f.id == field_id.to_s }
-          answer.is_correct = field.check_answer(answer_value) if field
+          template_field = find_template_field(field_id.to_s)
+          if template_field
+            model_field = build_model_field_with_answer(template_field, answer_value)
+            answer.is_correct = model_field.check_answer
+          end
 
           answer.save!
         end
+      end
+
+      def find_template_field(field_id)
+        template_fields.find { |f| f.id == field_id }
+      end
+
+      def build_model_field_with_answer(template_field, answer_value)
+        model_field = template_field.build_blank_model_field(object: object.challenge)
+
+        case template_field.type
+        when :multiple_choice
+          model_field.selected_answers = Array(answer_value)
+        else
+          model_field.answer = answer_value.to_s
+        end
+
+        model_field
       end
 
       def save_artifacts

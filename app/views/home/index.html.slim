@@ -110,24 +110,26 @@
     .space-y-6
       .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
         h2.text-lg.font-semibold.text-white.mb-4 = @presenter.section_titles[:quick_actions]
-        .space-y-3
-          = link_to challenges_path, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
-            .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-emerald-500/20"
-              svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z" clip-rule="evenodd"
-            span.text-slate-300.group-hover:text-white = @presenter.action_labels[:find_challenges]
-          
-          = link_to rewards_path, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
-            .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-amber-500/20"
-              svg.w-5.h-5.text-amber-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"
-            span.text-slate-300.group-hover:text-white = @presenter.action_labels[:rewards_catalog]
-          
-          = link_to profile_path, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
-            .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-cyan-500/20"
-              svg.w-5.h-5.text-cyan-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z"
-            span.text-slate-300.group-hover:text-white = @presenter.action_labels[:my_profile]
+        .space-y-2
+          - @presenter.quick_actions.each do |action|
+            = link_to action.url, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
+              .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class} #{action.icon_color_class}"
+                = icon action.icon, width: 20, height: 20
+              div
+                .text-slate-300.group-hover:text-white.font-medium = action.title
+                .text-xs.text-slate-500 = action.description
+        
+        - if @presenter.admin_quick_actions.any?
+          .border-t.mt-4.pt-4 class="border-slate-700"
+            .text-xs.font-medium.text-slate-500.uppercase.tracking-wider.mb-3 Admin
+            .space-y-2
+              - @presenter.admin_quick_actions.each do |action|
+                = link_to action.url, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
+                  .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class} #{action.icon_color_class}"
+                    = icon action.icon, width: 20, height: 20
+                  div
+                    .text-slate-300.group-hover:text-white.font-medium = action.title
+                    .text-xs.text-slate-500 = action.description
 
       .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
         .flex.items-center.justify-between.mb-4

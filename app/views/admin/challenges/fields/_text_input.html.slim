@@ -1,0 +1,13 @@
+/ Text Input field configuration
+/
+/ Local variables:
+/   field - The template field object
+/   index - The field index
+
+.space-y-2.mt-4
+  = label_tag "admin_challenges_form[fields_config][#{index}][correct_answer]", t('admin.challenges.field_form.correct_answer'), class: "block text-sm font-medium text-slate-300"
+  = text_field_tag "admin_challenges_form[fields_config][#{index}][correct_answer]", field.config[:correct_answer], class: "w-full px-3 py-2 rounded-lg text-white bg-slate-700 border border-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500", placeholder: t('admin.challenges.field_form.correct_answer_placeholder', default: 'Enter the expected answer')
+
+.flex.items-center.gap-4.mt-4
+  = check_box_tag "admin_challenges_form[fields_config][#{index}][case_sensitive]", "1", field.config[:case_sensitive], class: "w-5 h-5 rounded text-emerald-500 bg-slate-700 border-slate-600"
+  = label_tag "admin_challenges_form[fields_config][#{index}][case_sensitive]", t('admin.challenges.field_form.case_sensitive'), class: "text-sm font-medium text-slate-300"
