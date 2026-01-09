@@ -5,6 +5,7 @@ class PointsHistory < ApplicationRecord
 
   REASON_CHALLENGE_AWARD = "challenge_award"
   REASON_REWARD_PURCHASE = "reward_purchase"
+  REASON_REWARD_REDEMPTION = "reward_redemption"
 
   belongs_to :user
   belongs_to :challenge, optional: true

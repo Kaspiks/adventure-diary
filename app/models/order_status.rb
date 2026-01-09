@@ -43,9 +43,10 @@ class OrderStatus < ApplicationRecord
   end
 
   # Dynamic instance methods for status checking
+  # Returns true if this status matches the queried code, false otherwise
   def method_missing(method_name, *args, &block)
     method_str = method_name.to_s
-    if method_str.end_with?("?") && self.class.exists?(code: method_str.chomp("?"))
+    if method_str.end_with?("?")
       code == method_str.chomp("?")
     else
       super
@@ -54,7 +55,7 @@ class OrderStatus < ApplicationRecord
 
   def respond_to_missing?(method_name, include_private = false)
     method_str = method_name.to_s
-    (method_str.end_with?("?") && self.class.exists?(code: method_str.chomp("?"))) || super
+    method_str.end_with?("?") || super
   end
 end
 

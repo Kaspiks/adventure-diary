@@ -50,7 +50,6 @@ module DynamicFields
         assign_attributes(attributes) if attributes.present?
       end
 
-      # For form builder compatibility
       def persisted?
         model_field.uuid.present?
       end

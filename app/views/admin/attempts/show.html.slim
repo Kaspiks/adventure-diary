@@ -4,24 +4,51 @@
   .flex.items-center.justify-between
     div
       = link_to admin_attempts_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
-        svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+        = icon(:arrow_left, width: 16, height: 16)
         = t('.back')
       h1.text-2xl.font-bold.text-white = t('.title')
 
-    - unless @presenter.decorated_attempt.final?
+    - if @presenter.decorated_attempt.can_review?
       .flex.gap-2
-        = form_with url: admin_attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_approve_actions_form, data: { turbo_confirm: t('.confirm_approve') } do |f|
-          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-emerald-600.cursor-pointer type="submit" class="hover:bg-emerald-500"
-            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-              path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+        / Approve button and modal
+        div data-controller="modal"
+          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-emerald-600.cursor-pointer type="button" class="hover:bg-emerald-500" data-action="click->modal#open"
+            = icon(:check, width: 20, height: 20)
             = t('.approve')
 
-        = form_with url: admin_attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_reject_actions_form, data: { turbo_confirm: t('.confirm_reject') } do |f|
-          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-red-600.cursor-pointer type="submit" class="hover:bg-red-500"
-            svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-              path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+          .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+            .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+              .p-6
+                .flex.items-center.gap-3.mb-4
+                  .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
+                    = icon(:check, width: 20, height: 20, class: "text-emerald-400")
+                  h3.text-lg.font-semibold.text-white = t('.approve')
+                p.text-slate-300.mb-6 = t('.confirm_approve')
+                .flex.gap-3.justify-end
+                  button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                    | Cancel
+                  = form_with url: admin_attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_approve_actions_form, class: "inline" do |f|
+                    = f.submit t('.approve'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500"
+
+        / Reject button and modal
+        div data-controller="modal"
+          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-red-600.cursor-pointer type="button" class="hover:bg-red-500" data-action="click->modal#open"
+            = icon(:x, width: 20, height: 20)
             = t('.reject')
+
+          .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+            .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+              .p-6
+                .flex.items-center.gap-3.mb-4
+                  .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
+                    = icon(:x, width: 20, height: 20, class: "text-red-400")
+                  h3.text-lg.font-semibold.text-white = t('.reject')
+                p.text-slate-300.mb-6 = t('.confirm_reject')
+                .flex.gap-3.justify-end
+                  button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                    | Cancel
+                  = form_with url: admin_attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_reject_actions_form, class: "inline" do |f|
+                    = f.submit t('.reject'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500"
 
   .grid.grid-cols-1.lg:grid-cols-2.gap-6
     .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
@@ -78,13 +105,11 @@
               .text-right
                 - if result[:is_correct]
                   span.inline-flex.items-center.gap-1.text-emerald-400.text-sm
-                    svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+                    = icon(:check, width: 16, height: 16)
                     | #{result[:points_earned]}/#{result[:max_points]} pts
                 - else
                   span.inline-flex.items-center.gap-1.text-red-400.text-sm
-                    svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                    = icon(:x, width: 16, height: 16)
                     | 0/#{result[:max_points]} pts
 
   / Display uploaded photos

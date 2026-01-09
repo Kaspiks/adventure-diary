@@ -22,8 +22,7 @@ module Attempts
           save_answers
           save_artifacts
 
-          unless object.validate_submission
-            object.errors.each { |e| errors.add(e.attribute, e.message) }
+          unless validate_submission
             raise ActiveRecord::Rollback
           end
 
@@ -62,7 +61,7 @@ module Attempts
 
         # Require user coordinates for geofenced challenges
         if user_latitude.blank? || user_longitude.blank?
-          errors.add(:base, "Location verification required. Please enable location access.")
+          errors.add(:base, :location_required)
           return false
         end
 
@@ -70,14 +69,14 @@ module Attempts
         user_lng = user_longitude.to_f
 
         unless GeoDistance.valid_coordinates?(user_lat, user_lng)
-          errors.add(:base, "Invalid location coordinates provided.")
+          errors.add(:base, :invalid_coordinates)
           return false
         end
 
         unless location.within_radius?(user_lat, user_lng)
           distance = location.distance_from(user_lat, user_lng)
           distance_text = distance >= 1000 ? "#{(distance / 1000).round(1)} km" : "#{distance.round} meters"
-          errors.add(:base, "You must be within #{location.radius_meters} meters of #{location.name} to complete this challenge. You are currently #{distance_text} away.")
+          errors.add(:base, :outside_geofence, radius: location.radius_meters, location_name: location.name, distance: distance_text)
           return false
         end
 
@@ -147,6 +146,39 @@ module Attempts
             artifact.save!
           end
         end
+      end
+
+      def validate_submission
+        if template_fields.empty?
+          if object.photos.empty?
+            errors.add(:base, :photo_required)
+          end
+          return errors.empty?
+        end
+
+        template_fields.each do |template_field|
+          next unless template_field.required?
+
+          case template_field.type
+          when :photo_upload
+            photos_count = object.photos_for_field(template_field.id).count
+            if photos_count < 1
+              errors.add(:base, :photo_required_for_field, field_label: template_field.label)
+            end
+          when :text_input, :single_choice, :hidden_letter
+            answer = object.answer_for_field(template_field.id)
+            if answer.blank? || answer.answer_value.blank?
+              errors.add(:base, :field_required, field_label: template_field.label)
+            end
+          when :multiple_choice
+            answer = object.answer_for_field(template_field.id)
+            if answer.blank? || answer.answer_value_array.empty?
+              errors.add(:base, :field_required, field_label: template_field.label)
+            end
+          end
+        end
+
+        errors.empty?
       end
     end
   end

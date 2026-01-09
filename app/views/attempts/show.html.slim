@@ -3,8 +3,7 @@
 .min-h-screen.bg-slate-900.py-8
   .max-w-4xl.mx-auto.px-4
     = link_to my_attempts_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
-      svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-        path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
+      = icon(:arrow_left, width: 16, height: 16)
       = t('.back')
 
     .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
@@ -98,8 +97,7 @@
                 .p-4.border-b class="border-slate-600"
                   .flex.items-center.justify-between
                     .flex.items-center.gap-3
-                      svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+                      = icon(:map_pin, width: 20, height: 20, class: "text-emerald-400")
                       div
                         h3.text-sm.font-medium.text-white = t('.location_required')
                         p.text-xs.text-slate-400 = t('.location_required_hint', name: location.name, radius: location.radius_meters)
@@ -129,8 +127,8 @@
                   = label_tag :evidence_photo, t('.upload_evidence'), class: "block text-sm font-medium text-slate-300 mb-2"
                   p.text-xs.text-slate-400.mb-3 = t('.upload_evidence_hint')
                   .border-2.border-dashed.rounded-xl.p-6.text-center.transition-colors class="border-slate-600 hover:border-emerald-500/50 bg-slate-700/30"
-                    svg.w-12.h-12.text-slate-500.mx-auto.mb-3 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                      path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    .flex.justify-center.mb-3
+                      = icon(:photo, width: 48, height: 48, class: "text-slate-500")
                     = file_field_tag "attempts_submit_actions_form[photos][evidence][]", accept: "image/*", multiple: true, required: true, class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
                     p.text-xs.text-slate-500.mt-2 = t('.upload_formats')
               
@@ -178,7 +176,40 @@
                             .text-xs.text-slate-300.mt-1.italic = artifact.caption
 
             .flex.gap-4
-              = form_with url: attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, class: "flex-1", scope: :attempts_approve_actions_form, data: { turbo_confirm: t('.confirm_approve') } do |f|
-                = f.submit t('.approve'), class: "w-full text-center px-6 py-3 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-all cursor-pointer"
-              = form_with url: attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, class: "flex-1", scope: :attempts_reject_actions_form, data: { turbo_confirm: t('.confirm_reject') } do |f|
-                = f.submit t('.reject'), class: "w-full text-center px-6 py-3 rounded-lg font-medium text-white bg-red-600 hover:bg-red-500 transition-all cursor-pointer"
+              / Approve button and modal
+              .flex-1 data-controller="modal"
+                button.w-full.text-center.px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer type="button" class="bg-emerald-600 hover:bg-emerald-500" data-action="click->modal#open"
+                  = t('.approve')
+
+                .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+                  .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+                    .p-6
+                      .flex.items-center.gap-3.mb-4
+                        .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
+                          = icon(:check, width: 20, height: 20, class: "text-emerald-400")
+                        h3.text-lg.font-semibold.text-white = t('.approve')
+                      p.text-slate-300.mb-6 = t('.confirm_approve')
+                      .flex.gap-3.justify-end
+                        button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                          | Cancel
+                        = form_with url: attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_approve_actions_form, class: "inline" do |f|
+                          = f.submit t('.approve'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500"
+
+              / Reject button and modal
+              .flex-1 data-controller="modal"
+                button.w-full.text-center.px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer type="button" class="bg-red-600 hover:bg-red-500" data-action="click->modal#open"
+                  = t('.reject')
+
+                .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+                  .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+                    .p-6
+                      .flex.items-center.gap-3.mb-4
+                        .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
+                          = icon(:x, width: 20, height: 20, class: "text-red-400")
+                        h3.text-lg.font-semibold.text-white = t('.reject')
+                      p.text-slate-300.mb-6 = t('.confirm_reject')
+                      .flex.gap-3.justify-end
+                        button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                          | Cancel
+                        = form_with url: attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_reject_actions_form, class: "inline" do |f|
+                          = f.submit t('.reject'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500"

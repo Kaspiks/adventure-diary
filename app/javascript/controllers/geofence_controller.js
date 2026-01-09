@@ -5,12 +5,12 @@ import { Controller } from "@hotwired/stimulus"
  */
 export default class extends Controller {
   static targets = [
-    "map",           // Map container
-    "status",        // Status message element
-    "submitButton",  // Submit button to enable/disable
-    "userLat",       // Hidden field for user latitude
-    "userLng",       // Hidden field for user longitude
-    "checkButton"    // Check location button
+    "map",
+    "status",
+    "submitButton",
+    "userLat",
+    "userLng",
+    "checkButton"
   ]
 
   static values = {

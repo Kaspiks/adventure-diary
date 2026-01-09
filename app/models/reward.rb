@@ -9,7 +9,6 @@ class Reward < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :cost_points, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :stock_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
-  validate :acceptable_image
 
   scope :active, -> { where(is_active: true) }
   scope :inactive, -> { where(is_active: false) }
@@ -58,21 +57,6 @@ class Reward < ApplicationRecord
       }
     },
     defaults: { column: :stock_quantity, direction: :desc }
-
-  private
-
-  def acceptable_image
-    return unless image.attached?
-
-    acceptable_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]
-    unless acceptable_types.include?(image.content_type)
-      errors.add(:image, "must be a JPEG, PNG, GIF, or WebP")
-    end
-
-    if image.byte_size > 10.megabytes
-      errors.add(:image, "must be less than 10MB")
-    end
-  end
 end
 
 # == Schema Information

@@ -14,7 +14,7 @@ npm run build
 This generates `vendor/assets/images/icons.svg`.
 
 ## Add Icons
-1. Edit `webpack.config.js` → `includedIcons` array
+1. Edit `build-sprite.js` → `includedIcons` array
 2. Run `npm run build`
 
-Icons: https://feathericons.com
+Icons: https://tabler.io/icons

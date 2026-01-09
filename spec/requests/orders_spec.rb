@@ -37,7 +37,8 @@ RSpec.describe "Orders", type: :request do
         sign_in user
         get orders_path
 
-        expect(response.body).not_to include(other_order.id.to_s)
+        # Check that links to other user's orders don't appear
+        expect(response.body).not_to include(order_path(other_order))
       end
     end
   end

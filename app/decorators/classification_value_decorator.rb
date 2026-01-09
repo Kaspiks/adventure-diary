@@ -8,7 +8,7 @@ class ClassificationValueDecorator < ApplicationDecorator
   end
 
   def title_with_state
-    active? ? title : "#{title} (inactive)"
+    TitlePresenter.new(self, attribute: :title).title_with_state
   end
 
   def classification_title
@@ -27,3 +27,4 @@ class ClassificationValueDecorator < ApplicationDecorator
     active? ? "emerald" : "slate"
   end
 end
+

@@ -3,11 +3,11 @@
 module Admin
   class AttemptStatusPolicy < ApplicationPolicy
     def index?
-      user_has_permission?("attempt_statuses.index")
+      can?("attempt_statuses.index")
     end
 
     def new?
-      user_has_permission?("attempt_statuses.create")
+      can?("attempt_statuses.create")
     end
 
     def create?
@@ -15,7 +15,7 @@ module Admin
     end
 
     def edit?
-      user_has_permission?("attempt_statuses.update")
+      can?("attempt_statuses.update")
     end
 
     def update?

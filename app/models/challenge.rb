@@ -18,7 +18,6 @@ class Challenge < ApplicationRecord
   has_many :points_history, dependent: :nullify
 
   validates :title, presence: true, length: { maximum: 255 }
-  validate :validate_template_fields
 
   scope :active, -> { where(is_active: true) }
   scope :inactive, -> { where(is_active: false) }
@@ -95,18 +94,6 @@ class Challenge < ApplicationRecord
     template_fields.map { |tf| tf.build_blank_model_field(object: self) }
   end
 
-  private
-
-  def validate_template_fields
-    template_fields.each_with_index do |field, index|
-      unless field.valid_type?
-        errors.add(:fields_config, "field #{index + 1} has invalid type: #{field.type}")
-      end
-      if field.label.blank?
-        errors.add(:fields_config, "field #{index + 1} must have a label")
-      end
-    end
-  end
 end
 
 # == Schema Information

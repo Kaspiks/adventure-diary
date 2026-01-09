@@ -7,15 +7,11 @@ module Attempts
 
       attr_accessor :reviewer
 
-      def initialize(attempt)
-        super(attempt)
-      end
-
       def create(attributes)
         self.reviewer = attributes[:reviewer]
 
         if object.final?
-          errors.add(:base, "Attempt has already been reviewed")
+          errors.add(:base, :already_reviewed)
           return false
         end
 

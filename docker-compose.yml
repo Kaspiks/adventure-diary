@@ -30,12 +30,17 @@ x-test: &test
   tty: true
   environment:
     RAILS_ENV: test
+    DATABASE_ADAPTER: postgresql
+    DATABASE_HOST: db
+    DATABASE_PORT: 5432
+    DATABASE_NAME: adventure_diary_test
+    DATABASE_USERNAME: ${DATABASE_USERNAME:-adventure_diary}
+    DATABASE_PASSWORD: ${DATABASE_PASSWORD:-adventure_diary_dev}
     REDIS_SESSION_STORE_URL: redis://redis:6379/1
   volumes:
     - .:/app:cached
     - bundle_cache:/usr/local/bundle
   tmpfs:
-    - /app/storage:mode=1777
     - /app/tmp:mode=1777
 
 services:
@@ -94,6 +99,8 @@ services:
         echo "Test container ready. Run: docker compose exec test bash"
         tail -f /dev/null
     depends_on:
+      db:
+        condition: service_healthy
       redis:
         condition: service_healthy
 

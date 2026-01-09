@@ -21,13 +21,11 @@ Rails.application.routes.draw do
 
   get "my/attempts", to: "attempts#index", as: :my_attempts
 
-  # Rewards catalog
   resources :rewards, only: [:index, :show]
   namespace :rewards do
     post "purchase_actions/:reward_id", to: "purchase_actions#create", as: :purchase_actions
   end
 
-  # User orders
   resources :orders, only: [:index, :show]
 
   namespace :admin do
@@ -63,14 +61,12 @@ Rails.application.routes.draw do
     resources :classifications, only: [:show]
     resources :classification_values, only: [:new, :create, :edit, :update]
 
-    # Rewards management
     resources :rewards do
       member do
         get :orders
       end
     end
 
-    # Orders management
     resources :orders, only: [:index, :show]
     namespace :orders do
       post "status_actions/:id/approve", to: "status_actions#approve", as: :status_action_approve

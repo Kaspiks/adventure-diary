@@ -22,9 +22,13 @@ module Attempts
       end
 
       # Validate and save
-      return false unless object.validate_submission
+      return false unless validate_submission
 
       object.save
+    end
+
+    def template_fields
+      object.challenge.template_fields
     end
 
     private
@@ -98,6 +102,39 @@ module Attempts
           )
         end
       end
+    end
+
+    def validate_submission
+      if template_fields.empty?
+        if object.photos.empty?
+          errors.add(:base, :photo_required)
+        end
+        return errors.empty?
+      end
+
+      template_fields.each do |template_field|
+        next unless template_field.required?
+
+        case template_field.type
+        when :photo_upload
+          photos_count = object.photos_for_field(template_field.id).count
+          if photos_count < 1
+            errors.add(:base, :photo_required_for_field, field_label: template_field.label)
+          end
+        when :text_input, :single_choice, :hidden_letter
+          answer = object.answer_for_field(template_field.id)
+          if answer.blank? || answer.answer_value.blank?
+            errors.add(:base, :field_required, field_label: template_field.label)
+          end
+        when :multiple_choice
+          answer = object.answer_for_field(template_field.id)
+          if answer.blank? || answer.answer_value_array.empty?
+            errors.add(:base, :field_required, field_label: template_field.label)
+          end
+        end
+      end
+
+      errors.empty?
     end
   end
 end

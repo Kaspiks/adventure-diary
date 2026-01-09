@@ -45,7 +45,9 @@ class Order < ApplicationRecord
 
   def transition_to!(new_status_code)
     new_status = OrderStatus.find_by!(code: new_status_code)
-    return false unless can_transition_to?(new_status_code)
+    unless can_transition_to?(new_status_code)
+      raise "Invalid transition from #{order_status.code} to #{new_status_code}"
+    end
 
     update!(order_status: new_status)
   end

@@ -6,8 +6,7 @@
           p.text-sm.text-amber-200 = @presenter.stats_labels[:points]
           p.text-2xl.font-bold.text-white = @presenter.stats[:points]
         .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-amber-500/20"
-          svg.w-6.h-6.text-amber-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.798 7.45c.512-.67 1.135-.95 1.702-.95s1.19.28 1.702.95a.75.75 0 001.192-.91C12.637 5.55 11.596 5 10.5 5s-2.137.55-2.894 1.54A5.205 5.205 0 006.83 8H5.75a.75.75 0 000 1.5h.77a6.333 6.333 0 000 1h-.77a.75.75 0 000 1.5h1.08c.183.528.442 1.023.776 1.46.757.99 1.798 1.54 2.894 1.54s2.137-.55 2.894-1.54a.75.75 0 00-1.192-.91c-.512.67-1.135.95-1.702.95s-1.19-.28-1.702-.95a3.505 3.505 0 01-.343-.55h1.795a.75.75 0 000-1.5H8.026a4.835 4.835 0 010-1h2.224a.75.75 0 000-1.5H8.455c.098-.195.212-.38.343-.55z" clip-rule="evenodd"
+          = icon "star", class: "w-6 h-6 text-amber-400"
 
     .rounded-xl.p-5.border class="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
       .flex.items-center.justify-between
@@ -15,8 +14,7 @@
           p.text-sm.text-emerald-200 = @presenter.stats_labels[:active]
           p.text-2xl.font-bold.text-white = @presenter.stats[:challenges_active]
         .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
-          svg.w-6.h-6.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd"
+          = icon "clock", class: "w-6 h-6 text-emerald-400"
 
     .rounded-xl.p-5.border class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border-cyan-500/20"
       .flex.items-center.justify-between
@@ -24,8 +22,7 @@
           p.text-sm.text-cyan-200 = @presenter.stats_labels[:completed]
           p.text-2xl.font-bold.text-white = @presenter.stats[:challenges_completed]
         .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-cyan-500/20"
-          svg.w-6.h-6.text-cyan-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"
+          = icon "check", class: "w-6 h-6 text-cyan-400"
 
     .rounded-xl.p-5.border class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20"
       .flex.items-center.justify-between
@@ -33,8 +30,7 @@
           p.text-sm.text-purple-200 = @presenter.stats_labels[:rewards]
           p.text-2xl.font-bold.text-white = @presenter.stats[:rewards_claimed]
         .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-purple-500/20"
-          svg.w-6.h-6.text-purple-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"
+          = icon "star", class: "w-6 h-6 text-purple-400"
 
   .grid.lg:grid-cols-3.gap-6
     .lg:col-span-2.space-y-6
@@ -51,24 +47,19 @@
                 .flex.items-center.justify-between
                   .flex.items-center.gap-3
                     .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-emerald-500/20"
-                      svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"
+                      = icon "map-pin", class: "w-5 h-5 text-emerald-400"
                     div
                       .text-white.font-medium.group-hover:text-emerald-400.transition-colors = challenge.title
                       .text-xs.text-slate-400 = challenge.challenge_type&.name
                   .flex.items-center.gap-2
                     span.text-sm.font-semibold.text-amber-400 +#{challenge.award_points}
-                    svg.w-4.h-4.text-slate-500.group-hover:text-white.transition-colors xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"
+                    = icon "chevron-right", class: "w-4 h-4 text-slate-500 group-hover:text-white transition-colors"
         - else
           .text-center.py-8
-            svg.w-12.h-12.text-slate-600.mx-auto.mb-3 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-              path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-              path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+            = icon "map-pin", class: "w-12 h-12 text-slate-600 mx-auto mb-3"
             p.text-slate-400.mb-4 = @presenter.empty_state_messages[:no_challenges]
             = link_to challenges_path, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400" do
-              svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+              = icon "plus", class: "w-4 h-4"
               = @presenter.empty_state_messages[:browse_challenges]
 
       .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
@@ -82,17 +73,13 @@
                 .flex.items-center.gap-4
                   .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-#{attempt.attempt_status&.code == 'approved' ? 'emerald' : attempt.attempt_status&.code == 'rejected' ? 'red' : attempt.attempt_status&.code == 'submitted' ? 'amber' : 'blue'}-500/20"
                     - if attempt.approved?
-                      svg.w-5.h-5.text-emerald-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"
+                      = icon "check", class: "w-5 h-5 text-emerald-400"
                     - elsif attempt.rejected?
-                      svg.w-5.h-5.text-red-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                      = icon "x", class: "w-5 h-5 text-red-400"
                     - elsif attempt.submitted?
-                      svg.w-5.h-5.text-amber-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd"
+                      = icon "clock", class: "w-5 h-5 text-amber-400"
                     - else
-                      svg.w-5.h-5.text-blue-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd"
+                      = icon "arrow-right", class: "w-5 h-5 text-blue-400"
                   div.flex-1.min-w-0
                     .text-white.font-medium.truncate.group-hover:text-emerald-400.transition-colors = attempt.challenge&.title
                     .flex.items-center.gap-2.mt-1
@@ -103,8 +90,7 @@
                     span.text-sm.font-semibold.text-emerald-400 +#{attempt.score_awarded}
         - else
           .text-center.py-8
-            svg.w-12.h-12.text-slate-600.mx-auto.mb-3 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-              path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            = icon "clock", class: "w-12 h-12 text-slate-600 mx-auto mb-3"
             p.text-slate-400 = @presenter.empty_state_messages[:no_activity]
 
     .space-y-6
@@ -113,8 +99,8 @@
         .space-y-2
           - @presenter.quick_actions.each do |action|
             = link_to action.url, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
-              .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class} #{action.icon_color_class}"
-                = icon action.icon, width: 20, height: 20
+              .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class}"
+                = icon action.icon, width: 20, height: 20, class: action.icon_color_class
               div
                 .text-slate-300.group-hover:text-white.font-medium = action.title
                 .text-xs.text-slate-500 = action.description
@@ -125,8 +111,8 @@
             .space-y-2
               - @presenter.admin_quick_actions.each do |action|
                 = link_to action.url, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
-                  .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class} #{action.icon_color_class}"
-                    = icon action.icon, width: 20, height: 20
+                  .w-10.h-10.rounded-lg.flex.items-center.justify-center class="#{action.bg_color_class}"
+                    = icon action.icon, width: 20, height: 20, class: action.icon_color_class
                   div
                     .text-slate-300.group-hover:text-white.font-medium = action.title
                     .text-xs.text-slate-500 = action.description
@@ -146,11 +132,9 @@
                 .flex-1.min-w-0
                   .text-sm.font-medium.text-white.truncate = user.full_name
                 .flex.items-center.gap-1
-                  svg.w-4.h-4.text-amber-400 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                    path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.798 7.45c.512-.67 1.135-.95 1.702-.95s1.19.28 1.702.95a.75.75 0 001.192-.91C12.637 5.55 11.596 5 10.5 5s-2.137.55-2.894 1.54A5.205 5.205 0 006.83 8H5.75a.75.75 0 000 1.5h.77a6.333 6.333 0 000 1h-.77a.75.75 0 000 1.5h1.08c.183.528.442 1.023.776 1.46.757.99 1.798 1.54 2.894 1.54s2.137-.55 2.894-1.54a.75.75 0 00-1.192-.91c-.512.67-1.135.95-1.702.95s-1.19-.28-1.702-.95a3.505 3.505 0 01-.343-.55h1.795a.75.75 0 000-1.5H8.026a4.835 4.835 0 010-1h2.224a.75.75 0 000-1.5H8.455c.098-.195.212-.38.343-.55z" clip-rule="evenodd"
+                  = icon "star", class: "w-4 h-4 text-amber-400"
                   span.text-sm.font-semibold.text-amber-400 = user.reward_points
         - else
           .text-center.py-6
-            svg.w-10.h-10.text-slate-600.mx-auto.mb-2 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-              path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"
+            = icon "award", class: "w-10 h-10 text-slate-600 mx-auto mb-2"
             p.text-sm.text-slate-500 = @presenter.empty_state_messages[:no_leaderboard]

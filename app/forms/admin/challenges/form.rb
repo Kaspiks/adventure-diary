@@ -11,6 +11,8 @@ module Admin
       delegated_fields :title, :description, :location_id, :challenge_type_id,
                        :difficulty_level_id, :award_point_level_id, :is_active
 
+      validate :validate_template_fields
+
       def initialize(challenge)
         super(challenge)
       end
@@ -86,6 +88,18 @@ module Admin
         end.to_json
       end
 
+      private
+
+      def validate_template_fields
+        template_fields.each_with_index do |field, index|
+          unless field.valid_type?
+            errors.add(:fields_config, :invalid_field_type, index: index + 1, type: field.type)
+          end
+          if field.label.blank?
+            errors.add(:fields_config, :field_label_required, index: index + 1)
+          end
+        end
+      end
     end
   end
 end

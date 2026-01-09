@@ -114,21 +114,32 @@ RSpec.describe Rewards::Purchase do
       end
     end
 
-    context "concurrent purchase safety" do
+    context "concurrent purchase safety", concurrent: true do
       let(:reward) { create(:reward, :with_limited_stock, owner_user: company_user, cost_points: 100, stock_quantity: 1) }
 
       it "prevents double-spend with locking" do
         user2 = create(:user, :general_user, reward_points: 500)
 
-        results = []
+        results = Queue.new
         threads = [
-          Thread.new { results << described_class.new(user: user, reward: reward).call },
-          Thread.new { results << described_class.new(user: user2, reward: reward).call }
+          Thread.new do
+            ActiveRecord::Base.connection_pool.with_connection do
+              results << described_class.new(user: user, reward: reward).call
+            end
+          end,
+          Thread.new do
+            ActiveRecord::Base.connection_pool.with_connection do
+              results << described_class.new(user: user2, reward: reward).call
+            end
+          end
         ]
-        threads.each(&:join)
+        threads.each { |t| t.join(5) } # 5 second timeout
 
-        successful = results.count(&:success?)
-        failed = results.count(&:failure?)
+        results_array = []
+        results_array << results.pop until results.empty?
+
+        successful = results_array.count(&:success?)
+        failed = results_array.count(&:failure?)
 
         expect(successful).to eq(1)
         expect(failed).to eq(1)

@@ -13,6 +13,11 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
+  # Use truncation for tests that spawn threads (concurrent tests)
+  config.before(:each, concurrent: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
   config.before(:each) do
     DatabaseCleaner.start
   end

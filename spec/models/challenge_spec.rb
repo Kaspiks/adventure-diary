@@ -72,9 +72,9 @@ RSpec.describe Challenge, type: :model do
     context "with fields configured" do
       let(:challenge) { create(:challenge, :with_text_field) }
 
-      it "returns ChallengeField objects" do
-        expect(challenge.fields.first).to be_a(ChallengeField)
-        expect(challenge.fields.first.type).to eq("text_input")
+      it "returns TemplateField objects" do
+        expect(challenge.fields.first).to be_a(ChallengeFields::TemplateField)
+        expect(challenge.fields.first.type).to eq(:text_input)
       end
     end
   end

@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class AttemptStatus < ApplicationRecord
-  STARTED = "started"
-  SUBMITTED = "submitted"
-  APPROVED = "approved"
-  REJECTED = "rejected"
-
   has_many :challenge_attempts, dependent: :restrict_with_error
 
   validates :code, presence: true, uniqueness: true, length: { maximum: 50 }
@@ -16,19 +11,19 @@ class AttemptStatus < ApplicationRecord
 
   class << self
     def started
-      find_by(code: STARTED)
+      find_by(code: "started")
     end
 
     def submitted
-      find_by(code: SUBMITTED)
+      find_by(code: "submitted")
     end
 
     def approved
-      find_by(code: APPROVED)
+      find_by(code: "approved")
     end
 
     def rejected
-      find_by(code: REJECTED)
+      find_by(code: "rejected")
     end
   end
 end

@@ -1,28 +1,39 @@
 # frozen_string_literal: true
 
-class ApplicationDecorator
-  attr_reader :object
+class ApplicationDecorator < SimpleDelegator
+  include DecoratorHelpers
 
-  delegate :id, :to_param, :to_key, :to_model, :persisted?, :new_record?, :errors, to: :object
+  alias object __getobj__
+
+  delegate :to_param, :to_key, to: :object
 
   def initialize(object)
-    @object = object
+    super(object)
   end
 
   def to_model
     object
   end
 
-  def method_missing(method_name, ...)
-    if object.respond_to?(method_name)
-      object.public_send(method_name, ...)
-    else
-      super
+  def t_context(key, *args, **kwargs)
+    raise "translation key must be relative\nDid you mean?  .#{key}" unless key[0] == '.'
+
+    i18n_scope = self.class.i18n_scope
+
+    if kwargs[:default].is_a?(Array)
+      kwargs[:default] = kwargs[:default].map do |v|
+        next v unless v.is_a?(Symbol)
+        next v unless v.start_with?('.')
+
+        "decorators.#{i18n_scope}#{v}".to_sym
+      end
     end
+
+    I18n.t("decorators.#{i18n_scope}#{key}", *args, **kwargs)
   end
 
-  def respond_to_missing?(method_name, include_private = false)
-    object.respond_to?(method_name, include_private) || super
+  def self.i18n_scope
+    @i18n_scope ||= name.to_s.sub(/Decorator\z/, '').underscore.tr('/', '.')
   end
 
   def inspect

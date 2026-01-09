@@ -41,39 +41,6 @@ class ChallengeAttempt < ApplicationRecord
     model_field
   end
 
-  def validate_submission
-    if template_fields.empty?
-      if photos.empty?
-        errors.add(:base, "Please upload at least one photo")
-      end
-      return errors.empty?
-    end
-
-    template_fields.each do |template_field|
-      next unless template_field.required?
-
-      case template_field.type
-      when :photo_upload
-        photos_count = photos_for_field(template_field.id).count
-        if photos_count < 1
-          errors.add(:base, "#{template_field.label} requires at least 1 photo")
-        end
-      when :text_input, :single_choice, :hidden_letter
-        answer = answer_for_field(template_field.id)
-        if answer.blank? || answer.answer_value.blank?
-          errors.add(:base, "#{template_field.label} is required")
-        end
-      when :multiple_choice
-        answer = answer_for_field(template_field.id)
-        if answer.blank? || answer.answer_value_array.empty?
-          errors.add(:base, "#{template_field.label} is required")
-        end
-      end
-    end
-
-    errors.empty?
-  end
-
   validates :started_at, presence: true
   validates :evidence_url, length: { maximum: 500 }
 
@@ -81,22 +48,22 @@ class ChallengeAttempt < ApplicationRecord
   scope :for_user, ->(user) { where(user: user) }
   scope :for_challenge, ->(challenge) { where(challenge: challenge) }
   scope :non_final, -> { joins(:attempt_status).where(attempt_statuses: { is_final: false }) }
-  scope :pending_review, -> { joins(:attempt_status).where(attempt_statuses: { code: AttemptStatus::SUBMITTED }) }
+  scope :pending_review, -> { joins(:attempt_status).where(attempt_statuses: { code: "submitted" }) }
 
   def started?
-    attempt_status&.code == AttemptStatus::STARTED
+    attempt_status&.code == "started"
   end
 
   def submitted?
-    attempt_status&.code == AttemptStatus::SUBMITTED
+    attempt_status&.code == "submitted"
   end
 
   def approved?
-    attempt_status&.code == AttemptStatus::APPROVED
+    attempt_status&.code == "approved"
   end
 
   def rejected?
-    attempt_status&.code == AttemptStatus::REJECTED
+    attempt_status&.code == "rejected"
   end
 
   def final?

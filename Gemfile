@@ -1,6 +1,5 @@
 source "https://rubygems.org"
 
-# Bndle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.0", ">= 8.0.0.1"
 gem "propshaft"
 gem "sqlite3", ">= 2.1"
