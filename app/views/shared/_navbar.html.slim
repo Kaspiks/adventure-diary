@@ -1,26 +1,75 @@
-nav.border-b class="border-white/10 bg-slate-900/50 backdrop-blur-xl sticky top-0 z-50"
+nav.border-b class="border-white/10 bg-slate-900/50 backdrop-blur-xl sticky top-0 z-50" data-controller="mobile-menu"
   .max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8
     .flex.items-center.justify-between.h-16
       .flex.items-center.gap-3
         = link_to root_path, class: "flex items-center gap-3"
           .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-gradient-to-br from-amber-400 to-orange-500"
             = icon(:map_pin, class: "text-white")
-          span.text-xl.font-bold.text-white = t('home.index.app_name')
-      
-      .flex.items-center.gap-4
+          span.text-xl.font-bold.text-white.hidden.sm:block = t('home.index.app_name')
+
+      / Desktop navigation
+      .hidden.md:flex.items-center.gap-4
         .flex.items-center.gap-2.px-3.py-1.5.rounded-full class="bg-amber-500/20 border border-amber-500/30"
           = icon(:star, width: 16, height: 16, class: "text-amber-400")
           span.text-sm.font-semibold.text-amber-400 = current_user.reward_points
-        
+
         span.text-sm.text-slate-400
           = t('home.index.welcome')
           span.font-medium.text-white.ml-1 = current_user.first_name
-        
+
         - if current_user.administrator? || current_user.company_user?
           = link_to admin_root_path, class: "inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200" do
             = icon(:settings, width: 16, height: 16)
             = t('shared.navigation.admin')
-        
+
         = link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200" do
           = icon(:logout, width: 16, height: 16)
           = t('home.index.sign_out')
+
+      / Mobile menu button
+      .flex.items-center.gap-3.md:hidden
+        .flex.items-center.gap-2.px-2.py-1.rounded-full class="bg-amber-500/20 border border-amber-500/30"
+          = icon(:star, width: 14, height: 14, class: "text-amber-400")
+          span.text-xs.font-semibold.text-amber-400 = current_user.reward_points
+
+        button.p-2.rounded-lg.text-slate-300.hover:text-white.hover:bg-white/10.transition-colors type="button" data-action="click->mobile-menu#toggle" data-mobile-menu-target="button"
+          = icon(:menu_2, width: 24, height: 24, class: "block", data: { mobile_menu_target: "openIcon" })
+          = icon(:x, width: 24, height: 24, class: "hidden", data: { mobile_menu_target: "closeIcon" })
+
+  / Mobile menu panel
+  .hidden.md:hidden.border-t.border-white/10 data-mobile-menu-target="menu"
+    .px-4.py-4.space-y-3
+      .flex.items-center.gap-3.px-3.py-2.rounded-lg class="bg-white/5"
+        .w-8.h-8.rounded-full.flex.items-center.justify-center.text-sm.font-medium.text-white class="bg-gradient-to-br from-amber-400 to-orange-500"
+          = current_user.initials
+        div
+          .text-sm.font-medium.text-white = current_user.full_name
+          .text-xs.text-slate-400 = current_user.email
+
+      .border-t.border-white/10.pt-3.space-y-1
+        = link_to root_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" do
+          = icon(:home, width: 20, height: 20)
+          span = t('shared.navigation.home', default: 'Home')
+
+        = link_to challenges_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" do
+          = icon(:map_pin, width: 20, height: 20)
+          span = t('shared.navigation.challenges', default: 'Challenges')
+
+        = link_to rewards_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" do
+          = icon(:gift, width: 20, height: 20)
+          span = t('shared.navigation.rewards', default: 'Rewards')
+
+        = link_to orders_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" do
+          = icon(:shopping_cart, width: 20, height: 20)
+          span = t('shared.navigation.orders', default: 'My Orders')
+
+      - if current_user.administrator? || current_user.company_user?
+        .border-t.border-white/10.pt-3
+          = link_to admin_root_path, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors" do
+            = icon(:settings, width: 20, height: 20)
+            span = t('shared.navigation.admin')
+
+      .border-t.border-white/10.pt-3
+        = link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors" do
+          = icon(:logout, width: 20, height: 20)
+          span = t('home.index.sign_out')

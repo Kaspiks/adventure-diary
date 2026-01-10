@@ -1,48 +1,68 @@
-.mb-8
-  h1.text-3xl.font-bold.text-white = @presenter.title
-  p.text-slate-400.mt-1 = @presenter.subtitle
+.mb-6.sm:mb-8
+  h1.text-2xl.sm:text-3xl.font-bold.text-white = @presenter.title
+  p.text-sm.sm:text-base.text-slate-400.mt-1 = @presenter.subtitle
 
-.grid.grid-cols-2.lg:grid-cols-4.gap-4.mb-8
-  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
-    .flex.items-center.justify-between
-      div
-        p.text-sm.text-slate-400 = @presenter.stats_labels[:total_users]
-        p.text-2xl.font-bold.text-white = @presenter.stats[:total_users]
-      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-blue-500/20"
-        = icon(:users, class: "text-blue-400")
+.grid.grid-cols-2.lg:grid-cols-4.gap-3.sm:gap-4.mb-6.sm:mb-8
+  .rounded-xl.p-3.sm:p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between.gap-2
+      div.min-w-0
+        p.text-xs.sm:text-sm.text-slate-400.truncate = @presenter.stats_labels[:total_users]
+        p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:total_users]
+      .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-blue-500/20"
+        = icon(:users, class: "w-5 h-5 sm:w-6 sm:h-6 text-blue-400")
 
-  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
-    .flex.items-center.justify-between
-      div
-        p.text-sm.text-slate-400 = @presenter.stats_labels[:active_users]
-        p.text-2xl.font-bold.text-white = @presenter.stats[:active_users]
-      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
-        = icon(:check, class: "text-emerald-400")
+  .rounded-xl.p-3.sm:p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between.gap-2
+      div.min-w-0
+        p.text-xs.sm:text-sm.text-slate-400.truncate = @presenter.stats_labels[:active_users]
+        p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:active_users]
+      .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-emerald-500/20"
+        = icon(:check, class: "w-5 h-5 sm:w-6 sm:h-6 text-emerald-400")
 
-  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
-    .flex.items-center.justify-between
-      div
-        p.text-sm.text-slate-400 = @presenter.stats_labels[:blocked_users]
-        p.text-2xl.font-bold.text-white = @presenter.stats[:blocked_users]
-      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
-        = icon(:x, class: "text-red-400")
+  .rounded-xl.p-3.sm:p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between.gap-2
+      div.min-w-0
+        p.text-xs.sm:text-sm.text-slate-400.truncate = @presenter.stats_labels[:blocked_users]
+        p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:blocked_users]
+      .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-red-500/20"
+        = icon(:x, class: "w-5 h-5 sm:w-6 sm:h-6 text-red-400")
 
-  .rounded-xl.p-5.border class="bg-slate-800 border-slate-700"
-    .flex.items-center.justify-between
-      div
-        p.text-sm.text-slate-400 = @presenter.stats_labels[:admins]
-        p.text-2xl.font-bold.text-white = @presenter.stats[:admins]
-      .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-purple-500/20"
-        = icon(:target, class: "text-purple-400")
+  .rounded-xl.p-3.sm:p-5.border class="bg-slate-800 border-slate-700"
+    .flex.items-center.justify-between.gap-2
+      div.min-w-0
+        p.text-xs.sm:text-sm.text-slate-400.truncate = @presenter.stats_labels[:admins]
+        p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:admins]
+      .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-purple-500/20"
+        = icon(:target, class: "w-5 h-5 sm:w-6 sm:h-6 text-purple-400")
 
-.grid.lg:grid-cols-3.gap-6
-  .lg:col-span-2.rounded-xl.border.p-6 class="bg-slate-800 border-slate-700"
+.grid.grid-cols-1.lg:grid-cols-3.gap-4.sm:gap-6
+  .lg:col-span-2.rounded-xl.border.p-4.sm:p-6 class="bg-slate-800 border-slate-700"
     .flex.items-center.justify-between.mb-4
-      h2.text-lg.font-semibold.text-white = @presenter.recent_users_labels[:title]
-      = link_to @presenter.view_all_text, admin_users_path, class: "text-sm text-amber-400 hover:text-amber-300"
-    
+      h2.text-base.sm:text-lg.font-semibold.text-white = @presenter.recent_users_labels[:title]
+      = link_to @presenter.view_all_text, admin_users_path, class: "text-xs sm:text-sm text-amber-400 hover:text-amber-300"
+
     - if @presenter.recent_users.any?
-      .overflow-x-auto
+      / Mobile card view
+      .space-y-3.sm:hidden
+        - @presenter.recent_users.each do |user|
+          .rounded-lg.p-3.border class="bg-slate-700/50 border-slate-600"
+            .flex.items-center.gap-3.mb-2
+              .w-8.h-8.rounded-full.flex.items-center.justify-center.text-xs.font-medium.text-white.flex-shrink-0 class="bg-gradient-to-br from-slate-600 to-slate-700"
+                = user.initials
+              div.min-w-0.flex-1
+                .text-sm.font-medium.text-white.truncate = user.full_name
+                .text-xs.text-slate-400.truncate = user.email
+            .flex.items-center.justify-between.text-xs
+              - if user.blocked?
+                span.px-2.py-0.5.rounded-full.font-medium class="bg-red-500/20 text-red-400" = @presenter.recent_users_labels[:blocked]
+              - elsif user.admin?
+                span.px-2.py-0.5.rounded-full.font-medium class="bg-purple-500/20 text-purple-400" = @presenter.recent_users_labels[:admin]
+              - else
+                span.px-2.py-0.5.rounded-full.font-medium class="bg-emerald-500/20 text-emerald-400" = @presenter.recent_users_labels[:active]
+              span.text-slate-500 = l(user.created_at, format: :short)
+
+      / Desktop table view
+      .hidden.sm:block.overflow-x-auto
         table.w-full
           thead
             tr.text-left.text-sm.text-slate-400
@@ -71,25 +91,25 @@
       .text-center.py-8
         p.text-slate-400 = @presenter.recent_users_labels[:empty]
 
-  .rounded-xl.border.p-6 class="bg-slate-800 border-slate-700"
-    h2.text-lg.font-semibold.text-white.mb-4 = @presenter.quick_actions_labels[:title]
-    .space-y-3
-      = link_to admin_users_path, class: "flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
-        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-blue-500/20"
-          = icon(:lock, width: 20, height: 20, class: "text-blue-400")
-        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:manage_users]
+  .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800 border-slate-700"
+    h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = @presenter.quick_actions_labels[:title]
+    .space-y-2.sm:space-y-3
+      = link_to admin_users_path, class: "flex items-center gap-3 p-2.5 sm:p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
+        .w-9.h-9.sm:w-10.sm:h-10.rounded-lg.flex.items-center.justify-center.flex-shrink-0 class="bg-blue-500/20"
+          = icon(:lock, width: 18, height: 18, class: "text-blue-400 sm:w-5 sm:h-5")
+        span.text-sm.sm:text-base.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:manage_users]
 
-      = link_to new_admin_challenge_path, class: "flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
-        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-emerald-500/20"
-          = icon(:circle_plus, width: 20, height: 20, class: "text-emerald-400")
-        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:create_challenge]
+      = link_to new_admin_challenge_path, class: "flex items-center gap-3 p-2.5 sm:p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
+        .w-9.h-9.sm:w-10.sm:h-10.rounded-lg.flex.items-center.justify-center.flex-shrink-0 class="bg-emerald-500/20"
+          = icon(:circle_plus, width: 18, height: 18, class: "text-emerald-400 sm:w-5 sm:h-5")
+        span.text-sm.sm:text-base.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:create_challenge]
 
-      = link_to new_admin_reward_path, class: "flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
-        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-amber-500/20"
-          = icon(:star, width: 20, height: 20, class: "text-amber-400")
-        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:add_reward]
+      = link_to new_admin_reward_path, class: "flex items-center gap-3 p-2.5 sm:p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
+        .w-9.h-9.sm:w-10.sm:h-10.rounded-lg.flex.items-center.justify-center.flex-shrink-0 class="bg-amber-500/20"
+          = icon(:star, width: 18, height: 18, class: "text-amber-400 sm:w-5 sm:h-5")
+        span.text-sm.sm:text-base.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:add_reward]
 
-      = link_to admin_settings_path, class: "flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
-        .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-purple-500/20"
-          = icon(:settings, width: 20, height: 20, class: "text-purple-400")
-        span.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:app_settings]
+      = link_to admin_settings_path, class: "flex items-center gap-3 p-2.5 sm:p-3 rounded-lg transition-colors hover:bg-slate-700/50 group" do
+        .w-9.h-9.sm:w-10.sm:h-10.rounded-lg.flex.items-center.justify-center.flex-shrink-0 class="bg-purple-500/20"
+          = icon(:settings, width: 18, height: 18, class: "text-purple-400 sm:w-5 sm:h-5")
+        span.text-sm.sm:text-base.text-slate-300.group-hover:text-white = @presenter.quick_actions_labels[:app_settings]

@@ -12,7 +12,35 @@
 
   .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
     - if @presenter.decorated_attempts.any?
-      .overflow-x-auto
+      / Mobile card view
+      .space-y-3.p-4.sm:hidden
+        - @presenter.decorated_attempts.each do |attempt|
+          .rounded-lg.p-4.border class="bg-slate-700/50 border-slate-600"
+            .flex.items-start.justify-between.gap-3.mb-3
+              div.min-w-0.flex-1
+                .flex.items-center.gap-2.mb-1
+                  .text-sm.font-medium.text-white.truncate = attempt.user_name
+                  span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-#{attempt.status_color}-500/20 text-#{attempt.status_color}-300"
+                    = attempt.status_name
+
+              = link_to admin_attempt_path(attempt), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-600 transition-colors flex-shrink-0" do
+                svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                  path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"
+
+            .flex.flex-wrap.items-center.gap-x-4.gap-y-2.text-xs
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.headers.started') + ":"
+                span.text-slate-300 = attempt.started_at_formatted
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.headers.submitted') + ":"
+                span.text-slate-300 = attempt.submitted_at_formatted || "-"
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.headers.points') + ":"
+                span.text-slate-300 = attempt.points_display
+
+      / Desktop table view
+      .hidden.sm:block.overflow-x-auto
         table.w-full
           thead
             tr.text-left.text-xs.font-medium.text-slate-400.uppercase.tracking-wider
@@ -42,10 +70,3 @@
     - else
       .p-12.text-center
         .text-slate-400 = t('.no_attempts')
-
-
-
-
-
-
-

@@ -1,133 +1,130 @@
 - content_for :title, t('.title')
 
-.space-y-6
-  .flex.items-center.justify-between
+.space-y-4.sm:space-y-6
+  .flex.flex-col.sm:flex-row.sm:items-center.sm:justify-between.gap-4
     div
       = link_to admin_attempts_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-2" do
         = icon(:arrow_left, width: 16, height: 16)
         = t('.back')
-      h1.text-2xl.font-bold.text-white = t('.title')
+      h1.text-xl.sm:text-2xl.font-bold.text-white = t('.title')
 
     - if @presenter.decorated_attempt.can_review?
       .flex.gap-2
         / Approve button and modal
         div data-controller="modal"
-          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-emerald-600.cursor-pointer type="button" class="hover:bg-emerald-500" data-action="click->modal#open"
-            = icon(:check, width: 20, height: 20)
-            = t('.approve')
+          button.inline-flex.items-center.gap-2.px-3.sm:px-4.py-2.rounded-lg.font-medium.text-white.text-sm.transition-all.duration-200.bg-emerald-600.cursor-pointer type="button" class="hover:bg-emerald-500" data-action="click->modal#open"
+            = icon(:check, width: 18, height: 18)
+            span.hidden.sm:inline = t('.approve')
 
-          .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
-            .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
-              .p-6
+          .hidden.fixed.inset-0.z-50.items-center.justify-center.p-4 data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+            .w-full.max-w-md.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+              .p-4.sm:p-6
                 .flex.items-center.gap-3.mb-4
-                  .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
-                    = icon(:check, width: 20, height: 20, class: "text-emerald-400")
-                  h3.text-lg.font-semibold.text-white = t('.approve')
-                p.text-slate-300.mb-6 = t('.confirm_approve')
-                .flex.gap-3.justify-end
-                  button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                  .w-8.h-8.sm:w-10.sm:h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
+                    = icon(:check, width: 16, height: 16, class: "text-emerald-400 sm:w-5 sm:h-5")
+                  h3.text-base.sm:text-lg.font-semibold.text-white = t('.approve')
+                p.text-sm.sm:text-base.text-slate-300.mb-6 = t('.confirm_approve')
+                .flex.flex-col-reverse.sm:flex-row.gap-2.sm:gap-3.sm:justify-end
+                  button.w-full.sm:w-auto.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer.text-sm type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
                     | Cancel
-                  = form_with url: admin_attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_approve_actions_form, class: "inline" do |f|
-                    = f.submit t('.approve'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500"
+                  = form_with url: admin_attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_approve_actions_form, class: "w-full sm:w-auto" do |f|
+                    = f.submit t('.approve'), class: "w-full px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-sm"
 
         / Reject button and modal
         div data-controller="modal"
-          button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.font-medium.text-white.transition-all.duration-200.bg-red-600.cursor-pointer type="button" class="hover:bg-red-500" data-action="click->modal#open"
-            = icon(:x, width: 20, height: 20)
-            = t('.reject')
+          button.inline-flex.items-center.gap-2.px-3.sm:px-4.py-2.rounded-lg.font-medium.text-white.text-sm.transition-all.duration-200.bg-red-600.cursor-pointer type="button" class="hover:bg-red-500" data-action="click->modal#open"
+            = icon(:x, width: 18, height: 18)
+            span.hidden.sm:inline = t('.reject')
 
-          .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
-            .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
-              .p-6
+          .hidden.fixed.inset-0.z-50.items-center.justify-center.p-4 data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+            .w-full.max-w-md.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+              .p-4.sm:p-6
                 .flex.items-center.gap-3.mb-4
-                  .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
-                    = icon(:x, width: 20, height: 20, class: "text-red-400")
-                  h3.text-lg.font-semibold.text-white = t('.reject')
-                p.text-slate-300.mb-6 = t('.confirm_reject')
-                .flex.gap-3.justify-end
-                  button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                  .w-8.h-8.sm:w-10.sm:h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
+                    = icon(:x, width: 16, height: 16, class: "text-red-400 sm:w-5 sm:h-5")
+                  h3.text-base.sm:text-lg.font-semibold.text-white = t('.reject')
+                p.text-sm.sm:text-base.text-slate-300.mb-6 = t('.confirm_reject')
+                .flex.flex-col-reverse.sm:flex-row.gap-2.sm:gap-3.sm:justify-end
+                  button.w-full.sm:w-auto.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer.text-sm type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
                     | Cancel
-                  = form_with url: admin_attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_reject_actions_form, class: "inline" do |f|
-                    = f.submit t('.reject'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500"
+                  = form_with url: admin_attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :admin_attempts_reject_actions_form, class: "w-full sm:w-auto" do |f|
+                    = f.submit t('.reject'), class: "w-full px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500 text-sm"
 
-  .grid.grid-cols-1.lg:grid-cols-2.gap-6
-    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
-      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.attempt_info')
-      .space-y-4
-        .grid.grid-cols-2.gap-4
+  .grid.grid-cols-1.lg:grid-cols-2.gap-4.sm:gap-6
+    .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.sections.attempt_info')
+      .space-y-3.sm:space-y-4
+        .grid.grid-cols-2.gap-3.sm:gap-4
           div
-            .text-sm.text-slate-400 = t('.fields.user')
-            .text-white = @presenter.decorated_attempt.user_name
+            .text-xs.sm:text-sm.text-slate-400 = t('.fields.user')
+            .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.user_name
           div
-            .text-sm.text-slate-400 = t('.fields.challenge')
-            = link_to @presenter.decorated_attempt.challenge_title, admin_challenge_path(@presenter.decorated_attempt.challenge), class: "text-emerald-400 hover:text-emerald-300"
+            .text-xs.sm:text-sm.text-slate-400 = t('.fields.challenge')
+            = link_to @presenter.decorated_attempt.challenge_title, admin_challenge_path(@presenter.decorated_attempt.challenge), class: "text-sm sm:text-base text-emerald-400 hover:text-emerald-300"
           div
-            .text-sm.text-slate-400 = t('.fields.status')
-            span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_attempt.status_color}-500/20 text-#{@presenter.decorated_attempt.status_color}-300"
+            .text-xs.sm:text-sm.text-slate-400 = t('.fields.status')
+            span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{@presenter.decorated_attempt.status_color}-500/20 text-#{@presenter.decorated_attempt.status_color}-300"
               = @presenter.decorated_attempt.status_name
           div
-            .text-sm.text-slate-400 = t('.fields.points_awarded')
-            .text-white = @presenter.decorated_attempt.points_display
+            .text-xs.sm:text-sm.text-slate-400 = t('.fields.points_awarded')
+            .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.points_display
 
-    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
-      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.timeline')
-      .space-y-4
+    .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.sections.timeline')
+      .space-y-3.sm:space-y-4
         div
-          .text-sm.text-slate-400 = t('.fields.started_at')
-          .text-white = @presenter.decorated_attempt.started_at_formatted
+          .text-xs.sm:text-sm.text-slate-400 = t('.fields.started_at')
+          .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.started_at_formatted
         div
-          .text-sm.text-slate-400 = t('.fields.submitted_at')
-          .text-white = @presenter.decorated_attempt.submitted_at_formatted || "-"
+          .text-xs.sm:text-sm.text-slate-400 = t('.fields.submitted_at')
+          .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.submitted_at_formatted || "-"
         div
-          .text-sm.text-slate-400 = t('.fields.reviewed_at')
-          .text-white = @presenter.decorated_attempt.reviewed_at_formatted || "-"
+          .text-xs.sm:text-sm.text-slate-400 = t('.fields.reviewed_at')
+          .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.reviewed_at_formatted || "-"
         - if @presenter.decorated_attempt.reviewer_user
           div
-            .text-sm.text-slate-400 = t('.fields.reviewer')
-            .text-white = @presenter.decorated_attempt.reviewer_name
+            .text-xs.sm:text-sm.text-slate-400 = t('.fields.reviewer')
+            .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.reviewer_name
 
   - if @presenter.decorated_attempt.evidence_url.present?
-    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
-      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.evidence')
-      = link_to @presenter.decorated_attempt.evidence_url, @presenter.decorated_attempt.evidence_url, target: "_blank", class: "text-emerald-400 hover:text-emerald-300 break-all"
+    .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.sections.evidence')
+      = link_to @presenter.decorated_attempt.evidence_url, @presenter.decorated_attempt.evidence_url, target: "_blank", class: "text-sm text-emerald-400 hover:text-emerald-300 break-all"
 
   / Display submitted answers
   - if @presenter.decorated_attempt.object.challenge.has_fields?
-    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
-      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.answers')
+    .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.sections.answers')
       .space-y-3
         - @presenter.decorated_attempt.object.response_results.each do |result|
-          .rounded-lg.p-4 class="#{result[:is_correct] ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-slate-700/50'}"
-            .flex.items-start.justify-between
-              div
-                .text-sm.font-medium.text-slate-400 = result[:label]
-                .text-white.mt-1 = result[:response].presence || "(no answer)"
-              .text-right
+          .rounded-lg.p-3.sm:p-4 class="#{result[:is_correct] ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-slate-700/50'}"
+            .flex.flex-col.sm:flex-row.sm:items-start.sm:justify-between.gap-2
+              div.flex-1.min-w-0
+                .text-xs.sm:text-sm.font-medium.text-slate-400 = result[:label]
+                .text-sm.sm:text-base.text-white.mt-1.break-words = result[:response].presence || "(no answer)"
+              .flex-shrink-0
                 - if result[:is_correct]
-                  span.inline-flex.items-center.gap-1.text-emerald-400.text-sm
-                    = icon(:check, width: 16, height: 16)
+                  span.inline-flex.items-center.gap-1.text-emerald-400.text-xs.sm:text-sm
+                    = icon(:check, width: 14, height: 14)
                     | #{result[:points_earned]}/#{result[:max_points]} pts
                 - else
-                  span.inline-flex.items-center.gap-1.text-red-400.text-sm
-                    = icon(:x, width: 16, height: 16)
+                  span.inline-flex.items-center.gap-1.text-red-400.text-xs.sm:text-sm
+                    = icon(:x, width: 14, height: 14)
                     | 0/#{result[:max_points]} pts
 
   / Display uploaded photos
   - photos = @presenter.decorated_attempt.object.photos
   - if photos.any?
-    .rounded-xl.border.p-6 class="bg-slate-800/50 border-slate-700"
-      h2.text-lg.font-semibold.text-white.mb-4 = t('.sections.photos')
-      .grid.grid-cols-2.md:grid-cols-3.lg:grid-cols-4.gap-4
+    .rounded-xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-slate-700"
+      h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.sections.photos')
+      .grid.grid-cols-2.sm:grid-cols-3.lg:grid-cols-4.gap-3.sm:gap-4
         - photos.each do |artifact|
           - if artifact.file.attached?
             .rounded-lg.overflow-hidden.border.group.relative class="border-slate-600"
-              = image_tag artifact.file, class: "w-full h-40 object-cover"
+              = image_tag artifact.file, class: "w-full h-28 sm:h-40 object-cover"
               .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
                 - field = @presenter.decorated_attempt.object.challenge.fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
                 - if field
                   .text-xs.text-white.truncate = field.label
                 - if artifact.caption?
-                  .text-xs.text-slate-300.mt-1.italic = artifact.caption
-
-
-
+                  .text-xs.text-slate-300.mt-1.italic.line-clamp-1 = artifact.caption

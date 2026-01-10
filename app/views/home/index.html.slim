@@ -1,40 +1,40 @@
-.max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-8
-  .grid.grid-cols-2.lg:grid-cols-4.gap-4.mb-8
-    .rounded-xl.p-5.border class="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/20"
-      .flex.items-center.justify-between
-        div
-          p.text-sm.text-amber-200 = @presenter.stats_labels[:points]
-          p.text-2xl.font-bold.text-white = @presenter.stats[:points]
-        .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-amber-500/20"
-          = icon "star", class: "w-6 h-6 text-amber-400"
+.max-w-7xl.mx-auto.px-4.sm:px-6.lg:px-8.py-6.sm:py-8
+  .grid.grid-cols-2.sm:grid-cols-2.lg:grid-cols-4.gap-3.sm:gap-4.mb-6.sm:mb-8
+    .rounded-xl.p-3.sm:p-5.border class="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/20"
+      .flex.items-center.justify-between.gap-2
+        div.min-w-0
+          p.text-xs.sm:text-sm.text-amber-200.truncate = @presenter.stats_labels[:points]
+          p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:points]
+        .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-amber-500/20"
+          = icon "star", class: "w-5 h-5 sm:w-6 sm:h-6 text-amber-400"
 
-    .rounded-xl.p-5.border class="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
-      .flex.items-center.justify-between
-        div
-          p.text-sm.text-emerald-200 = @presenter.stats_labels[:active]
-          p.text-2xl.font-bold.text-white = @presenter.stats[:challenges_active]
-        .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
-          = icon "clock", class: "w-6 h-6 text-emerald-400"
+    .rounded-xl.p-3.sm:p-5.border class="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20"
+      .flex.items-center.justify-between.gap-2
+        div.min-w-0
+          p.text-xs.sm:text-sm.text-emerald-200.truncate = @presenter.stats_labels[:active]
+          p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:challenges_active]
+        .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-emerald-500/20"
+          = icon "clock", class: "w-5 h-5 sm:w-6 sm:h-6 text-emerald-400"
 
-    .rounded-xl.p-5.border class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border-cyan-500/20"
-      .flex.items-center.justify-between
-        div
-          p.text-sm.text-cyan-200 = @presenter.stats_labels[:completed]
-          p.text-2xl.font-bold.text-white = @presenter.stats[:challenges_completed]
-        .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-cyan-500/20"
-          = icon "check", class: "w-6 h-6 text-cyan-400"
+    .rounded-xl.p-3.sm:p-5.border class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border-cyan-500/20"
+      .flex.items-center.justify-between.gap-2
+        div.min-w-0
+          p.text-xs.sm:text-sm.text-cyan-200.truncate = @presenter.stats_labels[:completed]
+          p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:challenges_completed]
+        .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-cyan-500/20"
+          = icon "check", class: "w-5 h-5 sm:w-6 sm:h-6 text-cyan-400"
 
-    .rounded-xl.p-5.border class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20"
-      .flex.items-center.justify-between
-        div
-          p.text-sm.text-purple-200 = @presenter.stats_labels[:rewards]
-          p.text-2xl.font-bold.text-white = @presenter.stats[:rewards_claimed]
-        .w-12.h-12.rounded-full.flex.items-center.justify-center class="bg-purple-500/20"
-          = icon "star", class: "w-6 h-6 text-purple-400"
+    .rounded-xl.p-3.sm:p-5.border class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-500/20"
+      .flex.items-center.justify-between.gap-2
+        div.min-w-0
+          p.text-xs.sm:text-sm.text-purple-200.truncate = @presenter.stats_labels[:rewards]
+          p.text-xl.sm:text-2xl.font-bold.text-white = @presenter.stats[:rewards_claimed]
+        .w-10.h-10.sm:w-12.sm:h-12.rounded-full.flex.items-center.justify-center.flex-shrink-0 class="bg-purple-500/20"
+          = icon "star", class: "w-5 h-5 sm:w-6 sm:h-6 text-purple-400"
 
-  .grid.lg:grid-cols-3.gap-6
-    .lg:col-span-2.space-y-6
-      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+  .grid.grid-cols-1.lg:grid-cols-3.gap-4.sm:gap-6
+    .lg:col-span-2.space-y-4.sm:space-y-6
+      .rounded-2xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-white/10"
         .flex.items-center.justify-between.mb-4
           h2.text-lg.font-semibold.text-white = @presenter.section_titles[:active_challenges]
           = link_to challenges_path, class: "text-sm text-amber-400 hover:text-amber-300" do
@@ -62,9 +62,9 @@
               = icon "plus", class: "w-4 h-4"
               = @presenter.empty_state_messages[:browse_challenges]
 
-      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+      .rounded-2xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-white/10"
         .flex.items-center.justify-between.mb-4
-          h2.text-lg.font-semibold.text-white = @presenter.section_titles[:recent_activity]
+          h2.text-base.sm:text-lg.font-semibold.text-white = @presenter.section_titles[:recent_activity]
         
         - if @presenter.recent_activity.any?
           .space-y-3
@@ -93,9 +93,9 @@
             = icon "clock", class: "w-12 h-12 text-slate-600 mx-auto mb-3"
             p.text-slate-400 = @presenter.empty_state_messages[:no_activity]
 
-    .space-y-6
-      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
-        h2.text-lg.font-semibold.text-white.mb-4 = @presenter.section_titles[:quick_actions]
+    .space-y-4.sm:space-y-6
+      .rounded-2xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-white/10"
+        h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = @presenter.section_titles[:quick_actions]
         .space-y-2
           - @presenter.quick_actions.each do |action|
             = link_to action.url, class: "flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/5 group" do
@@ -117,9 +117,9 @@
                     .text-slate-300.group-hover:text-white.font-medium = action.title
                     .text-xs.text-slate-500 = action.description
 
-      .rounded-2xl.border.p-6 class="bg-slate-800/50 border-white/10"
+      .rounded-2xl.border.p-4.sm:p-6 class="bg-slate-800/50 border-white/10"
         .flex.items-center.justify-between.mb-4
-          h2.text-lg.font-semibold.text-white = @presenter.section_titles[:leaderboard]
+          h2.text-base.sm:text-lg.font-semibold.text-white = @presenter.section_titles[:leaderboard]
         
         - if @presenter.leaderboard.any?
           .space-y-2

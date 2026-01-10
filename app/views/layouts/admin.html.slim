@@ -12,55 +12,71 @@ html
     script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""
     = javascript_importmap_tags
 
-  body.min-h-screen.bg-slate-900
+  body.min-h-screen.bg-slate-900 data-controller="admin-sidebar"
     = render_svg_icons
-    .flex
-      aside.w-64.min-h-screen.border-r.flex.flex-col class="bg-slate-800 border-slate-700"
-        .p-4.border-b class="border-slate-700"
+
+    / Mobile header
+    .lg:hidden.sticky.top-0.z-50.flex.items-center.justify-between.h-14.px-4.border-b class="bg-slate-800 border-slate-700"
+      .flex.items-center.gap-3
+        .w-8.h-8.rounded-lg.flex.items-center.justify-center class="bg-gradient-to-br from-red-500 to-rose-600"
+          = icon "file", class: "w-4 h-4 text-white"
+        span.font-bold.text-white.text-sm = t('admin.title')
+      button.p-2.rounded-lg.text-slate-400.hover:text-white.hover:bg-slate-700.transition-colors type="button" data-action="click->admin-sidebar#toggle"
+        = icon "menu-2", class: "w-6 h-6"
+
+    / Mobile sidebar overlay
+    .fixed.inset-0.z-40.lg:hidden.hidden data-admin-sidebar-target="overlay" data-action="click->admin-sidebar#close"
+      .absolute.inset-0.bg-black/50
+
+    / Sidebar - always fixed, hidden on mobile by default
+    aside.fixed.inset-y-0.left-0.z-40.w-64.border-r.flex.flex-col.transform.-translate-x-full.lg:translate-x-0.transition-transform.duration-200 class="bg-slate-800 border-slate-700" data-admin-sidebar-target="sidebar"
+      .p-4.border-b class="border-slate-700"
+        .flex.items-center.justify-between
           .flex.items-center.gap-3
             .w-10.h-10.rounded-lg.flex.items-center.justify-center class="bg-gradient-to-br from-red-500 to-rose-600"
-              svg.w-6.h-6.text-white xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5V7.621a1.5 1.5 0 00-.44-1.06l-4.12-4.122A1.5 1.5 0 0011.378 2H4.5zm2.25 8.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 3a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" clip-rule="evenodd"
+              = icon "file", class: "w-6 h-6 text-white"
             div
               p.font-bold.text-white = t('admin.title')
               p.text-xs.text-slate-400 = t('admin.subtitle')
+          / Mobile close button
+          button.lg:hidden.p-2.rounded-lg.text-slate-400.hover:text-white.hover:bg-slate-700.transition-colors type="button" data-action="click->admin-sidebar#close"
+            = icon "x", class: "w-5 h-5"
 
-        nav.flex-1.p-4
-          - admin_navigation_presenter.navigation_sections.each do |section|
-            - if section.title.present?
-              .mt-6.mb-2.px-3
-                p.text-xs.font-semibold.uppercase.tracking-wider.text-slate-500 = section.title
-            .space-y-1
-              - section.items.each do |item|
-                = link_to item.url, class: "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors #{item.active? ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}" do
-                  = icon(item.icon, width: 20, height: 20)
-                  span = item.title
+      nav.flex-1.p-4.overflow-y-auto
+        - admin_navigation_presenter.navigation_sections.each do |section|
+          - if section.title.present?
+            .mt-6.mb-2.px-3
+              p.text-xs.font-semibold.uppercase.tracking-wider.text-slate-500 = section.title
+          .space-y-1
+            - section.items.each do |item|
+              = link_to item.url, class: "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors #{item.active? ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}", data: { action: "click->admin-sidebar#close" } do
+                = icon(item.icon, width: 20, height: 20)
+                span = item.title
 
-        .p-4.border-t class="border-slate-700"
-          .flex.items-center.gap-3.mb-3
-            .w-10.h-10.rounded-full.flex.items-center.justify-center.text-sm.font-medium.text-white class="bg-gradient-to-br from-amber-400 to-orange-500"
-              = current_user.initials
-            div
-              p.text-sm.font-medium.text-white = current_user.full_name
-              p.text-xs.text-slate-400 = t('admin.role')
-          
-          .flex.gap-2
-            = link_to root_path, class: "flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors" do
-              svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"
-              = t('admin.back_to_app')
-            
-            = link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center justify-center px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors" do
-              svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z" clip-rule="evenodd"
-                path fill-rule="evenodd" d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z" clip-rule="evenodd"
+      .p-4.border-t class="border-slate-700"
+        .flex.items-center.gap-3.mb-3
+          .w-10.h-10.rounded-full.flex.items-center.justify-center.text-sm.font-medium.text-white class="bg-gradient-to-br from-amber-400 to-orange-500"
+            = current_user.initials
+          div.min-w-0
+            p.text-sm.font-medium.text-white.truncate = current_user.full_name
+            p.text-xs.text-slate-400 = t('admin.role')
 
-      main.flex-1.p-8
+        .flex.gap-2
+          = link_to root_path, class: "flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors" do
+            = icon "arrow-left", class: "w-4 h-4"
+            span.hidden.sm:inline = t('admin.back_to_app')
+
+          = link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center justify-center px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors" do
+            = icon "logout", class: "w-4 h-4"
+
+    / Main content - offset on desktop to account for fixed sidebar
+    main.lg:ml-64.min-h-screen
+      .p-4.sm:p-6.lg:p-8
         - if flash[:notice]
           .mb-6.p-4.rounded-lg.text-sm class="bg-emerald-500/20 text-emerald-200 border border-emerald-500/30"
             = flash[:notice]
         - if flash[:alert]
           .mb-6.p-4.rounded-lg.text-sm class="bg-red-500/20 text-red-200 border border-red-500/30"
             = flash[:alert]
-        
+
         = yield

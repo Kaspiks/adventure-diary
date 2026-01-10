@@ -1,66 +1,105 @@
 - content_for :title, t('.title')
 
 .space-y-6
-  .flex.items-center.justify-between
+  .flex.flex-col.sm:flex-row.sm:items-center.justify-between.gap-4
     div
       h1.text-2xl.font-bold.text-white = t('.title')
       p.text-slate-400 = t('.subtitle', count: @presenter.total_count)
-    = link_to t('.new_reward'), new_admin_reward_path, class: "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all"
+    = link_to t('.new_reward'), new_admin_reward_path, class: "inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 transition-all"
 
   / Search Form
   .rounded-xl.border.p-4 class="bg-slate-800/50 border-slate-700"
-    = form_with model: @presenter.search_form, url: admin_rewards_path, method: :get, local: true, class: "flex items-end gap-4" do |f|
+    = form_with model: @presenter.search_form, url: admin_rewards_path, method: :get, local: true, class: "flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4" do |f|
       .flex-1
         = f.label :title, t('.search.title_placeholder'), class: "sr-only"
         = f.text_field :title, placeholder: t('.search.title_placeholder'), class: "w-full px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
       div
         = f.label :is_active, t('.search.status'), class: "sr-only"
-        = f.select :is_active, [["All", ""], ["Active", "true"], ["Inactive", "false"]], {}, class: "px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        = f.select :is_active, [["All", ""], ["Active", "true"], ["Inactive", "false"]], {}, class: "w-full sm:w-auto px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
       .flex.gap-2
-        = f.submit t('.search.search'), class: "px-4 py-2 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-all cursor-pointer"
-        = link_to t('.search.clear'), admin_rewards_path, class: "px-4 py-2 rounded-lg font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 transition-all"
+        = f.submit t('.search.search'), class: "flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-500 transition-all cursor-pointer"
+        = link_to t('.search.clear'), admin_rewards_path, class: "flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 transition-all text-center"
 
   / Rewards List
   .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
-    table.w-full
-      thead
-        tr.border-b class="border-slate-700"
-          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :title, label: t('.list.headers.title')
-          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :cost_points, label: t('.list.headers.cost')
-          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :stock_quantity, label: t('.list.headers.stock')
-          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.list.headers.status')
-          th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :orders_count, label: t('.list.headers.orders')
-          th.px-6.py-4.text-right.text-sm.font-medium.text-slate-400 = t('.list.headers.actions')
-      tbody.divide-y class="divide-slate-700"
-        - if @presenter.decorated_rewards.any?
-          - @presenter.decorated_rewards.each do |reward|
-            tr.transition-colors class="hover:bg-slate-700/50"
-              td.px-6.py-4
-                .font-medium.text-white = reward.title
-                .text-sm.text-slate-400 = reward.owner_name
-              td.px-6.py-4.text-emerald-400.font-medium = reward.cost_display
-              td.px-6.py-4 class="text-#{reward.stock_color}-400" = reward.stock_display
-              td.px-6.py-4
-                span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{reward.status_color}-500/20 text-#{reward.status_color}-300"
-                  = reward.status_badge
-              td.px-6.py-4.text-slate-300 = reward.orders_count
-              td.px-6.py-4.text-right
-                .flex.items-center.justify-end.gap-2
-                  = link_to admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.view') do
-                    svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
-                      path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41z" clip-rule="evenodd"
-                  = link_to edit_admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.edit') do
-                    svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
-                      path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
-                  = link_to orders_admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.orders') do
-                    svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      path fill-rule="evenodd" d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0zm4-2.5A2.5 2.5 0 007.5 5v1h5V5A2.5 2.5 0 0010 2.5z" clip-rule="evenodd"
-        - else
-          tr
-            td.px-6.py-12.text-center.text-slate-400 colspan="6"
-              = t('.list.no_rewards')
-              .mt-2
-                = link_to t('.list.add_first'), new_admin_reward_path, class: "text-emerald-400 hover:text-emerald-300"
+    - if @presenter.decorated_rewards.any?
+      / Mobile card view
+      .space-y-3.p-4.sm:hidden
+        - @presenter.decorated_rewards.each do |reward|
+          .rounded-lg.p-4.border class="bg-slate-700/50 border-slate-600"
+            .flex.items-start.justify-between.gap-3.mb-3
+              div.min-w-0.flex-1
+                .flex.items-center.gap-2.mb-1
+                  .text-sm.font-medium.text-white.truncate = reward.title
+                  span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-#{reward.status_color}-500/20 text-#{reward.status_color}-300"
+                    = reward.status_badge
+                .text-xs.text-slate-400 = reward.owner_name
 
+              .flex.items-center.gap-1.flex-shrink-0
+                = link_to admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-600 transition-all", title: t('.list.actions.view') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                    path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41z" clip-rule="evenodd"
+                = link_to edit_admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-600 transition-all", title: t('.list.actions.edit') do
+                  svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+                    path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
+
+            .flex.flex-wrap.items-center.gap-x-4.gap-y-2.text-xs
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.list.headers.cost') + ":"
+                span.text-emerald-400.font-medium = reward.cost_display
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.list.headers.stock') + ":"
+                span class="text-#{reward.stock_color}-400" = reward.stock_display
+              .flex.items-center.gap-1.5
+                span.text-slate-500 = t('.list.headers.orders') + ":"
+                span.text-slate-300 = reward.orders_count
+
+            .mt-3
+              = link_to orders_admin_reward_path(reward), class: "inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white" do
+                svg.w-4.h-4 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  path fill-rule="evenodd" d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0zm4-2.5A2.5 2.5 0 007.5 5v1h5V5A2.5 2.5 0 0010 2.5z" clip-rule="evenodd"
+                = t('.list.actions.orders')
+
+      / Desktop table view
+      .hidden.sm:block
+        table.w-full
+          thead
+            tr.border-b class="border-slate-700"
+              th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :title, label: t('.list.headers.title')
+              th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :cost_points, label: t('.list.headers.cost')
+              th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :stock_quantity, label: t('.list.headers.stock')
+              th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = t('.list.headers.status')
+              th.px-6.py-4.text-left.text-sm.font-medium.text-slate-400 = sortable :orders_count, label: t('.list.headers.orders')
+              th.px-6.py-4.text-right.text-sm.font-medium.text-slate-400 = t('.list.headers.actions')
+          tbody.divide-y class="divide-slate-700"
+            - @presenter.decorated_rewards.each do |reward|
+              tr.transition-colors class="hover:bg-slate-700/50"
+                td.px-6.py-4
+                  .font-medium.text-white = reward.title
+                  .text-sm.text-slate-400 = reward.owner_name
+                td.px-6.py-4.text-emerald-400.font-medium = reward.cost_display
+                td.px-6.py-4 class="text-#{reward.stock_color}-400" = reward.stock_display
+                td.px-6.py-4
+                  span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-#{reward.status_color}-500/20 text-#{reward.status_color}-300"
+                    = reward.status_badge
+                td.px-6.py-4.text-slate-300 = reward.orders_count
+                td.px-6.py-4.text-right
+                  .flex.items-center.justify-end.gap-2
+                    = link_to admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.view') do
+                      svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                        path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41z" clip-rule="evenodd"
+                    = link_to edit_admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.edit') do
+                      svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z"
+                        path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z"
+                    = link_to orders_admin_reward_path(reward), class: "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all", title: t('.list.actions.orders') do
+                      svg.w-5.h-5 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        path fill-rule="evenodd" d="M6 5v1H4.667a1.75 1.75 0 00-1.743 1.598l-.826 9.5A1.75 1.75 0 003.84 19H16.16a1.75 1.75 0 001.743-1.902l-.826-9.5A1.75 1.75 0 0015.333 6H14V5a4 4 0 00-8 0zm4-2.5A2.5 2.5 0 007.5 5v1h5V5A2.5 2.5 0 0010 2.5z" clip-rule="evenodd"
+    - else
+      .p-12.text-center.text-slate-400
+        = t('.list.no_rewards')
+        .mt-2
+          = link_to t('.list.add_first'), new_admin_reward_path, class: "text-emerald-400 hover:text-emerald-300"

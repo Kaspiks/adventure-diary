@@ -1,21 +1,21 @@
 - content_for :title, t('.title')
 
-.min-h-screen.bg-slate-900.py-8
+.min-h-screen.bg-slate-900.py-6.sm:py-8
   .max-w-4xl.mx-auto.px-4
     = link_to my_attempts_path, class: "inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white mb-4" do
       = icon(:arrow_left, width: 16, height: 16)
       = t('.back')
 
     .rounded-xl.border.overflow-hidden class="bg-slate-800/50 border-slate-700"
-      .p-8
-        .flex.items-start.justify-between.mb-6
+      .p-4.sm:p-6.lg:p-8
+        .flex.flex-col.sm:flex-row.sm:items-start.sm:justify-between.gap-4.mb-6
           div
-            h1.text-2xl.font-bold.text-white.mb-2 = @presenter.decorated_attempt.challenge_title
-            span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-#{@presenter.decorated_attempt.status_color}-500/20 text-#{@presenter.decorated_attempt.status_color}-300"
+            h1.text-xl.sm:text-2xl.font-bold.text-white.mb-2 = @presenter.decorated_attempt.challenge_title
+            span class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-#{@presenter.decorated_attempt.status_color}-500/20 text-#{@presenter.decorated_attempt.status_color}-300"
               = @presenter.decorated_attempt.status_name
           - if @presenter.decorated_attempt.score_awarded
-            .text-right
-              .text-3xl.font-bold.text-emerald-400 +#{@presenter.decorated_attempt.score_awarded}
+            .sm:text-right.flex.sm:flex-col.items-center.sm:items-end.gap-2.sm:gap-0
+              .text-2xl.sm:text-3xl.font-bold.text-emerald-400 +#{@presenter.decorated_attempt.score_awarded}
               .text-sm.text-slate-400 = t('.points_earned')
               - if @presenter.decorated_attempt.object.challenge.has_fields? && @presenter.decorated_attempt.object.response_results.any?
                 - max_score = @presenter.decorated_attempt.object.challenge.total_field_points
@@ -23,96 +23,96 @@
                 .text-xs.text-slate-500.mt-1
                   = "Quiz Score: #{field_score}/#{max_score}"
 
-        .grid.grid-cols-2.gap-6.mb-6
+        .grid.grid-cols-1.sm:grid-cols-2.gap-4.sm:gap-6.mb-6
           div
-            .text-sm.text-slate-400.mb-1 = t('.fields.started')
-            .text-white = @presenter.decorated_attempt.started_at_formatted
+            .text-xs.sm:text-sm.text-slate-400.mb-1 = t('.fields.started')
+            .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.started_at_formatted
           div
-            .text-sm.text-slate-400.mb-1 = t('.fields.submitted')
-            .text-white = @presenter.decorated_attempt.submitted_at_formatted || "-"
+            .text-xs.sm:text-sm.text-slate-400.mb-1 = t('.fields.submitted')
+            .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.submitted_at_formatted || "-"
           - if @presenter.decorated_attempt.reviewed_at
             div
-              .text-sm.text-slate-400.mb-1 = t('.fields.reviewed')
-              .text-white = @presenter.decorated_attempt.reviewed_at_formatted
+              .text-xs.sm:text-sm.text-slate-400.mb-1 = t('.fields.reviewed')
+              .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.reviewed_at_formatted
             div
-              .text-sm.text-slate-400.mb-1 = t('.fields.reviewer')
-              .text-white = @presenter.decorated_attempt.reviewer_name
+              .text-xs.sm:text-sm.text-slate-400.mb-1 = t('.fields.reviewer')
+              .text-sm.sm:text-base.text-white = @presenter.decorated_attempt.reviewer_name
 
         - if @presenter.decorated_attempt.evidence_url.present?
           .mb-6
-            .text-sm.text-slate-400.mb-1 = t('.fields.evidence')
-            = link_to @presenter.decorated_attempt.evidence_url, @presenter.decorated_attempt.evidence_url, target: "_blank", class: "text-emerald-400 hover:text-emerald-300 break-all"
+            .text-xs.sm:text-sm.text-slate-400.mb-1 = t('.fields.evidence')
+            = link_to @presenter.decorated_attempt.evidence_url, @presenter.decorated_attempt.evidence_url, target: "_blank", class: "text-sm text-emerald-400 hover:text-emerald-300 break-all"
 
         / Show uploaded photos
         - photos = @presenter.decorated_attempt.object.photos
         - if photos.any?
           .mb-6
-            .text-sm.text-slate-400.mb-2 = t('.uploaded_photos')
-            .grid.grid-cols-2.md:grid-cols-3.gap-3
+            .text-xs.sm:text-sm.text-slate-400.mb-2 = t('.uploaded_photos')
+            .grid.grid-cols-2.sm:grid-cols-3.gap-2.sm:gap-3
               - photos.each do |artifact|
                 - if artifact.file.attached?
                   .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
-                    = image_tag artifact.file, class: "w-full h-32 object-cover"
+                    = image_tag artifact.file, class: "w-full h-24 sm:h-32 object-cover"
                     .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
                       - field = @presenter.decorated_attempt.object.challenge.template_fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
                       - if field
                         .text-xs.text-white.truncate = field.label
                       - if artifact.caption?
-                        .text-xs.text-slate-300.mt-1.italic = artifact.caption
+                        .text-xs.text-slate-300.mt-1.italic.line-clamp-1 = artifact.caption
 
         / Show user's own submitted answers
         - if @presenter.can_view_own_answers?
           - if @presenter.decorated_attempt.object.challenge.has_fields? && @presenter.decorated_attempt.object.response_results.any?
-            .border-t.pt-6.mb-6 class="border-slate-700"
-              .flex.items-center.justify-between.mb-4
-                h2.text-lg.font-semibold.text-white = t('.your_answers', default: 'Your Answers')
+            .border-t.pt-4.sm:pt-6.mb-6 class="border-slate-700"
+              .flex.flex-col.sm:flex-row.sm:items-center.justify-between.gap-2.sm:gap-4.mb-4
+                h2.text-base.sm:text-lg.font-semibold.text-white = t('.your_answers', default: 'Your Answers')
                 - if @presenter.can_edit_submission?
-                  = link_to t('.edit_answers', default: 'Edit Answers'), edit_attempt_path(@presenter.decorated_attempt), class: "inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors"
-              
+                  = link_to t('.edit_answers', default: 'Edit Answers'), edit_attempt_path(@presenter.decorated_attempt), class: "inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors self-start sm:self-auto"
+
               .space-y-3
                 - @presenter.decorated_attempt.object.response_results.each do |result|
                   .rounded-lg.p-3 class="bg-slate-700/50"
-                    .flex.items-start.justify-between
-                      div
-                        .text-sm.font-medium.text-slate-300 = result[:label]
-                        .text-white.mt-1 = result[:response].presence || t('.no_answer', default: 'No answer provided')
+                    .flex.flex-col.sm:flex-row.sm:items-start.sm:justify-between.gap-2
+                      div.flex-1.min-w-0
+                        .text-xs.sm:text-sm.font-medium.text-slate-300 = result[:label]
+                        .text-sm.sm:text-base.text-white.mt-1.break-words = result[:response].presence || t('.no_answer', default: 'No answer provided')
                       - if @presenter.decorated_attempt.approved? || @presenter.decorated_attempt.rejected?
-                        .text-right
+                        .sm:text-right.flex-shrink-0
                           - if result[:is_correct]
-                            span.text-emerald-400.text-sm = "✓ #{result[:points_earned]}/#{result[:max_points]} pts"
+                            span.text-emerald-400.text-xs.sm:text-sm = "✓ #{result[:points_earned]}/#{result[:max_points]} pts"
                           - else
-                            span.text-red-400.text-sm = "✗ 0/#{result[:max_points]} pts"
+                            span.text-red-400.text-xs.sm:text-sm = "✗ 0/#{result[:max_points]} pts"
                       - elsif @presenter.decorated_attempt.submitted?
                         .text-xs.text-amber-400 = t('.pending_review', default: 'Pending review')
 
         - if @presenter.can_submit?
           - location = @presenter.decorated_attempt.object.challenge.location
           - geofenced = location&.geofenced?
-          .border-t.pt-6 class="border-slate-700" data-controller=(geofenced ? "geofence" : nil) data-geofence-latitude-value=(geofenced ? location.latitude : nil) data-geofence-longitude-value=(geofenced ? location.longitude : nil) data-geofence-radius-meters-value=(geofenced ? location.radius_meters : nil) data-geofence-location-name-value=(geofenced ? location.name : nil) data-geofence-geofenced-value=(geofenced ? "true" : nil)
-            h2.text-lg.font-semibold.text-white.mb-4 = t('.submit_evidence')
-            
+          .border-t.pt-4.sm:pt-6 class="border-slate-700" data-controller=(geofenced ? "geofence" : nil) data-geofence-latitude-value=(geofenced ? location.latitude : nil) data-geofence-longitude-value=(geofenced ? location.longitude : nil) data-geofence-radius-meters-value=(geofenced ? location.radius_meters : nil) data-geofence-location-name-value=(geofenced ? location.name : nil) data-geofence-geofenced-value=(geofenced ? "true" : nil)
+            h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.submit_evidence')
+
             / Geofence section if challenge has location
             - if geofenced
               .mb-6.rounded-xl.border.overflow-hidden class="bg-slate-700/50 border-slate-600"
-                .p-4.border-b class="border-slate-600"
-                  .flex.items-center.justify-between
+                .p-3.sm:p-4.border-b class="border-slate-600"
+                  .flex.flex-col.sm:flex-row.sm:items-center.justify-between.gap-3
                     .flex.items-center.gap-3
-                      = icon(:map_pin, width: 20, height: 20, class: "text-emerald-400")
+                      = icon(:map_pin, width: 20, height: 20, class: "text-emerald-400 flex-shrink-0")
                       div
                         h3.text-sm.font-medium.text-white = t('.location_required')
                         p.text-xs.text-slate-400 = t('.location_required_hint', name: location.name, radius: location.radius_meters)
-                    button.px-3.py-1.5.text-xs.font-medium.rounded-lg.transition-colors type="button" class="bg-slate-600 text-slate-300 hover:bg-slate-500 hover:text-white" data-geofence-target="checkButton" data-action="click->geofence#refreshLocation"
+                    button.px-3.py-1.5.text-xs.font-medium.rounded-lg.transition-colors.self-start.sm:self-auto type="button" class="bg-slate-600 text-slate-300 hover:bg-slate-500 hover:text-white" data-geofence-target="checkButton" data-action="click->geofence#refreshLocation"
                       = t('.refresh_location')
-                
+
                 / Status message
-                .px-4.py-3.text-sm.font-medium class="bg-slate-800/50" aria-live="polite"
+                .px-3.sm:px-4.py-3.text-xs.sm:text-sm.font-medium class="bg-slate-800/50" aria-live="polite"
                   span data-geofence-target="status" class="text-amber-400"
                     = t('.checking_location')
-                
-                / Map container
-                #geofence-map.w-full data-geofence-target="map" style="height: 280px;"
 
-            = form_with url: attempts_submit_action_path(@presenter.decorated_attempt), method: :patch, local: true, multipart: true, class: "space-y-6", scope: :attempts_submit_actions_form do |f|
+                / Map container
+                #geofence-map.w-full.h-48.sm:h-72 data-geofence-target="map"
+
+            = form_with url: attempts_submit_action_path(@presenter.decorated_attempt), method: :patch, local: true, multipart: true, class: "space-y-4 sm:space-y-6", scope: :attempts_submit_actions_form do |f|
               - if geofenced
                 = hidden_field_tag "attempts_submit_actions_form[user_latitude]", "", data: { geofence_target: "userLat" }
                 = hidden_field_tag "attempts_submit_actions_form[user_longitude]", "", data: { geofence_target: "userLng" }
@@ -121,95 +121,95 @@
               - attempt = @presenter.decorated_attempt.object
               - challenge.template_fields.each do |field|
                 = render "attempts/fields/field_wrapper", field: field, attempt: attempt
-              
+
               - if challenge.fields.empty?
                 div
                   = label_tag :evidence_photo, t('.upload_evidence'), class: "block text-sm font-medium text-slate-300 mb-2"
                   p.text-xs.text-slate-400.mb-3 = t('.upload_evidence_hint')
-                  .border-2.border-dashed.rounded-xl.p-6.text-center.transition-colors class="border-slate-600 hover:border-emerald-500/50 bg-slate-700/30"
+                  .border-2.border-dashed.rounded-xl.p-4.sm:p-6.text-center.transition-colors class="border-slate-600 hover:border-emerald-500/50 bg-slate-700/30"
                     .flex.justify-center.mb-3
-                      = icon(:photo, width: 48, height: 48, class: "text-slate-500")
-                    = file_field_tag "attempts_submit_actions_form[photos][evidence][]", accept: "image/*", multiple: true, required: true, class: "block w-full text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
+                      = icon(:photo, width: 40, height: 40, class: "text-slate-500 sm:w-12 sm:h-12")
+                    = file_field_tag "attempts_submit_actions_form[photos][evidence][]", accept: "image/*", multiple: true, required: true, class: "block w-full text-xs sm:text-sm text-slate-300 file:mr-3 sm:file:mr-4 file:py-2 file:px-3 sm:file:px-4 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-emerald-500 file:text-white hover:file:bg-emerald-400 cursor-pointer"
                     p.text-xs.text-slate-500.mt-2 = t('.upload_formats')
-              
+
               - if geofenced
-                = f.submit t('.submit_button'), class: "w-full px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all opacity-50 cursor-not-allowed", disabled: true, data: { geofence_target: "submitButton" }
+                = f.submit t('.submit_button'), class: "w-full px-4 sm:px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all opacity-50 cursor-not-allowed text-sm sm:text-base", disabled: true, data: { geofence_target: "submitButton" }
               - else
-                = f.submit t('.submit_button'), class: "w-full px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+                = f.submit t('.submit_button'), class: "w-full px-4 sm:px-6 py-3 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer text-sm sm:text-base"
 
         - if @presenter.can_review?
-          .border-t.pt-6 class="border-slate-700"
-            h2.text-lg.font-semibold.text-white.mb-4 = t('.review_attempt')
-            
+          .border-t.pt-4.sm:pt-6 class="border-slate-700"
+            h2.text-base.sm:text-lg.font-semibold.text-white.mb-4 = t('.review_attempt')
+
             / Display submitted answers for review
             - if @presenter.decorated_attempt.object.challenge.has_fields?
               .mb-6
-                h3.text-md.font-medium.text-slate-300.mb-3 = t('.submitted_answers')
+                h3.text-sm.sm:text-md.font-medium.text-slate-300.mb-3 = t('.submitted_answers')
                 .space-y-3
                   - @presenter.decorated_attempt.object.response_results.each do |result|
                     .rounded-lg.p-3 class="#{result[:is_correct] ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-slate-700/50'}"
-                      .flex.items-start.justify-between
-                        div
-                          .text-sm.font-medium.text-slate-300 = result[:label]
-                          .text-white.mt-1 = result[:response].presence || t('.no_answer')
-                        .text-right
+                      .flex.flex-col.sm:flex-row.sm:items-start.sm:justify-between.gap-2
+                        div.flex-1.min-w-0
+                          .text-xs.sm:text-sm.font-medium.text-slate-300 = result[:label]
+                          .text-sm.sm:text-base.text-white.mt-1.break-words = result[:response].presence || t('.no_answer')
+                        .sm:text-right.flex-shrink-0
                           - if result[:is_correct]
-                            span.text-emerald-400.text-sm = "✓ #{result[:points_earned]}/#{result[:max_points]} pts"
+                            span.text-emerald-400.text-xs.sm:text-sm = "✓ #{result[:points_earned]}/#{result[:max_points]} pts"
                           - else
-                            span.text-red-400.text-sm = "✗ 0/#{result[:max_points]} pts"
+                            span.text-red-400.text-xs.sm:text-sm = "✗ 0/#{result[:max_points]} pts"
 
             / Display uploaded photos for review
             - photos = @presenter.decorated_attempt.object.photos
             - if photos.any?
               .mb-6
-                h3.text-md.font-medium.text-slate-300.mb-3 = t('.uploaded_photos')
-                .grid.grid-cols-2.md:grid-cols-3.gap-3
+                h3.text-sm.sm:text-md.font-medium.text-slate-300.mb-3 = t('.uploaded_photos')
+                .grid.grid-cols-2.sm:grid-cols-3.gap-2.sm:gap-3
                   - photos.each do |artifact|
                     - if artifact.file.attached?
                       .rounded-lg.overflow-hidden.border.relative class="border-slate-600"
-                        = image_tag artifact.file, class: "w-full h-32 object-cover"
+                        = image_tag artifact.file, class: "w-full h-24 sm:h-32 object-cover"
                         .absolute.bottom-0.left-0.right-0.bg-gradient-to-t.from-black/70.to-transparent.p-2
                           - field = @presenter.decorated_attempt.object.challenge.template_fields.find { |f| f.id == artifact.field_id } if artifact.field_id.present?
                           - if field
                             .text-xs.text-white.truncate = field.label
                           - if artifact.caption?
-                            .text-xs.text-slate-300.mt-1.italic = artifact.caption
+                            .text-xs.text-slate-300.mt-1.italic.line-clamp-1 = artifact.caption
 
-            .flex.gap-4
+            .flex.flex-col.sm:flex-row.gap-3.sm:gap-4
               / Approve button and modal
               .flex-1 data-controller="modal"
-                button.w-full.text-center.px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer type="button" class="bg-emerald-600 hover:bg-emerald-500" data-action="click->modal#open"
+                button.w-full.text-center.px-4.sm:px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer.text-sm.sm:text-base type="button" class="bg-emerald-600 hover:bg-emerald-500" data-action="click->modal#open"
                   = t('.approve')
 
-                .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
-                  .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
-                    .p-6
+                .hidden.fixed.inset-0.z-50.items-center.justify-center.p-4 data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+                  .w-full.max-w-md.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+                    .p-4.sm:p-6
                       .flex.items-center.gap-3.mb-4
-                        .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
-                          = icon(:check, width: 20, height: 20, class: "text-emerald-400")
-                        h3.text-lg.font-semibold.text-white = t('.approve')
-                      p.text-slate-300.mb-6 = t('.confirm_approve')
-                      .flex.gap-3.justify-end
-                        button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                        .w-8.h-8.sm:w-10.sm:h-10.rounded-full.flex.items-center.justify-center class="bg-emerald-500/20"
+                          = icon(:check, width: 16, height: 16, class: "text-emerald-400 sm:w-5 sm:h-5")
+                        h3.text-base.sm:text-lg.font-semibold.text-white = t('.approve')
+                      p.text-sm.sm:text-base.text-slate-300.mb-6 = t('.confirm_approve')
+                      .flex.flex-col-reverse.sm:flex-row.gap-2.sm:gap-3.sm:justify-end
+                        button.w-full.sm:w-auto.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer.text-sm type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
                           | Cancel
-                        = form_with url: attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_approve_actions_form, class: "inline" do |f|
-                          = f.submit t('.approve'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500"
+                        = form_with url: attempts_approve_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_approve_actions_form, class: "w-full sm:w-auto" do |f|
+                          = f.submit t('.approve'), class: "w-full px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-sm"
 
               / Reject button and modal
               .flex-1 data-controller="modal"
-                button.w-full.text-center.px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer type="button" class="bg-red-600 hover:bg-red-500" data-action="click->modal#open"
+                button.w-full.text-center.px-4.sm:px-6.py-3.rounded-lg.font-medium.text-white.transition-all.cursor-pointer.text-sm.sm:text-base type="button" class="bg-red-600 hover:bg-red-500" data-action="click->modal#open"
                   = t('.reject')
 
-                .hidden.fixed.inset-0.z-50.items-center.justify-center data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
-                  .w-full.max-w-md.mx-4.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
-                    .p-6
+                .hidden.fixed.inset-0.z-50.items-center.justify-center.p-4 data-modal-target="dialog" data-action="click->modal#closeOnBackdrop keydown.escape@window->modal#closeOnEscape" class="bg-black/60 backdrop-blur-sm"
+                  .w-full.max-w-md.rounded-xl.border.overflow-hidden.shadow-2xl class="bg-slate-800 border-slate-700"
+                    .p-4.sm:p-6
                       .flex.items-center.gap-3.mb-4
-                        .w-10.h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
-                          = icon(:x, width: 20, height: 20, class: "text-red-400")
-                        h3.text-lg.font-semibold.text-white = t('.reject')
-                      p.text-slate-300.mb-6 = t('.confirm_reject')
-                      .flex.gap-3.justify-end
-                        button.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
+                        .w-8.h-8.sm:w-10.sm:h-10.rounded-full.flex.items-center.justify-center class="bg-red-500/20"
+                          = icon(:x, width: 16, height: 16, class: "text-red-400 sm:w-5 sm:h-5")
+                        h3.text-base.sm:text-lg.font-semibold.text-white = t('.reject')
+                      p.text-sm.sm:text-base.text-slate-300.mb-6 = t('.confirm_reject')
+                      .flex.flex-col-reverse.sm:flex-row.gap-2.sm:gap-3.sm:justify-end
+                        button.w-full.sm:w-auto.px-4.py-2.rounded-lg.font-medium.transition-colors.cursor-pointer.text-sm type="button" class="bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white" data-action="click->modal#close"
                           | Cancel
-                        = form_with url: attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_reject_actions_form, class: "inline" do |f|
-                          = f.submit t('.reject'), class: "px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500"
+                        = form_with url: attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_reject_actions_form, class: "w-full sm:w-auto" do |f|
+                          = f.submit t('.reject'), class: "w-full px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500 text-sm"

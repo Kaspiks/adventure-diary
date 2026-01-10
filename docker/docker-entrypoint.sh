@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 if [ -f /tmp/server.pid ]; then
@@ -29,5 +30,3 @@ case "$1" in
 esac
 
 exec "$@"
-
-
