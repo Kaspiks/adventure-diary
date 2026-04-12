@@ -16,7 +16,7 @@ module Attempts
         end
 
         with_safe_transaction do
-          points_to_award = calculate_points
+          points_to_award = Challenges::AwardPoints.calculate_points_for(object)
 
           object.update!(
             attempt_status: AttemptStatus.approved,
@@ -26,23 +26,11 @@ module Attempts
           )
 
           award_points(points_to_award) unless points_already_awarded?
+          true
         end
       end
 
       private
-
-      def calculate_points
-        if object.challenge.has_fields?
-          field_score = object.calculate_score
-          if object.challenge.quiz_challenge?
-            field_score
-          else
-            field_score + object.challenge.award_points
-          end
-        else
-          object.challenge.award_points
-        end
-      end
 
       def points_already_awarded?
         PointsHistory.exists?(

@@ -24,6 +24,22 @@ module Challenges
       Result.new(success: false, points_awarded: 0, errors: [e.message])
     end
 
+    class << self
+      # Scoring rules for an attempt (read-only; used by approval and this service).
+      def calculate_points_for(attempt)
+        if attempt.challenge.has_fields?
+          field_score = attempt.calculate_score
+          if attempt.challenge.quiz_challenge?
+            field_score
+          else
+            field_score + attempt.challenge.award_points
+          end
+        else
+          attempt.challenge.award_points
+        end
+      end
+    end
+
     private
 
     def validate!
@@ -54,16 +70,7 @@ module Challenges
     end
 
     def calculate_points
-      if attempt.challenge.has_fields?
-        field_score = attempt.calculate_score
-        if attempt.challenge.quiz_challenge?
-          field_score
-        else
-          field_score + attempt.challenge.award_points
-        end
-      else
-        attempt.challenge.award_points
-      end
+      self.class.calculate_points_for(attempt)
     end
 
     class Result

@@ -213,3 +213,18 @@
                           | Cancel
                         = form_with url: attempts_reject_action_path(@presenter.decorated_attempt), method: :post, local: true, scope: :attempts_reject_actions_form, class: "w-full sm:w-auto" do |f|
                           = f.submit t('.reject'), class: "w-full px-4 py-2 rounded-lg font-medium text-white transition-colors cursor-pointer bg-red-600 hover:bg-red-500 text-sm"
+
+    - attempt_record = @presenter.decorated_attempt.object
+    - if attempt_record.final? && attempt_record.owned_by?(@presenter.current_user)
+      .border-t.pt-6.mt-6 class="border-slate-700"
+        h2.text-base.sm:text-lg.font-semibold.text-white.mb-3 = t('.next_steps.title')
+        - if attempt_record.approved?
+          p.text-sm.text-slate-400.mb-4 = t('.next_steps.approved_lead')
+          .flex.flex-col.sm:flex-row.gap-3
+            = link_to t('.next_steps.browse_challenges'), challenges_path, class: "inline-flex justify-center items-center px-4 py-2.5 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-sm"
+            = link_to t('.next_steps.view_rewards'), rewards_path, class: "inline-flex justify-center items-center px-4 py-2.5 rounded-lg font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 hover:text-white text-sm"
+        - elsif attempt_record.rejected?
+          p.text-sm.text-slate-400.mb-4 = t('.next_steps.rejected_lead')
+          .flex.flex-col.sm:flex-row.gap-3
+            = link_to t('.next_steps.open_challenge'), challenge_path(attempt_record.challenge), class: "inline-flex justify-center items-center px-4 py-2.5 rounded-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-sm"
+            = link_to t('.next_steps.browse_challenges'), challenges_path, class: "inline-flex justify-center items-center px-4 py-2.5 rounded-lg font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 hover:text-white text-sm"

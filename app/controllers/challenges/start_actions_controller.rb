@@ -18,7 +18,7 @@ module Challenges
       form = build_form(attempt)
 
       if form.create(create_params)
-        redirect_to my_attempts_path, notice: t("challenges.start.success")
+        redirect_to attempt_path(attempt), notice: t("challenges.start.success")
       else
         redirect_to challenge_path(@challenge), alert: form.errors.full_messages.join(", ")
       end

@@ -4,10 +4,10 @@ import { Controller } from "@hotwired/stimulus"
 
 /**
  * Leaflet Map Controller for Location Form
- * 
+ *
  * Provides interactive map functionality for selecting and viewing locations.
  * Supports both coordinate input and map-based selection modes.
- * 
+ *
  * Usage:
  *   Add data-controller="location-map" to your form container
  *   Add data-location-map-target attributes to your form inputs
@@ -43,13 +43,64 @@ export default class extends Controller {
     this.geocodeAbortController = null
     this.geocodeDebounceTimer = null
     this.coordinateDebounceTimer = null
-    
+
     // Delay initialization to ensure DOM is ready
     requestAnimationFrame(() => {
       this.initializeMap()
       this.bindInputListeners()
       this.loadInitialState()
+      this.requestGeolocation()
     })
+  }
+
+  requestGeolocation() {
+    if (!navigator.geolocation) {
+      this.setStatus("Geolocation is not supported by your browser")
+      return
+    }
+
+    // Only request if no coordinates are already set
+    const lat = this.parseCoordinate(this.latitudeTarget?.value, -90, 90)
+    const lng = this.parseCoordinate(this.longitudeTarget?.value, -180, 180)
+
+    if (lat !== null && lng !== null) {
+      return // Already have coordinates, don't override
+    }
+
+    this.setStatus("Requesting your location...")
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        this.setMarker(latitude, longitude, this.pickMode)
+        this.map.setView([latitude, longitude], this.locationZoomValue)
+        this.updateInputs(latitude, longitude)
+        this.reverseGeocode(latitude, longitude)
+        this.setStatus("Location found!")
+        setTimeout(() => this.setStatus(""), 2000)
+      },
+      (error) => {
+        let message = "Could not get your location"
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            message = "Location permission denied"
+            break
+          case error.POSITION_UNAVAILABLE:
+            message = "Location unavailable"
+            break
+          case error.TIMEOUT:
+            message = "Location request timed out"
+            break
+        }
+        this.setStatus(message)
+        setTimeout(() => this.setStatus(""), 3000)
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
   }
 
   disconnect() {
@@ -91,7 +142,7 @@ export default class extends Controller {
     if (lat !== null && lng !== null) {
       this.setMarker(lat, lng, false)
       this.map.setView([lat, lng], this.locationZoomValue)
-      
+
       if (radius !== null) {
         this.setCircle(lat, lng, radius)
       }
@@ -122,11 +173,11 @@ export default class extends Controller {
       this.radiusTarget.addEventListener("input", () => this.updateCircleFromInput())
     }
   }
-  
+
   toggleMode() {
     this.pickMode = !this.pickMode
     this.updateModeUI()
-    
+
     if (this.marker) {
       if (this.pickMode) {
         this.marker.dragging.enable()
@@ -220,7 +271,7 @@ export default class extends Controller {
 
   updateCircleFromInput() {
     const radius = this.parseRadius(this.radiusTarget?.value)
-    
+
     if (radius === null) {
       this.removeCircle()
       return
@@ -278,7 +329,7 @@ export default class extends Controller {
     if (!this.hasNameTarget) return
 
     const name = this.nameTarget.value.trim()
-    
+
     if (name.length < 3) {
       this.setStatus("")
       return
@@ -317,7 +368,7 @@ export default class extends Controller {
         this.setMarker(lat, lng, this.pickMode)
         this.map.setView([lat, lng], this.locationZoomValue)
         this.updateInputs(lat, lng)
-        
+
         this.setStatus(`Found: ${result.display_name.substring(0, 50)}...`)
         setTimeout(() => this.setStatus(""), 3000)
       } else {
@@ -355,7 +406,7 @@ export default class extends Controller {
       const result = await response.json()
 
       if (result && result.display_name) {
-        const shortName = result.name || 
+        const shortName = result.name ||
                           result.address?.tourism ||
                           result.address?.building ||
                           result.address?.road ||
@@ -402,19 +453,19 @@ export default class extends Controller {
 
   parseCoordinate(value, min, max) {
     if (!value || value.trim() === "") return null
-    
+
     const num = parseFloat(value)
     if (isNaN(num)) return null
-    
+
     return Math.max(min, Math.min(max, num))
   }
 
   parseRadius(value) {
     if (!value || value.trim() === "") return null
-    
+
     const num = parseInt(value, 10)
     if (isNaN(num) || num <= 0) return null
-    
+
     return num
   }
 

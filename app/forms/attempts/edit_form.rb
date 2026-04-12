@@ -95,11 +95,9 @@ module Attempts
         files.each do |file|
           next unless file.respond_to?(:original_filename)
 
-          object.attempt_artifacts.create!(
-            artifact_type: "photo",
-            field_id: field_id.to_s,
-            file: file
-          )
+          artifact = object.attempt_artifacts.build(kind: "photo", field_id: field_id.to_s)
+          artifact.file.attach(file)
+          artifact.save!
         end
       end
     end

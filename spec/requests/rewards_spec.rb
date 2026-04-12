@@ -18,7 +18,7 @@ RSpec.describe "Rewards", type: :request do
     context "when authenticated" do
       let(:user) { create(:user, :general_user) }
 
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "returns success" do
         get rewards_path
@@ -41,7 +41,7 @@ RSpec.describe "Rewards", type: :request do
     context "when authenticated" do
       let(:user) { create(:user, :general_user) }
 
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "shows reward details" do
         get reward_path(reward)
@@ -54,7 +54,7 @@ RSpec.describe "Rewards", type: :request do
   describe "POST /rewards/purchase_actions/:reward_id" do
     let(:user) { create(:user, :general_user, reward_points: 500) }
 
-    before { sign_in user }
+    before { login_as(user, scope: :user) }
 
     context "with sufficient points" do
       it "creates an order" do

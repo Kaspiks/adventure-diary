@@ -13,7 +13,10 @@ module Challenges
     end
 
     def user_attempt
-      @user_attempt ||= current_user.challenge_attempts.for_challenge(challenge).first
+      @user_attempt ||= current_user.challenge_attempts
+        .for_challenge(challenge)
+        .order(created_at: :desc)
+        .first
     end
 
     def can_start?

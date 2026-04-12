@@ -12,7 +12,7 @@ RSpec.describe "Attempts", type: :request do
     context "when authenticated" do
       let(:user) { create(:user, :general_user) }
 
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "returns success" do
         get my_attempts_path
@@ -35,7 +35,7 @@ RSpec.describe "Attempts", type: :request do
     let(:challenge) { create(:challenge, :with_text_field) }
     let(:attempt) { create(:challenge_attempt, user: user, challenge: challenge, attempt_status: started_status) }
 
-    before { sign_in user }
+    before { login_as(user, scope: :user) }
 
     context "when owner submits" do
       it "changes status to submitted" do
@@ -52,21 +52,21 @@ RSpec.describe "Attempts", type: :request do
         expect(attempt.submitted_at).to be_present
       end
 
-      it "redirects to my attempts" do
+      it "redirects back to the attempt" do
         field_id = challenge.fields.first.id
         patch attempts_submit_action_path(attempt), params: {
           attempts_submit_actions_form: {
             answers: { field_id => "correct" }
           }
         }
-        expect(response).to redirect_to(my_attempts_path)
+        expect(response).to redirect_to(attempt_path(attempt))
       end
     end
 
     context "when not owner" do
       let(:other_user) { create(:user, :general_user) }
 
-      before { sign_in other_user }
+      before { login_as(other_user, scope: :user) }
 
       it "denies access" do
         patch attempts_submit_action_path(attempt), params: {
@@ -102,7 +102,7 @@ RSpec.describe "Attempts", type: :request do
     end
 
     context "when challenge owner approves" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "changes status to approved" do
         post attempts_approve_action_path(attempt)
@@ -143,7 +143,7 @@ RSpec.describe "Attempts", type: :request do
     context "when not challenge owner" do
       let(:other_company_user) { create(:user, :company_user) }
 
-      before { sign_in other_company_user }
+      before { login_as(other_company_user, scope: :user) }
 
       it "denies access" do
         post attempts_approve_action_path(attempt)
@@ -154,7 +154,7 @@ RSpec.describe "Attempts", type: :request do
     context "when administrator" do
       let(:admin) { create(:user, :admin) }
 
-      before { sign_in admin }
+      before { login_as(admin, scope: :user) }
 
       it "can approve any attempt" do
         post attempts_approve_action_path(attempt)
@@ -178,7 +178,7 @@ RSpec.describe "Attempts", type: :request do
       )
     end
 
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     it "changes status to rejected" do
       post attempts_reject_action_path(attempt)

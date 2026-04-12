@@ -11,7 +11,7 @@ module Attempts
       form = build_form(@attempt)
 
       if form.update(update_params)
-        redirect_to my_attempts_path, notice: t("attempts.submit.success")
+        redirect_to attempt_path(@attempt), notice: t("attempts.submit.success")
       else
         redirect_to attempt_path(@attempt), alert: form.errors.full_messages.join(", ")
       end

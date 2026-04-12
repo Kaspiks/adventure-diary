@@ -8,7 +8,7 @@ RSpec.describe "Admin::Rewards", type: :request do
 
   describe "GET /admin/rewards" do
     context "when authenticated as company user" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "returns success" do
         get admin_rewards_path
@@ -24,7 +24,7 @@ RSpec.describe "Admin::Rewards", type: :request do
     context "when authenticated as general user" do
       let(:general_user) { create(:user, :general_user) }
 
-      before { sign_in general_user }
+      before { login_as(general_user, scope: :user) }
 
       it "denies access" do
         get admin_rewards_path
@@ -34,7 +34,7 @@ RSpec.describe "Admin::Rewards", type: :request do
   end
 
   describe "POST /admin/rewards" do
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     let(:valid_params) do
       {
@@ -66,7 +66,7 @@ RSpec.describe "Admin::Rewards", type: :request do
   end
 
   describe "PATCH /admin/rewards/:id" do
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     it "updates the reward" do
       patch admin_reward_path(reward), params: { admin_rewards_form: { title: "Updated Title" } }
@@ -76,7 +76,7 @@ RSpec.describe "Admin::Rewards", type: :request do
     context "when trying to update another user's reward" do
       let(:other_company_user) { create(:user, :company_user) }
 
-      before { sign_in other_company_user }
+      before { login_as(other_company_user, scope: :user) }
 
       it "denies access" do
         patch admin_reward_path(reward), params: { admin_rewards_form: { title: "Hacked" } }
@@ -86,7 +86,7 @@ RSpec.describe "Admin::Rewards", type: :request do
   end
 
   describe "DELETE /admin/rewards/:id" do
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     it "deletes the reward" do
       expect {

@@ -17,7 +17,7 @@ RSpec.describe "Challenges", type: :request do
     context "when authenticated" do
       let(:user) { create(:user, :general_user) }
 
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "returns success" do
         get challenges_path
@@ -40,7 +40,7 @@ RSpec.describe "Challenges", type: :request do
     context "when authenticated" do
       let(:user) { create(:user, :general_user) }
 
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "shows challenge details" do
         get challenge_path(challenge)
@@ -53,7 +53,7 @@ RSpec.describe "Challenges", type: :request do
   describe "POST /challenges/start_actions" do
     let(:user) { create(:user, :general_user) }
 
-    before { sign_in user }
+    before { login_as(user, scope: :user) }
 
     context "when challenge is active" do
       it "creates a new attempt" do
@@ -62,9 +62,10 @@ RSpec.describe "Challenges", type: :request do
         }.to change(ChallengeAttempt, :count).by(1)
       end
 
-      it "redirects to my attempts" do
+      it "redirects to the new attempt" do
         post challenges_start_actions_path, params: { challenge_id: challenge.id }
-        expect(response).to redirect_to(my_attempts_path)
+        attempt = ChallengeAttempt.order(:id).last
+        expect(response).to redirect_to(attempt_path(attempt))
       end
 
       it "sets correct attempt attributes" do

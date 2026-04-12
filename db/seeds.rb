@@ -266,6 +266,8 @@ if Rails.env.development?
 
     puts "  Created #{Reward.count} sample rewards"
   end
+
+  load Rails.root.join("db/seeds/demo_riga_motor_museum.rb")
 end
 
 puts "Seeding complete!"

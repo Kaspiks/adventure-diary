@@ -836,6 +836,13 @@ en:
       location_denied: "Location permission denied. Please enable location access."
       location_unavailable: "Location unavailable. Please try again."
       location_timeout: "Location request timed out. Please try again."
+      next_steps:
+        title: "What is next?"
+        approved_lead: "Great work - your points are on your profile."
+        browse_challenges: "Find another challenge"
+        view_rewards: "Spend your points"
+        rejected_lead: "You can try this challenge again from the challenge page when you are ready."
+        open_challenge: "Back to challenge"
     submit:
       success: "Evidence submitted successfully!"
     approve:

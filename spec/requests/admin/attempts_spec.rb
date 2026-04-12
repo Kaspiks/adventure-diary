@@ -25,7 +25,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     context "when admin user" do
       let(:admin) { create(:user, :admin) }
 
-      before { sign_in admin }
+      before { login_as(admin, scope: :user) }
 
       it "approves attempt" do
         post admin_attempts_approve_action_path(attempt)
@@ -56,7 +56,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     end
 
     context "when company_user owns challenge" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "can approve" do
         post admin_attempts_approve_action_path(attempt)
@@ -69,7 +69,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     context "when company_user does not own challenge" do
       let(:other_company) { create(:user, :company_user) }
 
-      before { sign_in other_company }
+      before { login_as(other_company, scope: :user) }
 
       it "denies access" do
         post admin_attempts_approve_action_path(attempt)
@@ -95,7 +95,7 @@ RSpec.describe "Admin::Attempts", type: :request do
       end
 
       before do
-        sign_in company_user
+        login_as(company_user, scope: :user)
         # Create correct answers for all fields
         quiz_challenge.fields.each do |field|
           create(:attempt_answer,
@@ -123,7 +123,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     end
 
     context "idempotent approval" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "does not double award points" do
         # First approval
@@ -153,7 +153,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     context "when admin" do
       let(:admin) { create(:user, :admin) }
 
-      before { sign_in admin }
+      before { login_as(admin, scope: :user) }
 
       it "rejects attempt" do
         post admin_attempts_reject_action_path(attempt)
@@ -184,7 +184,7 @@ RSpec.describe "Admin::Attempts", type: :request do
     end
 
     context "when general_user" do
-      before { sign_in general_user }
+      before { login_as(general_user, scope: :user) }
 
       it "denies access to admin attempts" do
         get admin_attempts_path

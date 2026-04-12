@@ -18,7 +18,7 @@ RSpec.describe "Orders", type: :request do
     end
 
     context "when authenticated" do
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "returns success" do
         get orders_path
@@ -34,7 +34,7 @@ RSpec.describe "Orders", type: :request do
         other_user = create(:user, :general_user)
         other_order = create(:order, user: other_user, reward: reward, order_status: pending_status)
 
-        sign_in user
+        login_as(user, scope: :user)
         get orders_path
 
         # Check that links to other user's orders don't appear
@@ -45,7 +45,7 @@ RSpec.describe "Orders", type: :request do
 
   describe "GET /orders/:id" do
     context "when authenticated as order owner" do
-      before { sign_in user }
+      before { login_as(user, scope: :user) }
 
       it "shows order details" do
         get order_path(order)
@@ -54,7 +54,7 @@ RSpec.describe "Orders", type: :request do
     end
 
     context "when authenticated as reward owner" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "shows order details" do
         get order_path(order)
@@ -65,7 +65,7 @@ RSpec.describe "Orders", type: :request do
     context "when authenticated as different user" do
       let(:other_user) { create(:user, :general_user) }
 
-      before { sign_in other_user }
+      before { login_as(other_user, scope: :user) }
 
       it "denies access" do
         get order_path(order)

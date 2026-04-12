@@ -15,7 +15,7 @@ RSpec.describe "Admin::Orders", type: :request do
 
   describe "GET /admin/orders" do
     context "when authenticated as reward owner" do
-      before { sign_in company_user }
+      before { login_as(company_user, scope: :user) }
 
       it "returns success" do
         get admin_orders_path
@@ -30,7 +30,7 @@ RSpec.describe "Admin::Orders", type: :request do
   end
 
   describe "POST /admin/orders/status_actions/:id/approve" do
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     it "approves the order" do
       post admin_orders_status_action_approve_path(order.id)
@@ -47,7 +47,7 @@ RSpec.describe "Admin::Orders", type: :request do
   describe "POST /admin/orders/status_actions/:id/deliver" do
     before do
       order.update!(order_status: approved_status)
-      sign_in company_user
+      login_as(company_user, scope: :user)
     end
 
     it "marks order as delivered" do
@@ -57,7 +57,7 @@ RSpec.describe "Admin::Orders", type: :request do
   end
 
   describe "POST /admin/orders/status_actions/:id/cancel" do
-    before { sign_in company_user }
+    before { login_as(company_user, scope: :user) }
 
     it "cancels the order" do
       post admin_orders_status_action_cancel_path(order.id)
@@ -68,7 +68,7 @@ RSpec.describe "Admin::Orders", type: :request do
   describe "authorization" do
     let(:other_company_user) { create(:user, :company_user) }
 
-    before { sign_in other_company_user }
+    before { login_as(other_company_user, scope: :user) }
 
     it "denies status change for non-owner" do
       post admin_orders_status_action_approve_path(order.id)

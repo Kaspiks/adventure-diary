@@ -22,3 +22,8 @@
   latitude: 35.6586
   longitude: 139.7454
   radius_meters: 100
+
+- name: Riga Motor Museum
+  latitude: 56.9706
+  longitude: 24.2277
+  radius_meters: 200
